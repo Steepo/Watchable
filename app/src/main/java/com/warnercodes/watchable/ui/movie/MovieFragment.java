@@ -1,30 +1,28 @@
-package com.warnercodes.watchable.ui.home;
+package com.warnercodes.watchable.ui.movie;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 import com.warnercodes.watchable.R;
 
-public class HomeFragment extends Fragment {
+public class MovieFragment extends Fragment{
 
-    private HomeViewModel homeViewModel;
+    private MovieViewModel movieViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        movieViewModel =
+                ViewModelProviders.of(this).get(MovieViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_movie, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        movieViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
