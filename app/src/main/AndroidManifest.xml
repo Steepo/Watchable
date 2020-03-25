@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:windowSoftInputMode="adjustPan"
             android:name=".HomePage"
             android:label="@string/title_activity_home_page">
             <intent-filter>

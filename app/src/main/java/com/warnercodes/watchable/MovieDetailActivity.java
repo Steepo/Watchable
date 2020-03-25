@@ -1,5 +1,6 @@
 package com.warnercodes.watchable;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,11 +30,17 @@ public class MovieDetailActivity extends AppCompatActivity {
     private MovieDetailAdapter movieDetailAdapter;
     private List<Movie> mDataset;
     private RecyclerView.LayoutManager mLayoutManager;
+    private int movieId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
 
+        Intent intent = getIntent();
+
+
+
+        movieId = intent.getIntExtra("movieId", 0);
 
         recyclerView = (RecyclerView) findViewById(R.id.details_recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -41,7 +48,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        requestMovieInfo(181812); //Star Wars The Rise of the Skywalker
+        requestMovieInfo(movieId); //Star Wars The Rise of the Skywalker
     }
 
     public void requestMovieInfo(final int movieId){

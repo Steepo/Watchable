@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-class Movie {
+public class Movie {
     private String copertina;
     private String title;
     private String tagline;
@@ -78,6 +78,18 @@ class Movie {
         }
     }
 
+    public Movie parseSearchJson(JSONObject response)  {
+        Movie item = new Movie();
+        try {
+            item.setCopertina(response.getString("poster_path"));
+            item.setTitle(response.getString("original_title"));
+            item.setMovieId(response.getInt("id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return item;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
@@ -95,9 +107,15 @@ class Movie {
                 '}';
     }
 
-    List<Movie> getMovies() {
+    public List<Movie> getMovies() {
         return movies;
     }
+
+    public Movie getMovie(){
+        return this;
+    }
+
+
 
     public String getCopertina() {
         return copertina;

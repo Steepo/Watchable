@@ -80,7 +80,7 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             chip.setText(genere);
             viewHolder.chipGroup.addView(chip);
         }
-        Glide.with(((CoverSimilarViewHolder) holder).main_cover.getContext()).load(movies.get(position).getCopertina()).into(viewHolder.main_cover);
+        Glide.with(context).load(movies.get(position).getCopertina()).into(viewHolder.main_cover);
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         //gets similar movies
         String url = "https://api.themoviedb.org/3/movie/"+movieId+"/similar?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
