@@ -17,17 +17,20 @@ class Movie {
     private String title;
     private String tagline;
     private String trama;
-    private  List<String> generi;
+    private List<String> generi;
     private int movieId;
-    private int imdbId;
+    private String imdbId;
     private String overview;
     private String releaseDate;
     private int runtime;
     private RequestQueue requestQueue;
-    List<Movie> movies;
+    private List<Movie> movies;
+    private List<Movie> similar;
+    private String youtubekey;
 
 
-    public Movie(String copertina, String title, String tagline, String trama, List<String> generi, int movieId, int imdbId, String overview, String releaseDate, int runtime) {
+
+    public Movie(String copertina, String title, String tagline, String trama, List<String> generi, int movieId, String imdbId, String overview, String releaseDate, int runtime) {
         this.copertina = copertina;
         this.title = title;
         this.tagline = tagline;
@@ -38,18 +41,16 @@ class Movie {
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.runtime = runtime;
-
     }
 
     public Movie() {
 
     }
 
-
-
     public void parseJson(JSONObject response)  {
         Movie item = new Movie();
         movies = new ArrayList<Movie>();
+        generi = new ArrayList<String>();
         try {
             response.getBoolean("adult");
 
@@ -61,7 +62,7 @@ class Movie {
             JSONArray genres = response.getJSONArray("genres");
             if (genres.length() > 0)
                 for (int i=0; i < genres.length(); i++) {
-                    //generi.add(genres.getJSONObject(i).getString("name"));
+                    generi.add(genres.getJSONObject(i).getString("name"));
                 }
             item.setGeneri(generi);
             item.setMovieId(response.getInt("id"));
@@ -95,7 +96,6 @@ class Movie {
     }
 
     List<Movie> getMovies() {
-
         return movies;
     }
 
@@ -147,11 +147,11 @@ class Movie {
         this.movieId = movieId;
     }
 
-    public int getImdbId() {
+    public String getImdbId() {
         return imdbId;
     }
 
-    public void setImdbId(int imdbId) {
+    public void setImdbId(String imdbId) {
         this.imdbId = imdbId;
     }
 
@@ -185,6 +185,25 @@ class Movie {
 
     public void setRequestQueue(RequestQueue requestQueue) {
         this.requestQueue = requestQueue;
+    }
+
+    public List<Movie> getSimilar() {
+        return similar;
+    }
+    public void setSimilar(List<Movie> similar) {
+        this.similar = similar;
+    }
+
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
+    }
+
+    public String getYoutubekey() {
+        return youtubekey;
+    }
+
+    public void setYoutubekey(String youtubekey) {
+        this.youtubekey = youtubekey;
     }
 }
 

@@ -1,9 +1,10 @@
-package com.warnercodes.watchable.ui.notifications;
+package com.warnercodes.watchable.ui.search;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,18 +14,18 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.warnercodes.watchable.R;
+import com.warnercodes.watchable.ui.notifications.NotificationsViewModel;
 
-public class NotificationsFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
-    private NotificationsViewModel notificationsViewModel;
+    private SearchViewModel searchViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                ViewModelProviders.of(this).get(NotificationsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        final TextView textView = root.findViewById(R.id.text_notification);
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_search, container, false);
+        final TextView textView = root.findViewById(R.id.text_search);
+        searchViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

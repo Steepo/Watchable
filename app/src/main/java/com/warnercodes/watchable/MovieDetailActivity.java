@@ -14,9 +14,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -34,15 +38,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.details_recyclerview);
         recyclerView.setHasFixedSize(true);
 
-
-        mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-        requestMovieInfo(181812);
 
+        requestMovieInfo(181812); //Star Wars The Rise of the Skywalker
     }
 
-    public void requestMovieInfo(int movieId){
+    public void requestMovieInfo(final int movieId){
         String url = "https://api.themoviedb.org/3/movie/"+movieId+"?api_key=db18c03be648dd161624fabd8596021a&language=en-US";
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -60,14 +64,14 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
                         Toast.makeText(MovieDetailActivity.this,error.getMessage(), Toast.LENGTH_LONG).show();
                         Log.e("DEBUG", String.valueOf(error));
                     }
                 });
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
         Log.i("DEBUG", "END");
     }
+
+
 }
