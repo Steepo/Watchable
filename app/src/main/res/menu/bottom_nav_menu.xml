@@ -9,6 +9,11 @@
         />
 
     <item
+        android:id="@+id/navigation_movie"
+        android:icon="@drawable/ic_local_movies_black_24dp"
+        android:title="@string/title_movie" />
+
+    <item
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_search_black_24dp"
         android:title="@string/title_search"/>
@@ -17,10 +22,4 @@
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_person_black_24dp"
         android:title="@string/title_profile" />
-
-    <item
-        android:id="@+id/navigation_movie"
-        android:icon="@drawable/ic_local_movies_black_24dp"
-        android:title="@string/title_movie" />
-
 </menu>
