@@ -1,14 +1,12 @@
 package com.warnercodes.watchable.ui.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -26,7 +24,7 @@ public class ActivityFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    ArrayList<MovieActivity> myDataset = new ArrayList<MovieActivity>();
+    ArrayList<Movie> myDataset = new ArrayList<Movie>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -51,12 +49,12 @@ public class ActivityFragment extends Fragment {
         return root;
     }
     private void popoluteDataset(){
-        myDataset.add(new MovieActivity(R.drawable.shaw));
-        myDataset.add(new MovieActivity(R.drawable.shaw));
-        myDataset.add(new MovieActivity(R.drawable.shaw));
-        myDataset.add(new MovieActivity(R.drawable.shaw));
-        myDataset.add(new MovieActivity(R.drawable.shaw));
-        myDataset.add(new MovieActivity(R.drawable.shaw));
-        myDataset.add(new MovieActivity(R.drawable.shaw));
+        myDataset.add(new Movie(R.drawable.shaw));
+        myDataset.add(new Movie(R.drawable.shaw));
+        myDataset.add(new Movie(R.drawable.shaw));
+        myDataset.add(new Movie(R.drawable.shaw));
+        myDataset.add(new Movie(R.drawable.shaw));
+        myDataset.add(new Movie(R.drawable.shaw));
+        myDataset.add(new Movie(R.drawable.shaw));
     }
 }

@@ -1,6 +1,5 @@
 package com.warnercodes.watchable.ui.activity;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +16,10 @@ import java.util.ArrayList;
 
 public class RecyclerViewActivityAdapter extends RecyclerView.Adapter<RecyclerViewActivityAdapter.TestViewHolder> {
 
-    private ArrayList<MovieActivity> dataList;
+    private ArrayList<Movie> dataList;
     private Fragment mContex;
 
-    public RecyclerViewActivityAdapter(ArrayList<MovieActivity> dataList, Fragment mContex) {
+    public RecyclerViewActivityAdapter(ArrayList<Movie> dataList, Fragment mContex) {
         this.dataList = dataList;
         this.mContex = mContex;
     }
@@ -34,7 +33,7 @@ public class RecyclerViewActivityAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewActivityAdapter.TestViewHolder holder, int position) {
-        final MovieActivity data = dataList.get(position);
+        final Movie data = dataList.get(position);
         holder.imgTest.setImageResource(data.getCopertina());
     }
     @Override
