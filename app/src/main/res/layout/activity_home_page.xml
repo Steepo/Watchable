@@ -8,8 +8,7 @@
     android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     android:background="#CFD8DC"
-    tools:context=".HomePage"
-    android:paddingTop="?attr/actionBarSize" >
+    tools:context=".HomePage">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
