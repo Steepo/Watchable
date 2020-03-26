@@ -27,15 +27,14 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cover_similar, parent,false);
-        return new CoverSimilarViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent_activities, parent,false);
+        return new RecentActivitiesHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        CoverSimilarViewHolder viewHolder = (CoverSimilarViewHolder) holder;
+        RecentActivitiesHolder viewHolder = (RecentActivitiesHolder) holder;
 
-        viewHolder.main_title.setText(movies.get(position).getTitle());
         Glide.with(context).load("url").into(viewHolder.main_cover);
     }
 
@@ -50,13 +49,11 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return 0;
     }
 
-    private static class CoverSimilarViewHolder extends RecyclerView.ViewHolder {
+    private static class RecentActivitiesHolder extends RecyclerView.ViewHolder {
         private ImageView main_cover;
-        private TextView main_title;
-        CoverSimilarViewHolder(View view) {
+        RecentActivitiesHolder(View view) {
             super(view);
             this.main_cover = view.findViewById(R.id.main_cover);
-            this.main_title = view.findViewById(R.id.main_title);
         }
     }
 }
