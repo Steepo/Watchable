@@ -1,9 +1,13 @@
 package com.warnercodes.watchable.ui.activity;
 
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -11,43 +15,130 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.warnercodes.watchable.R;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class RecyclerViewActivityAdapter extends RecyclerView.Adapter<RecyclerViewActivityAdapter.TestViewHolder> {
 
-    private ArrayList<Movie> dataList;
-    private Fragment mContex;
+public class RecyclerViewActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public RecyclerViewActivityAdapter(ArrayList<Movie> dataList, Fragment mContex) {
+    private List<Movie> dataList;
+    public int typeReq;
+    Context mContex;
+
+    public RecyclerViewActivityAdapter(List<Movie> dataList, int typeReq) {
         this.dataList = dataList;
-        this.mContex = mContex;
+        this.typeReq = typeReq;
+    }
+    public void add(int position, Movie item) {
+        dataList.add(position, item);
+        notifyItemInserted(position);
+    }
+    public void remove(Movie item) {
+        int position = dataList.indexOf(item);
+        dataList.remove(position);
+        notifyItemRemoved(position);
     }
 
+    @NonNull
     @Override
-    public TestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.item_recent_activities, parent, false);
-        return new TestViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
+        if(typeReq == 1) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.advice_film, parent, false);
+            return new ViewHolder(view);
+        }
+        else{
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent_activities, parent, false);
+            return new ViewHolder2(view);
+        }
     }
-
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewActivityAdapter.TestViewHolder holder, int position) {
-        final Movie data = dataList.get(position);
-        holder.imgTest.setImageResource(data.getCopertina());
-    }
-    @Override
-    public int getItemCount() {
-        return (dataList != null) ? dataList.size() : 0;
-    }
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+        if(typeReq == 1) {
+            ViewHolder viewHolder = (ViewHolder) holder;
+            mContex = viewHolder.img_advice.getContext();
+            //Recent activities
+            Glide.with(mContex).load(dataList.get(position).getCopertina()).into(viewHolder.img_advice);
 
-    public class TestViewHolder extends RecyclerView.ViewHolder{
-        ImageView imgTest;
+            // Advice movie
+            TextView textView = viewHolder.title_advice;
+            TextView textView1 = viewHolder.trama_adv;
+            textView.setText(dataList.get(position).getTitle());
+            textView1.setText(dataList.get(position).getTrama());
+            List<String> generi = new ArrayList<String>(dataList.get(position).getGeneri());
 
-        public TestViewHolder(View itemView) {
-            super(itemView);
-            imgTest = (ImageView)itemView.findViewById(R.id.img_movie);
+            Chip chip1 = viewHolder.chip1;
+            Chip chip2 = viewHolder.chip2;
+            Chip chip3 = viewHolder.chip3;
+
+            chip1.setText(generi.get(0));
+            chip2.setText(generi.get(1));
+            chip3.setText(generi.get(2));
+        }
+        else{
+            ViewHolder2 viewHolder = (ViewHolder2) holder;
+            mContex = viewHolder.img_movie.getContext();
+            Glide.with(mContex).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
         }
 
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return dataList.size();
+    }
+
+    @Override
+    public int getItemCount() {
+        return dataList.size();
+    }
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView img_movie;
+
+        private ImageView img_advice;
+        private TextView title_advice;
+        private TextView trama_adv;
+        private Chip chip1;
+        private Chip chip2;
+        private Chip chip3;
+        ViewHolder(View view) {
+            super(view);
+            this.img_movie = view.findViewById(R.id.img_movie);
+
+            this.img_advice = view.findViewById(R.id.img_advice);
+            this.title_advice = view.findViewById(R.id.title_advice);
+            this.trama_adv = view.findViewById(R.id.trama_advice);
+            this.chip1 = view.findViewById(R.id.chip1);
+            this.chip2 = view.findViewById(R.id.chip2);
+            this.chip3 = view.findViewById(R.id.chip3);
+        }
+    }
+
+    class ViewHolder2 extends RecyclerView.ViewHolder {
+        private ImageView img_movie;
+        ViewHolder2(View view) {
+            super(view);
+            this.img_movie = view.findViewById(R.id.img_movie);
+        }
     }
 }
