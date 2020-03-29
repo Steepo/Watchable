@@ -25,7 +25,7 @@ public class Movie {
     private int runtime;
     private RequestQueue requestQueue;
     private List<Movie> movies;
-    private List<Movie> similar;
+    private List<Integer> similar;
     private String youtubekey;
 
 
@@ -51,6 +51,7 @@ public class Movie {
         Movie item = new Movie();
         movies = new ArrayList<Movie>();
         generi = new ArrayList<String>();
+        similar = new ArrayList<Integer>();
         try {
             response.getBoolean("adult");
 
@@ -70,9 +71,7 @@ public class Movie {
             item.setOverview(response.getString("overview"));
             item.setReleaseDate(response.getString("release_date"));
             item.setRuntime(response.getInt("runtime"));
-            Log.i("DEBUG", item.toString());
             movies.add(item);
-            Log.i("DEBUG", movies.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -84,6 +83,7 @@ public class Movie {
             item.setCopertina(response.getString("poster_path"));
             item.setTitle(response.getString("original_title"));
             item.setMovieId(response.getInt("id"));
+            item.setReleaseDate(response.getString("release_date"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -107,13 +107,16 @@ public class Movie {
                 '}';
     }
 
-    public List<Movie> getMovies() {
+    public void addSimilar(Integer movieId){
+        if (similar == null)
+            similar = new ArrayList<Integer>();
+        similar.add(movieId);
+    }
+
+    public List<Movie> getMovie() {
         return movies;
     }
 
-    public Movie getMovie(){
-        return this;
-    }
 
 
 
@@ -123,6 +126,7 @@ public class Movie {
 
     public void setCopertina(String copertina) {
         this.copertina = "https://image.tmdb.org/t/p/w500"+copertina;
+
     }
 
     public String getTitle() {
@@ -205,10 +209,11 @@ public class Movie {
         this.requestQueue = requestQueue;
     }
 
-    public List<Movie> getSimilar() {
+    public List<Integer> getSimilar() {
         return similar;
     }
-    public void setSimilar(List<Movie> similar) {
+
+    public void setSimilar(List<Integer> similar) {
         this.similar = similar;
     }
 

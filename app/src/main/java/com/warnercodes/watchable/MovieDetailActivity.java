@@ -15,13 +15,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -41,13 +37,15 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
         movieId = intent.getIntExtra("movieId", 0);
+        String title = intent.getStringExtra("title");
+        getSupportActionBar().setTitle("");
 
         recyclerView = (RecyclerView) findViewById(R.id.details_recyclerview);
         recyclerView.setHasFixedSize(true);
 
         mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-
+        //181812
         requestMovieInfo(movieId); //Star Wars The Rise of the Skywalker
     }
 
@@ -62,7 +60,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Movie movie = new Movie();
                         movie.parseJson(response);
-                        mDataset = movie.getMovies();
+                        mDataset = movie.getMovie();
+
+                        getSupportActionBar().setTitle(mDataset.get(0).getTitle());
                         Log.i("DEBUG", ""+mDataset.size());
                         movieDetailAdapter = new MovieDetailAdapter(mDataset);
                         recyclerView.setAdapter(movieDetailAdapter);
@@ -79,6 +79,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
         Log.i("DEBUG", "END");
     }
+
 
 
 }

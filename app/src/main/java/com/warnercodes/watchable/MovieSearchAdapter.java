@@ -56,6 +56,7 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ImageView search_thumb = viewHolder.search_thumb;
         TextView textView = viewHolder.search_movie_title;
         textView.setText(movies.get(position).getTitle());
+        viewHolder.search_movie_year.setText(movies.get(position).getReleaseDate().split("-")[0]); //shows only the year
         Glide.with(context).load(movies.get(position).getCopertina()).into(viewHolder.search_thumb);
     }
 
@@ -73,20 +74,23 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private ImageView search_thumb;
         private TextView search_movie_title;
         private ConstraintLayout clickable;
+        private TextView search_movie_year;
         ViewHolder(View view) {
             super(view);
             this.search_thumb = view.findViewById(R.id.search_thumb);
             this.search_movie_title = view.findViewById(R.id.search_movie_title);
             this.clickable = view.findViewById(R.id.clickable);
-
+            this.search_movie_year = view.findViewById(R.id.search_movie_year);
             clickable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Integer id = movies.get(getAdapterPosition()).getMovieId();
+                    String title = movies.get(getAdapterPosition()).getTitle();
                     Log.i("ID", String.valueOf(id));
                     Intent intent = new Intent(context, MovieDetailActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("movieId", id);
+                    intent.putExtra("title", title);
                     context.startActivity(intent);
                 }
             });

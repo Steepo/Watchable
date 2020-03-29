@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,13 +25,17 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
@@ -70,6 +75,52 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         imageViewList.add(viewHolder.similar2);
         imageViewList.add(viewHolder.similar3);
         imageViewList.add(viewHolder.similar4);
+
+        imageViewList.get(0).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer id = movies.get(position).getSimilar().get(0);
+                Log.i("ID", String.valueOf(id));
+                Intent intent = new Intent(context, MovieDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("movieId", id);
+                context.startActivity(intent);
+            }
+        });
+        imageViewList.get(1).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer id = movies.get(position).getSimilar().get(1);
+                Log.i("ID", String.valueOf(id));
+                Intent intent = new Intent(context, MovieDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("movieId", id);
+                context.startActivity(intent);
+            }
+        });
+        imageViewList.get(2).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer id = movies.get(position).getSimilar().get(2);
+                Log.i("ID", String.valueOf(id));
+                Intent intent = new Intent(context, MovieDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("movieId", id);
+                context.startActivity(intent);
+            }
+        });
+        imageViewList.get(3).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Integer id = movies.get(position).getSimilar().get(3);
+                Log.i("ID", String.valueOf(id));
+                Intent intent = new Intent(context, MovieDetailActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("movieId", id);
+                context.startActivity(intent);
+            }
+        });
+
         viewHolder.main_title.setText(movies.get(position).getTitle());
         viewHolder.trama.setText(movies.get(position).getOverview());
         final ImageView youtubeThumbnail = viewHolder.youtubeThumbnail;
@@ -95,6 +146,7 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             for (int index = 0; index < 4; index++) {
                                 String poster1 = "https://image.tmdb.org/t/p/w500" + array.getJSONObject(index).getString("poster_path");
                                 Glide.with(context).load(poster1).into(imageViewList.get(index));
+                                movies.get(position).addSimilar(array.getJSONObject(index).getInt("id"));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -164,6 +216,7 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView trama;
         private ChipGroup chipGroup;
         private ImageView youtubeThumbnail;
+        private ImageView favorite;
         CoverSimilarViewHolder(View view) {
             super(view);
             this.main_cover = view.findViewById(R.id.main_cover);
@@ -175,7 +228,8 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.similar4 = view.findViewById(R.id.similar4);
             this.chipGroup = view.findViewById(R.id.container_generi);
             this.youtubeThumbnail = view.findViewById(R.id.youtube_thumbnail);
-            youtubeThumbnail.setOnClickListener(new View.OnClickListener() {
+            this.favorite = view.findViewById(R.id.favorite);
+            youtubeThumbnail.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String key = movies.get(getAdapterPosition()).getYoutubekey();
@@ -192,6 +246,33 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 }
             });
+            favorite.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Write a message to the database
+                    // Access a Cloud Firestore instance from your Activity
+
+                    Map<String, String> userInfos = new HashMap<>();
+                    userInfos.put("Cognome", "Pippo");
+                    userInfos.put("Nome", "Rossi");
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    DocumentReference user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
+                    user.set(userInfos);
+
+                    Movie movieRef = movies.get(getAdapterPosition());
+
+                    Map<String, Object> movieInfos = new HashMap<>();
+                    movieInfos.put("title", movieRef.getTitle());
+                    movieInfos.put("movieId", movieRef.getMovieId());
+                    movieInfos.put("copertina", movieRef.getCopertina());
+                    movieInfos.put("runtime", movieRef.getRuntime());
+                    DocumentReference favorites = user.collection("favorites").document(String.valueOf(movieRef.getMovieId()));
+                    favorites.set(movieInfos);
+                    favorite.setImageResource(R.drawable.ic_favorite_full_24dp);
+                }
+            });
         }
     }
 }
+
+

@@ -23,19 +23,38 @@
             android:id="@+id/search_thumb"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:scaleType="centerInside"
+            android:scaleType="fitXY"
             tools:srcCompat="@drawable/iron" />
 
     </androidx.cardview.widget.CardView>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@id/search_item_cardview"
+    app:layout_constraintTop_toTopOf="@id/search_item_cardview"
+    app:layout_constraintBottom_toBottomOf="@id/search_item_cardview">
 
     <TextView
         android:id="@+id/search_movie_title"
         android:layout_width="0dp"
-        android:layout_marginHorizontal="8dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/search_item_cardview"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        tools:text="Star War The Third Gathers: gjfod jgkfld jgkfld" />
+
+    <TextView
+        android:id="@+id/search_movie_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_movie_title"
+        tools:text="2019" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
