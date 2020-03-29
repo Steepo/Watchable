@@ -79,11 +79,10 @@ public class Movie {
         }
     }
 
-    public Movie parseSearchJson(JSONObject response)  {
+    public Movie parseSingleFilmJson(JSONObject response)  {
         Movie item = new Movie();
         try {
             item.setCopertina(response.getString("poster_path"));
-            item.setTitle(response.getString("original_title"));
             item.setMovieId(response.getInt("id"));
         } catch (JSONException e) {
             e.printStackTrace();

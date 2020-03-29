@@ -64,17 +64,23 @@ public class RecyclerViewActivityAdapter extends RecyclerView.Adapter<RecyclerVi
         View view;
         if(typeReq == 1) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.advice_film, parent, false);
-            return new ViewHolder(view);
+            return new ViewHolder1(view);
         }
         else{
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent_activities, parent, false);
-            return new ViewHolder2(view);
-        }
+            //if(typeReq == 2) {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent_activities, parent, false);
+                return new ViewHolder2(view);
+            }
+            /*else{
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cover_similar, parent, false);
+                return new ViewHolder3(view);
+            }
+        }*/
     }
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if(typeReq == 1) {
-            ViewHolder viewHolder = (ViewHolder) holder;
+            ViewHolder1 viewHolder = (ViewHolder1) holder;
             mContex = viewHolder.img_advice.getContext();
             //Recent activities
             Glide.with(mContex).load(dataList.get(position).getCopertina()).into(viewHolder.img_advice);
@@ -84,35 +90,48 @@ public class RecyclerViewActivityAdapter extends RecyclerView.Adapter<RecyclerVi
             TextView textView1 = viewHolder.trama_adv;
             textView.setText(dataList.get(position).getTitle());
             textView1.setText(dataList.get(position).getTrama());
+
             List<String> generi = new ArrayList<String>(dataList.get(position).getGeneri());
 
             Chip chip1 = viewHolder.chip1;
             Chip chip2 = viewHolder.chip2;
             Chip chip3 = viewHolder.chip3;
 
-            chip1.setText(generi.get(0));
-            chip2.setText(generi.get(1));
-            chip3.setText(generi.get(2));
+            if(generi.size() != 0)
+                chip1.setText(generi.get(0));
+            else chip1.setVisibility(View.INVISIBLE);
+
+            if(generi.size() != 1)
+                chip2.setText(generi.get(1));
+            else chip2.setVisibility(View.INVISIBLE);
+
+            if(generi.size() != 2)
+                chip3.setText(generi.get(2));
+            else chip3.setVisibility(View.INVISIBLE);
         }
         else{
-            ViewHolder2 viewHolder = (ViewHolder2) holder;
-            mContex = viewHolder.img_movie.getContext();
-            Glide.with(mContex).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
+            if(typeReq == 2) {
+                ViewHolder2 viewHolder = (ViewHolder2) holder;
+                mContex = viewHolder.img_movie.getContext();
+                Glide.with(mContex).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
+            }
+            /*else
+            {
+                ViewHolder3 viewHolder = (ViewHolder3) holder;
+                mContex = viewHolder.img_similar_movie.getContext();
+                Glide.with(mContex).load(dataList.get(position).getCopertina()).into(viewHolder.img_similar_movie);
+            }*/
         }
 
 
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return dataList.size();
     }
 
     @Override
     public int getItemCount() {
         return dataList.size();
     }
-    class ViewHolder extends RecyclerView.ViewHolder {
+
+    class ViewHolder1 extends RecyclerView.ViewHolder {
         private ImageView img_movie;
 
         private ImageView img_advice;
@@ -121,7 +140,7 @@ public class RecyclerViewActivityAdapter extends RecyclerView.Adapter<RecyclerVi
         private Chip chip1;
         private Chip chip2;
         private Chip chip3;
-        ViewHolder(View view) {
+        ViewHolder1(View view) {
             super(view);
             this.img_movie = view.findViewById(R.id.img_movie);
 
@@ -141,4 +160,12 @@ public class RecyclerViewActivityAdapter extends RecyclerView.Adapter<RecyclerVi
             this.img_movie = view.findViewById(R.id.img_movie);
         }
     }
+
+    /*class ViewHolder3 extends RecyclerView.ViewHolder {
+        private ImageView img_similar_movie;
+        ViewHolder3(View view) {
+            super(view);
+            this.img_similar_movie = view.findViewById(R.id.img_similar_movie);
+        }
+    }*/
 }
