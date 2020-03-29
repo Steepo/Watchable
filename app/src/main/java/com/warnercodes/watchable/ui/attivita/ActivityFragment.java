@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.warnercodes.watchable.ItemType;
-import com.warnercodes.watchable.MainAdapter;
+import com.warnercodes.watchable.AttivitaAdapter;
 import com.warnercodes.watchable.R;
 
 
@@ -25,7 +25,7 @@ public class ActivityFragment extends Fragment {
 
     private ActivityViewModel activityViewModel;
     private RecyclerView recyclerView;
-    private MainAdapter mainAdapter;
+    private AttivitaAdapter attivitaAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private List<ItemType> itemList;
     private int movieId;
@@ -45,8 +45,8 @@ public class ActivityFragment extends Fragment {
         itemList.add(new ItemType("Attività Recenti", 1));
         itemList.add(new ItemType("Ti consigliamo anche", 2));
         itemList.add(new ItemType("Altri simili", 3));
-        mainAdapter = new MainAdapter(itemList);
-        recyclerView.setAdapter(mainAdapter);
+        attivitaAdapter = new AttivitaAdapter(itemList);
+        recyclerView.setAdapter(attivitaAdapter);
         /*
         //Second recyclerView
         recyclerView1 = root.findViewById(R.id.rv_advice);

@@ -1,32 +1,44 @@
 package com.warnercodes.watchable;
 
 import android.content.Context;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.warnercodes.watchable.Movie;
-import com.warnercodes.watchable.R;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import com.bumptech.glide.Glide;
-
+import java.util.ArrayList;
 import java.util.List;
-
 
 public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Movie> dataList;
+    private List<ItemType> dataList;
+    public int typeReq;
+    Context mContex;
 
-    public AttivitaAdapter(List<Movie> dataList) {
+    public AttivitaAdapter(List<ItemType> dataList) {
         this.dataList = dataList;
+        this.typeReq = typeReq;
     }
 
-    public void add(int position, Movie item) {
+    public void add(int position, ItemType item) {
         dataList.add(position, item);
         notifyItemInserted(position);
     }
@@ -41,50 +53,89 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static int COSIGLIATI = 2;
     private static int SIMILI = 3;
 
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if (viewType == 1) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_recylerview, parent, false);
+            return new ViewHolder(view);
         }
         if (viewType == 2) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_advice, parent, false);
-            return new AdviceViewHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_recylerview, parent, false);
+            return new ViewHolder(view);
         }
         if (viewType == 3) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_recylerview, parent, false);
+            return new ViewHolder(view);
         }
         return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-        if (getItemViewType(position) == COSIGLIATI) {
-
-        }
         if (getItemViewType(position) == RECENTI) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            Context context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
+            final ViewHolder viewHolder = (ViewHolder) holder;
+            viewHolder.item_textview.setText("Attività Recenti");
+            final Context context = viewHolder.item_recylerview.getContext();
+
+            final RequestQueue requestQueue = Volley.newRequestQueue(context);
+            String url = "https://api.themoviedb.org/3/movie/popular?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                            RecyclerView recyclerView = viewHolder.item_recylerview;
+                            recyclerView.setHasFixedSize(true);
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+                            recyclerView.setLayoutManager(layoutManager);
+                            List<Movie> dataset = new ArrayList<Movie>();
+                            System.out.println("Secondo inizio");
+                            HorizontalAdapter adapter = new HorizontalAdapter(dataset);
+                            recyclerView.setAdapter(adapter);
+                            JSONArray  movie_array = response.getJSONArray("results");
+                            Log.i("TAG", String.valueOf(movie_array.length()));
+                            for (int index = 0; index < movie_array.length(); index++) {
+                                Movie movie = new Movie();
+                                adapter.add(index, movie.parseSingleFilmJson(movie_array.getJSONObject(index), "recenti"));
+                                Log.i("DATASET", dataset.get(0).toString());
+                                adapter.notifyDataSetChanged();
+                            }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.e("DEBUG", String.valueOf(error));
+                        }
+                    });
+            System.out.println("Secondo fatto");
+            requestQueue.add(jsonObjectRequest1);
+
         }
-
+        if (getItemViewType(position) == COSIGLIATI) {
+            final ViewHolder viewHolder = (ViewHolder) holder;
+            viewHolder.item_textview.setText("Ti Cons");
+        }
         if (getItemViewType(position) == SIMILI) {
-
+            final ViewHolder viewHolder = (ViewHolder) holder;
+            viewHolder.item_textview.setText("Simili");
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        String tipo = dataList.get(position).getTipo();
-        if (tipo.equals("recenti"))
+        int tipo = dataList.get(position).getType();
+        if (tipo == 1)
             return RECENTI;
-        if (tipo.equals("consigliati"))
+        if (tipo == 2)
             return COSIGLIATI;
-        if (tipo.equals("simili"))
+        if (tipo == 3)
             return SIMILI;
         return super.getItemViewType(position);
     }
@@ -94,26 +145,14 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return dataList.size();
     }
 
-    class RecentiViewHolder extends RecyclerView.ViewHolder {
-        private ImageView img_movie;
-        RecentiViewHolder(View view) {
-            super(view);
-            this.img_movie = view.findViewById(R.id.img_movie);
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView item_textview;
+        private RecyclerView item_recylerview;
 
+        ViewHolder(View view) {
+            super(view);
+            this.item_textview = view.findViewById(R.id.item_textview);
+            this.item_recylerview = view.findViewById(R.id.item_recylerview);
         }
     }
-
-    class AdviceViewHolder extends RecyclerView.ViewHolder {
-        AdviceViewHolder(View view) {
-            super(view);
-        }
-    }
-
-    /*class ViewHolder3 extends RecyclerView.ViewHolder {
-        private ImageView img_similar_movie;
-        ViewHolder3(View view) {
-            super(view);
-            this.img_similar_movie = view.findViewById(R.id.img_similar_movie);
-        }
-    }*/
 }
