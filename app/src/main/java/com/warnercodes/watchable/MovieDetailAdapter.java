@@ -5,13 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.warnercodes.watchable.ui.activity.Movie;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent_activities, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent,false);
         return new RecentActivitiesHolder(view);
     }
 
@@ -54,7 +52,7 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private ImageView main_cover;
         RecentActivitiesHolder(View view) {
             super(view);
-            this.main_cover = view.findViewById(R.id.main_cover);
+            this.main_cover = view.findViewById(R.id.img_movie);
         }
     }
 }

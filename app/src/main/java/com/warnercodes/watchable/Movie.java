@@ -1,6 +1,5 @@
-package com.warnercodes.watchable.ui.activity;
+package com.warnercodes.watchable;
 
-import java.io.Serializable;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
@@ -25,9 +24,11 @@ public class Movie {
     private String releaseDate;
     private int runtime;
     private RequestQueue requestQueue;
-    private List<Movie> movies;
     private List<Movie> similar;
     private String youtubekey;
+    private String tipo;
+
+    private List<Movie> movies;
 
 
 
@@ -48,13 +49,13 @@ public class Movie {
 
     }
 
-    public void parseJson(JSONObject response)  {
+    public void parseJson(JSONObject response, String type)  {
         Movie item = new Movie();
         movies = new ArrayList<Movie>();
         generi = new ArrayList<String>();
         try {
             response.getBoolean("adult");
-
+            item.setTipo(type);
             item.setCopertina(response.getString("poster_path"));
             item.setTitle(response.getString("original_title"));
             item.setTagline(response.getString("tagline"));
@@ -79,9 +80,10 @@ public class Movie {
         }
     }
 
-    public Movie parseSingleFilmJson(JSONObject response)  {
+    public Movie parseSingleFilmJson(JSONObject response, String tipo)  {
         Movie item = new Movie();
         try {
+            item.setTipo(tipo);
             item.setCopertina(response.getString("poster_path"));
             item.setMovieId(response.getInt("id"));
         } catch (JSONException e) {
@@ -224,7 +226,13 @@ public class Movie {
         this.youtubekey = youtubekey;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
 
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 }
 
 

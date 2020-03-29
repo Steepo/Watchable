@@ -1,4 +1,4 @@
-package com.warnercodes.watchable.ui.activity;
+package com.warnercodes.watchable.ui.attivita;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
