@@ -8,25 +8,25 @@
     <fragment
         android:id="@+id/navigation_activity"
         android:name="com.warnercodes.watchable.ui.activity.ActivityFragment"
-        android:label="@string/title_activity"
+        android:label=""
         tools:layout="@layout/fragment_activity" />
 
     <fragment
         android:id="@+id/navigation_search"
         android:name="com.warnercodes.watchable.ui.search.SearchFragment"
-        android:label="@string/title_search"
+        android:label=""
         tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.warnercodes.watchable.ui.profile.ProfileFragment"
-        android:label="@string/title_profile"
+        android:label=""
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_movie"
         android:name="com.warnercodes.watchable.ui.movie.MovieFragment"
-        android:label="@string/title_movie"
+        android:label=""
         tools:layout="@layout/fragment_movie" />
 
 </navigation>

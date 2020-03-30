@@ -5,21 +5,21 @@
     <item
         android:id="@+id/navigation_activity"
         android:icon="@drawable/ic_apps_black_24dp"
-        android:title="@string/title_activity"
+        android:title="Home"
         />
 
     <item
         android:id="@+id/navigation_movie"
         android:icon="@drawable/ic_local_movies_black_24dp"
-        android:title="@string/title_movie" />
+        android:title="Upcoming" />
 
     <item
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_search_black_24dp"
-        android:title="@string/title_search"/>
+    android:title="Search"/>
 
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_person_black_24dp"
-        android:title="@string/title_profile" />
+        android:title="Profile" />
 </menu>

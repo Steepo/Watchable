@@ -21,7 +21,7 @@ public class ProfileFragment extends Fragment {
         profileViewModel =
                 ViewModelProviders.of(this).get(ProfileViewModel.class);
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
+        //final TextView textView = root.findViewById(R.id.text_notifications);
         return root;
     }
 }
