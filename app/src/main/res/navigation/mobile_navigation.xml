@@ -3,29 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/navigation_search">
+    app:startDestination="@+id/navigation_activity">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.warnercodes.watchable.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_activity"
+        android:name="com.warnercodes.watchable.ui.activity.ActivityFragment"
+        android:label=""
+        tools:layout="@layout/fragment_activity" />
 
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.warnercodes.watchable.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
-    <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.warnercodes.watchable.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/navigation_search"
         android:name="com.warnercodes.watchable.ui.search.SearchFragment"
-        android:label="Search"
+        android:label=""
         tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.warnercodes.watchable.ui.profile.ProfileFragment"
+        android:label=""
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/navigation_movie"
+        android:name="com.warnercodes.watchable.ui.movie.MovieFragment"
+        android:label=""
+        tools:layout="@layout/fragment_movie" />
 
 </navigation>

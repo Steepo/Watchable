@@ -17,21 +17,19 @@
             android:name=".HomePage"
             android:label="@string/title_activity_home_page"
             android:theme="@style/AppThemeNobar">
-
-
-
-        </activity>
-
-        <activity
-            android:name=".MovieDetailActivity"
-            android:theme="@style/AppTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
 
+        <activity
+            android:name=".MovieDetailActivity"
+            android:theme="@style/AppTheme">
         </activity>
     </application>
 
