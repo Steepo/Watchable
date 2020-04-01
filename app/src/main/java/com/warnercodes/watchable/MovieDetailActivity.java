@@ -34,8 +34,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-
-
         movieId = intent.getIntExtra("movieId", 0);
         String title = intent.getStringExtra("title");
         getSupportActionBar().setTitle("");
@@ -45,8 +43,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-        //181812
-        requestMovieInfo(movieId); //Star Wars The Rise of the Skywalker
+
+        if (movieId == 0)
+            requestMovieInfo(181812); //Star Wars The Rise of the Skywalker
+        else
+            requestMovieInfo(movieId);
     }
 
     public void requestMovieInfo(final int movieId){
@@ -55,13 +56,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
                     @Override
                     public void onResponse(JSONObject response) {
                         Movie movie = new Movie();
                         movie.parseJson(response);
                         mDataset = movie.getMovie();
-
                         getSupportActionBar().setTitle(mDataset.get(0).getTitle());
                         Log.i("DEBUG", ""+mDataset.size());
                         movieDetailAdapter = new MovieDetailAdapter(mDataset);

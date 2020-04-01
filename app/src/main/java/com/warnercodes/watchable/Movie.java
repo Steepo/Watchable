@@ -27,6 +27,8 @@ public class Movie {
     private List<Movie> movies;
     private List<Integer> similar;
     private String youtubekey;
+    private String tipo;
+    private boolean inWatchlist;
 
 
 
@@ -77,8 +79,9 @@ public class Movie {
         }
     }
 
-    public Movie parseSearchJson(JSONObject response)  {
+    public Movie parseSearchJson(JSONObject response, String type)  {
         Movie item = new Movie();
+        item.setTipo(type);
         try {
             item.setCopertina(response.getString("poster_path"));
             item.setTitle(response.getString("original_title"));
@@ -89,6 +92,8 @@ public class Movie {
         }
         return item;
     }
+
+
 
     @Override
     public String toString() {
@@ -227,6 +232,22 @@ public class Movie {
 
     public void setYoutubekey(String youtubekey) {
         this.youtubekey = youtubekey;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public boolean isInWatchlist() {
+        return inWatchlist;
+    }
+
+    public void setInWatchlist(boolean inWatchlist) {
+        this.inWatchlist = inWatchlist;
     }
 }
 

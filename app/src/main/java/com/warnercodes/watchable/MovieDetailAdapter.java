@@ -3,6 +3,7 @@ package com.warnercodes.watchable;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -23,9 +26,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
@@ -58,8 +66,7 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_details, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_details_test, parent,false);
         CoverSimilarViewHolder viewHolder = new CoverSimilarViewHolder(view);
         return viewHolder;
     }
@@ -69,57 +76,6 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         context = ((CoverSimilarViewHolder) holder).main_cover.getContext();
         final CoverSimilarViewHolder viewHolder = (CoverSimilarViewHolder) holder;
         final int movieId = movies.get(position).getMovieId();
-        // Add Similar movies
-        final List<ImageView> imageViewList = new ArrayList<ImageView>();
-        imageViewList.add(viewHolder.similar1);
-        imageViewList.add(viewHolder.similar2);
-        imageViewList.add(viewHolder.similar3);
-        imageViewList.add(viewHolder.similar4);
-
-        imageViewList.get(0).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Integer id = movies.get(position).getSimilar().get(0);
-                Log.i("ID", String.valueOf(id));
-                Intent intent = new Intent(context, MovieDetailActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("movieId", id);
-                context.startActivity(intent);
-            }
-        });
-        imageViewList.get(1).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Integer id = movies.get(position).getSimilar().get(1);
-                Log.i("ID", String.valueOf(id));
-                Intent intent = new Intent(context, MovieDetailActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("movieId", id);
-                context.startActivity(intent);
-            }
-        });
-        imageViewList.get(2).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Integer id = movies.get(position).getSimilar().get(2);
-                Log.i("ID", String.valueOf(id));
-                Intent intent = new Intent(context, MovieDetailActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("movieId", id);
-                context.startActivity(intent);
-            }
-        });
-        imageViewList.get(3).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Integer id = movies.get(position).getSimilar().get(3);
-                Log.i("ID", String.valueOf(id));
-                Intent intent = new Intent(context, MovieDetailActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("movieId", id);
-                context.startActivity(intent);
-            }
-        });
 
         viewHolder.main_title.setText(movies.get(position).getTitle());
         viewHolder.trama.setText(movies.get(position).getOverview());
@@ -133,6 +89,37 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         Glide.with(context).load(movies.get(position).getCopertina()).into(viewHolder.main_cover);
         RequestQueue requestQueue = Volley.newRequestQueue(context);
+        //check if movie is already in favorite list
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
+        DocumentReference favorites = user.collection("favorites").document(String.valueOf(movieId));
+        Task<DocumentSnapshot> reference = favorites.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    Movie movie = movies.get(0);
+                    if (document.exists()) {
+                        // il film è già aggiunto alla lista preferiti
+                        movie.setInWatchlist(true);
+                        Drawable removeIcon = ContextCompat.getDrawable(context,R.drawable.ic_remove_black_24dp);
+                        viewHolder.watchlist.setIcon(removeIcon);
+                        viewHolder.watchlist.setText("Remove from watchlist");
+
+                    } else {
+                        // il film non è nella lista preferiti
+                        movie.setInWatchlist(false);
+                        Drawable addIcon = ContextCompat.getDrawable(context,R.drawable.ic_add_black_24dp);
+                        viewHolder.watchlist.setIcon(addIcon);
+                        viewHolder.watchlist.setText("Add to watchlist");
+                    }
+                } else {
+                    Log.d("ITEM", "get failed with ", task.getException());
+                }
+            }
+        });
+        Log.i("ITEM", reference.toString());
+
         //gets similar movies
         String url = "https://api.themoviedb.org/3/movie/"+movieId+"/similar?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
         final JsonObjectRequest simialrRequest = new JsonObjectRequest
@@ -140,14 +127,26 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Movie movie = new Movie();
                         try {
+
+                            RecyclerView recyclerView = viewHolder.similarRecyclerview;
+                            recyclerView.setHasFixedSize(true);
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+                            recyclerView.setLayoutManager(layoutManager);
+                            List<Movie> dataset = new ArrayList<Movie>();
+                            System.out.println("Secondo inizio");
+                            HorizontalAdapter adapter = new HorizontalAdapter(dataset);
+                            recyclerView.setAdapter(adapter);
+
                             JSONArray array = response.getJSONArray("results");
-                            for (int index = 0; index < 4; index++) {
-                                String poster1 = "https://image.tmdb.org/t/p/w500" + array.getJSONObject(index).getString("poster_path");
-                                Glide.with(context).load(poster1).into(imageViewList.get(index));
-                                movies.get(position).addSimilar(array.getJSONObject(index).getInt("id"));
+
+                            for (int index = 0; index < array.length(); index++) {
+                                Movie movie = new Movie();
+                                adapter.add(index, movie.parseSearchJson(array.getJSONObject(index), "simili"));
+                                adapter.notifyDataSetChanged();
                             }
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -177,6 +176,7 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                             .error(Glide.with(context)
                                                     .load("https://img.youtube.com/vi/" + youtubekey + "/mqdefault.jpg"))
                                             .into(youtubeThumbnail);
+
                                 }
                             }
                         } catch (JSONException e) {
@@ -192,6 +192,39 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 });
 
+
+        viewHolder.casttextview.setText("Cast");
+
+        String castUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=db18c03be648dd161624fabd8596021a";
+        JsonObjectRequest requestCast = new JsonObjectRequest(Request.Method.GET, castUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            RecyclerView recyclerView = viewHolder.castRecyclerview;
+                            recyclerView.setHasFixedSize(true);
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+                            recyclerView.setLayoutManager(layoutManager);
+                            //List<Cast> dataset = new ArrayList<Cast>();
+                            System.out.println("Secondo inizio");
+                            HorizontalAdapter adapter = new HorizontalAdapter();
+                            recyclerView.setAdapter(adapter);
+                            JSONArray array = response.getJSONArray("cast");
+                            for (int index = 0; index < array.length(); index++) {
+                                Cast cast = new Cast();
+                                adapter.addCast(index, cast.parseCastJson(array.getJSONObject(index), "cast"));
+                                adapter.notifyDataSetChanged();
+                            }
+                        } catch (JSONException e) {
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+        requestQueue.add(requestCast);
         requestQueue.add(simialrRequest);
         requestQueue.add(videosRequest);
     }
@@ -216,7 +249,11 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private TextView trama;
         private ChipGroup chipGroup;
         private ImageView youtubeThumbnail;
-        private ImageView favorite;
+        private MaterialButton watchlist;
+        private RecyclerView similarRecyclerview;
+        private View castView;
+        private TextView casttextview;
+        private RecyclerView castRecyclerview;
         CoverSimilarViewHolder(View view) {
             super(view);
             this.main_cover = view.findViewById(R.id.main_cover);
@@ -228,7 +265,13 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.similar4 = view.findViewById(R.id.similar4);
             this.chipGroup = view.findViewById(R.id.container_generi);
             this.youtubeThumbnail = view.findViewById(R.id.youtube_thumbnail);
-            this.favorite = view.findViewById(R.id.favorite);
+            this.watchlist = view.findViewById(R.id.watchlistButton);
+            this.similarRecyclerview = view.findViewById(R.id.similar_recylerview);
+
+            this.castView = view.findViewById(R.id.cast_view);
+            this.casttextview = castView.findViewById(R.id.item_textview);
+            this.castRecyclerview = castView.findViewById(R.id.cast_recyclerview);
+
             youtubeThumbnail.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -246,29 +289,42 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 }
             });
-            favorite.setOnClickListener(new OnClickListener() {
+
+            watchlist.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Write a message to the database
-                    // Access a Cloud Firestore instance from your Activity
-
-                    Map<String, String> userInfos = new HashMap<>();
-                    userInfos.put("Cognome", "Pippo");
-                    userInfos.put("Nome", "Rossi");
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     DocumentReference user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
-                    user.set(userInfos);
-
-                    Movie movieRef = movies.get(getAdapterPosition());
-
-                    Map<String, Object> movieInfos = new HashMap<>();
-                    movieInfos.put("title", movieRef.getTitle());
-                    movieInfos.put("movieId", movieRef.getMovieId());
-                    movieInfos.put("copertina", movieRef.getCopertina());
-                    movieInfos.put("runtime", movieRef.getRuntime());
+                    final Movie movieRef = movies.get(getAdapterPosition());
                     DocumentReference favorites = user.collection("favorites").document(String.valueOf(movieRef.getMovieId()));
-                    favorites.set(movieInfos);
-                    favorite.setImageResource(R.drawable.ic_favorite_full_24dp);
+                    if (movieRef.isInWatchlist()) {
+                        favorites.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Drawable removeIcon = ContextCompat.getDrawable(context,R.drawable.ic_add_black_24dp);
+                                watchlist.setIcon(removeIcon);
+                                watchlist.setText("Add to watchlist");
+                                Log.i("FIREBASE", "rimosso");
+                                movieRef.setInWatchlist(false);
+                            }
+                        });
+                    }else{
+                        Map<String, Object> movieInfos = new HashMap<>();
+                        movieInfos.put("title", movieRef.getTitle());
+                        movieInfos.put("movieId", movieRef.getMovieId());
+                        movieInfos.put("copertina", movieRef.getCopertina());
+                        movieInfos.put("runtime", movieRef.getRuntime());
+                        favorites.set(movieInfos).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Drawable removeIcon = ContextCompat.getDrawable(context,R.drawable.ic_remove_black_24dp);
+                                watchlist.setIcon(removeIcon);
+                                watchlist.setText("Remove from watchlist");
+                                Log.i("FIREBASE", "Aggiunto");
+                                movieRef.setInWatchlist(true);
+                            }
+                        });
+                    }
                 }
             });
         }

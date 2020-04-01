@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/trailercardview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        app:cardElevation="20dp"
+        app:layout_constraintDimensionRatio="H,16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        card_view:cardMaxElevation="20dp">
+
+        <ImageView
+            android:id="@+id/youtube_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/youtube" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="150dp"
+        android:layout_height="225dp"
+        android:layout_marginStart="8dp"
+        app:cardElevation="20dp"
+        app:layout_constraintTop_toTopOf="@id/trailercardview"
+        android:layout_marginTop="180dp"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardMaxElevation="20dp"
+        card_view:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/main_cover"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            tools:srcCompat="@drawable/iron" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/main_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@id/cardview"
+        app:layout_constraintStart_toStartOf="@+id/cardview"
+        app:layout_constraintTop_toBottomOf="@id/cardview"
+        tools:text="Star Wars: The Rise of Skywalker" />
+
+    <HorizontalScrollView
+        android:id="@+id/scrollchipgroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cardview"
+        app:layout_constraintTop_toBottomOf="@id/trailercardview"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp" >
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/container_generi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/trama"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/scrollchipgroup"
+        app:layout_constraintStart_toStartOf="@id/scrollchipgroup"
+        app:layout_constraintEnd_toEndOf="@id/scrollchipgroup"
+        tools:text="The surviving Resistance faces the First Order once again as the journey of Rey, Finn and Poe Dameron continues. With the power and knowledge of generations behind them, the final battle begins." />
+
+    <include
+        android:id="@+id/cast_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/watchlistButton"
+        layout="@layout/title_recyclerview" />
+
+    <Button
+        android:id="@+id/watchlistButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Add to watchlist"
+        app:icon="@drawable/ic_add_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trama" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/similarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cast_view">
+
+        <TextView
+            android:id="@+id/item_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginStart="16dp"
+            android:text="Similar Movies" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/similar_recylerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/item_textview"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -79,13 +79,12 @@ public class SearchFragment extends Fragment {
                                 @Override
                                 public void onResponse(JSONObject response) {
                                     JSONArray movie_array = null;
-
                                     try {
                                         movie_array = response.getJSONArray("results");
                                         Log.i("TAG", String.valueOf(movie_array.length()));
                                         for (int index = 0; index < movie_array.length(); index++) {
                                             Movie movie = new Movie();
-                                            movieSearchAdapter.add(index, movie.parseSearchJson(movie_array.getJSONObject(index)));
+                                            movieSearchAdapter.add(index, movie.parseSearchJson(movie_array.getJSONObject(index), ""));
                                             Log.i("DATASET", mDataset.get(0).toString());
                                             movieSearchAdapter.notifyDataSetChanged();
                                         }
