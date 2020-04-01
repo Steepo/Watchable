@@ -4,11 +4,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="titolo">titolo</string>
+    <string name="titolo">Title</string>
     <string name="profile_name">Mario Rossi</string>
     <string name="profile_mail">mariorossi@gmail.com</string>
-    <string name="hour_spent">Hai visto 214 ore di film!</string>
-    <string name="favorite_here">Ecco i tuoi preferiti</string>
+    <string name="hour_spent">You\'ve watched 214 hours of movies</string>
+    <string name="favorite_here">Favorite</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
