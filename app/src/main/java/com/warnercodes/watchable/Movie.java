@@ -1,7 +1,5 @@
 package com.warnercodes.watchable;
 
-import android.util.Log;
-
 import com.android.volley.RequestQueue;
 
 import org.json.JSONArray;
@@ -49,13 +47,13 @@ public class Movie {
 
     }
 
-    public void parseJson(JSONObject response, String type)  {
+    public Movie parseJson(JSONObject response, String tipo)  {
         Movie item = new Movie();
         movies = new ArrayList<Movie>();
         generi = new ArrayList<String>();
         try {
             response.getBoolean("adult");
-            item.setTipo(type);
+            item.setTipo(tipo);
             item.setCopertina(response.getString("poster_path"));
             item.setTitle(response.getString("original_title"));
             item.setTagline(response.getString("tagline"));
@@ -68,16 +66,10 @@ public class Movie {
                 }
             item.setGeneri(generi);
             item.setMovieId(response.getInt("id"));
-            //item.setImdbId(response.getInt("imdb_id"));
-            item.setOverview(response.getString("overview"));
-            item.setReleaseDate(response.getString("release_date"));
-            item.setRuntime(response.getInt("runtime"));
-            Log.i("DEBUG", item.toString());
-            movies.add(item);
-            Log.i("DEBUG", movies.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return item;
     }
 
     public Movie parseSingleFilmJson(JSONObject response, String tipo)  {
