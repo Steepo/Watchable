@@ -3,8 +3,10 @@ package com.warnercodes.watchable;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +39,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieId = intent.getIntExtra("movieId", 0);
         String title = intent.getStringExtra("title");
         getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.details_recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -48,6 +51,12 @@ public class MovieDetailActivity extends AppCompatActivity {
             requestMovieInfo(181812); //Star Wars The Rise of the Skywalker
         else
             requestMovieInfo(movieId);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        finish();
+        return super.onOptionsItemSelected(item);
     }
 
     public void requestMovieInfo(final int movieId){
@@ -62,7 +71,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                         movie.parseJson(response);
                         mDataset = movie.getMovie();
                         getSupportActionBar().setTitle(mDataset.get(0).getTitle());
-                        Log.i("DEBUG", ""+mDataset.size());
                         movieDetailAdapter = new MovieDetailAdapter(mDataset);
                         recyclerView.setAdapter(movieDetailAdapter);
                     }
@@ -71,12 +79,10 @@ public class MovieDetailActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(MovieDetailActivity.this,error.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.e("DEBUG", String.valueOf(error));
                     }
                 });
 
         requestQueue.add(jsonObjectRequest);
-        Log.i("DEBUG", "END");
     }
 
 

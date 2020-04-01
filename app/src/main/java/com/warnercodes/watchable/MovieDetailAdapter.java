@@ -118,9 +118,9 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }
         });
-        Log.i("ITEM", reference.toString());
 
         //gets similar movies
+        viewHolder.similarTexview.setText("Similar");
         String url = "https://api.themoviedb.org/3/movie/"+movieId+"/similar?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
         final JsonObjectRequest simialrRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -241,36 +241,36 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     class CoverSimilarViewHolder extends RecyclerView.ViewHolder {
         private ImageView main_cover;
-        private ImageView similar1;
-        private ImageView similar2;
-        private ImageView similar3;
-        private ImageView similar4;
         private TextView main_title;
         private TextView trama;
         private ChipGroup chipGroup;
         private ImageView youtubeThumbnail;
         private MaterialButton watchlist;
+
+        private View similarView;
+        private TextView similarTexview;
         private RecyclerView similarRecyclerview;
+
         private View castView;
         private TextView casttextview;
         private RecyclerView castRecyclerview;
+
         CoverSimilarViewHolder(View view) {
             super(view);
             this.main_cover = view.findViewById(R.id.main_cover);
             this.main_title = view.findViewById(R.id.main_title);
             this.trama = view.findViewById(R.id.trama);
-            this.similar1 = view.findViewById(R.id.similar1);
-            this.similar2 = view.findViewById(R.id.similar2);
-            this.similar3 = view.findViewById(R.id.similar3);
-            this.similar4 = view.findViewById(R.id.similar4);
             this.chipGroup = view.findViewById(R.id.container_generi);
             this.youtubeThumbnail = view.findViewById(R.id.youtube_thumbnail);
             this.watchlist = view.findViewById(R.id.watchlistButton);
-            this.similarRecyclerview = view.findViewById(R.id.similar_recylerview);
+
+            this.similarView = view.findViewById(R.id.similar_view);
+            this.similarTexview = similarView.findViewById(R.id.item_textview);
+            this.similarRecyclerview = similarView.findViewById(R.id.item_recyclerview);
 
             this.castView = view.findViewById(R.id.cast_view);
             this.casttextview = castView.findViewById(R.id.item_textview);
-            this.castRecyclerview = castView.findViewById(R.id.cast_recyclerview);
+            this.castRecyclerview = castView.findViewById(R.id.item_recyclerview);
 
             youtubeThumbnail.setOnClickListener(new OnClickListener() {
                 @Override
@@ -304,7 +304,6 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 Drawable removeIcon = ContextCompat.getDrawable(context,R.drawable.ic_add_black_24dp);
                                 watchlist.setIcon(removeIcon);
                                 watchlist.setText("Add to watchlist");
-                                Log.i("FIREBASE", "rimosso");
                                 movieRef.setInWatchlist(false);
                             }
                         });
@@ -320,7 +319,6 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 Drawable removeIcon = ContextCompat.getDrawable(context,R.drawable.ic_remove_black_24dp);
                                 watchlist.setIcon(removeIcon);
                                 watchlist.setText("Remove from watchlist");
-                                Log.i("FIREBASE", "Aggiunto");
                                 movieRef.setInWatchlist(true);
                             }
                         });

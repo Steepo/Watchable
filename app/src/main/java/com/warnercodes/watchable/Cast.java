@@ -22,11 +22,9 @@ class Cast {
             item.setCharacter(response.getString("character"));
             item.setName(response.getString("name"));
             item.setProfile_path(response.getString("profile_path"));
-            Log.i("CAST", item.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.i("CAST", item.toString());
         return item;
     }
 

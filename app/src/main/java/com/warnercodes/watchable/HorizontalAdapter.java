@@ -106,7 +106,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Glide.with(context).load(itemCast.getProfile_path()).into(viewHolder.cover);
             viewHolder.attore.setText(itemCast.getName());
             viewHolder.personaggio.setText(itemCast.getCharacter());
-            Log.i("CAST", "ENTRATO");
         }
     }
 
@@ -147,7 +146,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View v) {
                     Integer id = dataList.get(getAdapterPosition()).getMovieId();
-                    Log.i("ID", String.valueOf(id));
                     Intent intent = new Intent(context, MovieDetailActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("movieId", id);

@@ -86,7 +86,6 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 public void onClick(View v) {
                     Integer id = movies.get(getAdapterPosition()).getMovieId();
                     String title = movies.get(getAdapterPosition()).getTitle();
-                    Log.i("ID", String.valueOf(id));
                     Intent intent = new Intent(context, MovieDetailActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("movieId", id);
