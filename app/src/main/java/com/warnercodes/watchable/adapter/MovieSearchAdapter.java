@@ -1,9 +1,7 @@
-package com.warnercodes.watchable;
+package com.warnercodes.watchable.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.warnercodes.watchable.Movie;
+import com.warnercodes.watchable.MovieDetailActivity;
+import com.warnercodes.watchable.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MovieSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

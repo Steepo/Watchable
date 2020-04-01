@@ -1,4 +1,4 @@
-package com.warnercodes.watchable;
+package com.warnercodes.watchable.adapter;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,6 +34,9 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.warnercodes.watchable.Cast;
+import com.warnercodes.watchable.Movie;
+import com.warnercodes.watchable.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     private List<Movie> movies;
 
@@ -135,14 +137,14 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             recyclerView.setLayoutManager(layoutManager);
                             List<Movie> dataset = new ArrayList<Movie>();
                             System.out.println("Secondo inizio");
-                            HorizontalAdapter adapter = new HorizontalAdapter(dataset);
+                            HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
                             recyclerView.setAdapter(adapter);
 
                             JSONArray array = response.getJSONArray("results");
 
                             for (int index = 0; index < array.length(); index++) {
                                 Movie movie = new Movie();
-                                adapter.add(index, movie.parseSearchJson(array.getJSONObject(index), "simili"));
+                                adapter.add(index, movie.parseSingleMovieJson(array.getJSONObject(index), "simili"));
                                 adapter.notifyDataSetChanged();
                             }
 
@@ -207,7 +209,7 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             recyclerView.setLayoutManager(layoutManager);
                             //List<Cast> dataset = new ArrayList<Cast>();
                             System.out.println("Secondo inizio");
-                            HorizontalAdapter adapter = new HorizontalAdapter();
+                            HorizontalAdapter adapter = new HorizontalAdapter(context);
                             recyclerView.setAdapter(adapter);
                             JSONArray array = response.getJSONArray("cast");
                             for (int index = 0; index < array.length(); index++) {
@@ -266,11 +268,11 @@ class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             this.similarView = view.findViewById(R.id.similar_view);
             this.similarTexview = similarView.findViewById(R.id.item_textview);
-            this.similarRecyclerview = similarView.findViewById(R.id.item_recyclerview);
+            this.similarRecyclerview = similarView.findViewById(R.id.title_recyclerview);
 
             this.castView = view.findViewById(R.id.cast_view);
             this.casttextview = castView.findViewById(R.id.item_textview);
-            this.castRecyclerview = castView.findViewById(R.id.item_recyclerview);
+            this.castRecyclerview = castView.findViewById(R.id.title_recyclerview);
 
             youtubeThumbnail.setOnClickListener(new OnClickListener() {
                 @Override

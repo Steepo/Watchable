@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Movie {
@@ -56,7 +55,7 @@ public class Movie {
         similar = new ArrayList<Integer>();
         try {
             response.getBoolean("adult");
-
+            item.setTipo(tipo);
             item.setCopertina(response.getString("poster_path"));
             item.setTitle(response.getString("original_title"));
             item.setTagline(response.getString("tagline"));
@@ -79,20 +78,29 @@ public class Movie {
         }
     }
 
-    public Movie parseSearchJson(JSONObject response, String type)  {
+    public Movie parseSingleMovieJson(JSONObject response, String type) {
         Movie item = new Movie();
         item.setTipo(type);
+        generi = new ArrayList<String>();
         try {
+
             item.setCopertina(response.getString("poster_path"));
             item.setTitle(response.getString("original_title"));
             item.setMovieId(response.getInt("id"));
             item.setReleaseDate(response.getString("release_date"));
+            item.setTrama(response.getString("overview"));
+            JSONArray genres = response.getJSONArray("genres");
+            if (genres.length() > 0)
+                for (int i = 0; i < genres.length(); i++) {
+                    generi.add(genres.getJSONObject(i).getString("name"));
+                    Log.i("GENERI", genres.getJSONObject(i).getString("name"));
+                }
+            item.setGeneri(generi);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return item;
     }
-
 
 
     @Override
@@ -130,7 +138,8 @@ public class Movie {
     }
 
     public void setCopertina(String copertina) {
-        this.copertina = "https://image.tmdb.org/t/p/w500"+copertina;
+        this.copertina = "https://image.tmdb.org/t/p/w400" + copertina;
+        Log.i("Copertine", copertina);
 
     }
 

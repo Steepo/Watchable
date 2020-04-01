@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_activity"
-        android:name="com.warnercodes.watchable.ui.activity.ActivityFragment"
+        android:name="com.warnercodes.watchable.ui.attivita.ActivityFragment"
         android:label=""
         tools:layout="@layout/fragment_activity" />
 

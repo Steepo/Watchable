@@ -3,7 +3,6 @@ package com.warnercodes.watchable.ui.search;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +23,8 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.warnercodes.watchable.Movie;
-import com.warnercodes.watchable.MovieSearchAdapter;
 import com.warnercodes.watchable.R;
+import com.warnercodes.watchable.adapter.MovieSearchAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -83,7 +82,7 @@ public class SearchFragment extends Fragment {
                                         movie_array = response.getJSONArray("results");
                                         for (int index = 0; index < movie_array.length(); index++) {
                                             Movie movie = new Movie();
-                                            movieSearchAdapter.add(index, movie.parseSearchJson(movie_array.getJSONObject(index), ""));
+                                            movieSearchAdapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), ""));
                                             movieSearchAdapter.notifyDataSetChanged();
                                         }
                                     } catch (JSONException e) {

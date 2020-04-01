@@ -1,11 +1,9 @@
 package com.warnercodes.watchable;
 
-import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class Cast {
+public class Cast {
     private String character;
     private String name;
     private String profile_path;
@@ -19,12 +17,13 @@ class Cast {
         Cast item = new Cast();
         item.setTipo(type);
         try {
-            item.setCharacter(response.getString("character"));
             item.setName(response.getString("name"));
             item.setProfile_path(response.getString("profile_path"));
+            item.setCharacter(response.getString("character"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return item;
     }
 
@@ -50,7 +49,7 @@ class Cast {
     }
 
     public void setProfile_path(String profile_path) {
-        this.profile_path = "https://image.tmdb.org/t/p/w500"+profile_path;
+        this.profile_path = "https://image.tmdb.org/t/p/w200" + profile_path;
     }
 
     public String getTipo() {

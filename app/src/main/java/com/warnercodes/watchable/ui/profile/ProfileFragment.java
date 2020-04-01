@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.warnercodes.watchable.ItemType;
-import com.warnercodes.watchable.ProfileAdapter;
 import com.warnercodes.watchable.R;
+import com.warnercodes.watchable.adapter.ProfileAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,6 @@ package com.warnercodes.watchable;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -17,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.warnercodes.watchable.adapter.MovieDetailAdapter;
 
 import org.json.JSONObject;
 

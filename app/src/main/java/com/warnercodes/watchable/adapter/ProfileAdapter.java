@@ -1,4 +1,4 @@
-package com.warnercodes.watchable;
+package com.warnercodes.watchable.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.warnercodes.watchable.ItemType;
+import com.warnercodes.watchable.Movie;
+import com.warnercodes.watchable.R;
 
 import java.util.List;
 
@@ -47,11 +51,11 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return new ProfileViewHolder(view);
         }
         if (viewType == 2) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_recyclerview, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
             return new ViewHolder(view);
         }
         if (viewType == 3) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_recyclerview, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
             return new ViewHolder(view);
         }
         return null;
@@ -96,7 +100,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ViewHolder(View view) {
             super(view);
             this.item_textview = view.findViewById(R.id.item_textview);
-            this.item_recylerview = view.findViewById(R.id.item_recylerview);
+            this.item_recylerview = view.findViewById(R.id.title_recyclerview);
         }
     }
 
