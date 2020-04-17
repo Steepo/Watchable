@@ -167,6 +167,7 @@ public class Movie {
         this.trama = trama;
     }
 
+
     public List<String> getGeneri() {
         return generi;
     }
