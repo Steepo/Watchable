@@ -4,6 +4,16 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+    <View
+        android:id="@+id/cardview"
+        android:layout_width="5dp"
+        android:layout_height="0dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toStartOf="@id/item_textview"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/item_textview"
+        app:layout_constraintTop_toTopOf="@id/item_textview" />
     <TextView
         android:id="@+id/item_textview"
         android:layout_width="wrap_content"

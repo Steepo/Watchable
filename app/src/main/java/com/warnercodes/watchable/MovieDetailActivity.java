@@ -60,7 +60,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     public void requestMovieInfo(final int movieId){
-        String url = "https://api.themoviedb.org/3/movie/"+movieId+"?api_key=db18c03be648dd161624fabd8596021a&language=en-US";
+        String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=db18c03be648dd161624fabd8596021a&language=it-it";
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -83,6 +83,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 });
 
         requestQueue.add(jsonObjectRequest);
+
     }
 
 

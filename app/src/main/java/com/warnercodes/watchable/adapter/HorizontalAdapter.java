@@ -59,47 +59,22 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static int RECENTI = 1;
     private static int CONSIGLIATI = 2;
-    private static int SIMILI = 3;
-    private static int CINEMA = 4;
-    private static int POPOLARI = 5;
-    private static int ARRIVO = 6;
-    private static int VOTATI = 7;
-    private static int CAST = 8;
+    private static int CAST = 3;
 
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (viewType == 1) {
+        if (viewType == RECENTI) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
             return new RecentiViewHolder(view);
         }
-        if (viewType == 2) {
+        if (viewType == CONSIGLIATI) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_advice, parent, false);
             return new AdviceViewHolder(view);
         }
-        if (viewType == 3) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
-        if (viewType == 4) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
-        if (viewType == 5) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
-        if (viewType == 6) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
-        if (viewType == 7) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
-        if (viewType == 8) {
+        if (viewType == CAST) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cast, parent, false);
             return new CastViewHolder(view);
         }
@@ -115,12 +90,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
         }
 
-        if (getItemViewType(position) == SIMILI) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
 
-        }
         if (getItemViewType(position) == CAST) {
             CastViewHolder viewHolder = (CastViewHolder) holder;
             context = viewHolder.attore.getContext();
@@ -130,7 +100,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             viewHolder.personaggio.setText(itemCast.getCharacter());
         }
 
-        //giro
         if (getItemViewType(position) == CONSIGLIATI) {
             AdviceViewHolder viewHolder = (AdviceViewHolder) holder;
             Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_advice);
@@ -151,40 +120,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
         }
-
-        if (getItemViewType(position) == CINEMA) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
-        }
-
-        if (getItemViewType(position) == POPOLARI) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
-        }
-
-        if (getItemViewType(position) == ARRIVO) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
-        }
-
-        if (getItemViewType(position) == VOTATI) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
-        }
-
-        if (getItemViewType(position) == CAST) {
-            CastViewHolder viewHolder = (CastViewHolder) holder;
-            context = viewHolder.attore.getContext();
-            Cast itemCast = castList.get(position);
-            Glide.with(context).load(itemCast.getProfile_path()).into(viewHolder.cover);
-            viewHolder.attore.setText(itemCast.getName());
-            viewHolder.personaggio.setText(itemCast.getCharacter());
-        }
-
     }
 
     @Override
@@ -196,15 +131,15 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (tipo.equals("consigliati"))
                 return CONSIGLIATI;
             if (tipo.equals("simili"))
-                return SIMILI;
+                return RECENTI;
             if (tipo.equals("cinema"))
-                return CINEMA;
+                return RECENTI;
             if (tipo.equals("popolari"))
-                return POPOLARI;
+                return RECENTI;
             if (tipo.equals("arrivo"))
-                return ARRIVO;
+                return RECENTI;
             if (tipo.equals("votati"))
-                return VOTATI;
+                return RECENTI;
             if (tipo.equals("cast"))
                 return CAST;
         } else {

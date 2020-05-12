@@ -14,6 +14,7 @@ import java.util.List;
 public class Movie {
     private String copertina;
     private String title;
+    private String original_title;
     private String tagline;
     private String trama;
     private List<String> generi;
@@ -27,8 +28,12 @@ public class Movie {
     private List<Integer> similar;
     private String youtubekey;
     private String tipo;
-    private boolean inWatchlist;
 
+    private String director;
+    private String writers;
+    private String awards;
+
+    private boolean inWatchlist;
 
 
     public Movie(String copertina, String title, String tagline, String trama, List<String> generi, int movieId, String imdbId, String overview, String releaseDate, int runtime) {
@@ -57,9 +62,11 @@ public class Movie {
             response.getBoolean("adult");
             item.setTipo(tipo);
             item.setCopertina(response.getString("poster_path"));
-            item.setTitle(response.getString("original_title"));
+            item.setTitle(response.getString("title"));
+            item.setOriginal_title(response.getString("original_title"));
             item.setTagline(response.getString("tagline"));
             item.setTrama(response.getString("overview"));
+            item.setImdbId(response.getString("imdb_id"));
 
             JSONArray genres = response.getJSONArray("genres");
             if (genres.length() > 0)
@@ -85,11 +92,13 @@ public class Movie {
         try {
 
             item.setCopertina(response.getString("poster_path"));
-            item.setTitle(response.getString("original_title"));
+            item.setTitle(response.getString("title"));
+            item.setOriginal_title(response.getString("original_title"));
             item.setMovieId(response.getInt("id"));
             item.setReleaseDate(response.getString("release_date"));
             item.setTrama(response.getString("overview"));
             JSONArray genres = response.getJSONArray("genres");
+            item.setImdbId(response.getString("imdb_id"));
             if (genres.length() > 0)
                 for (int i = 0; i < genres.length(); i++) {
                     generi.add(genres.getJSONObject(i).getString("name"));
@@ -100,6 +109,17 @@ public class Movie {
             e.printStackTrace();
         }
         return item;
+    }
+
+    public void addOMdbInfo(JSONObject response) {
+
+        try {
+            this.setDirector(response.getString("Director"));
+            this.setWriters(response.getString("Writer"));
+            this.setAwards(response.getString("Awards"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -258,6 +278,38 @@ public class Movie {
 
     public void setInWatchlist(boolean inWatchlist) {
         this.inWatchlist = inWatchlist;
+    }
+
+    public String getOriginal_title() {
+        return original_title;
+    }
+
+    public void setOriginal_title(String original_title) {
+        this.original_title = original_title;
+    }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public String getWriters() {
+        return writers;
+    }
+
+    public void setWriters(String writers) {
+        this.writers = writers;
+    }
+
+    public String getAwards() {
+        return awards;
+    }
+
+    public void setAwards(String awards) {
+        this.awards = awards;
     }
 }
 

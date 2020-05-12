@@ -69,8 +69,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_details_test, parent,false);
-        CoverSimilarViewHolder viewHolder = new CoverSimilarViewHolder(view);
-        return viewHolder;
+        return new CoverSimilarViewHolder(view);
     }
 
     @Override
@@ -79,8 +78,24 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final CoverSimilarViewHolder viewHolder = (CoverSimilarViewHolder) holder;
         final int movieId = movies.get(position).getMovieId();
 
+
         viewHolder.main_title.setText(movies.get(position).getTitle());
+        viewHolder.original_title.setText(String.format("%s (original title)", movies.get(position).getOriginal_title()));
+        int runtime = movies.get(position).getRuntime();
+        int hours = runtime / 60;
+        int minutes = runtime % 60;
+        String year = movies.get(position).getReleaseDate().substring(0, 4);
+        viewHolder.year_runtime.setText(String.format("%s %dh %dm", year, hours, minutes));
         viewHolder.trama.setText(movies.get(position).getOverview());
+
+        viewHolder.btShowmore.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewHolder.trama.setMaxLines(Integer.MAX_VALUE);
+                viewHolder.btShowmore.setVisibility(View.INVISIBLE);
+            }
+        });
+
         final ImageView youtubeThumbnail = viewHolder.youtubeThumbnail;
 
         List<String> generi = new ArrayList<String>(movies.get(position).getGeneri());
@@ -178,7 +193,6 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                             .error(Glide.with(context)
                                                     .load("https://img.youtube.com/vi/" + youtubekey + "/mqdefault.jpg"))
                                             .into(youtubeThumbnail);
-
                                 }
                             }
                         } catch (JSONException e) {
@@ -226,9 +240,29 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         });
 
+        String OMdbUrl = "https://www.omdbapi.com/?i=" + movies.get(position).getImdbId() + "&apikey=f435a572";
+        JsonObjectRequest OMdbRequest = new JsonObjectRequest(Request.Method.GET, OMdbUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        movies.get(position).addOMdbInfo(response);
+                        Log.i("Director", "Entrato");
+                        viewHolder.director.setText(movies.get(position).getDirector());
+                        viewHolder.writers.setText(movies.get(position).getWriters());
+                        viewHolder.awards.setText(movies.get(position).getAwards());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Director", error.getMessage());
+            }
+        });
+
         requestQueue.add(requestCast);
         requestQueue.add(simialrRequest);
         requestQueue.add(videosRequest);
+        requestQueue.add(OMdbRequest);
+
     }
 
     @Override
@@ -244,10 +278,13 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     class CoverSimilarViewHolder extends RecyclerView.ViewHolder {
         private ImageView main_cover;
         private TextView main_title;
+        private TextView original_title;
+        private TextView year_runtime;
         private TextView trama;
         private ChipGroup chipGroup;
         private ImageView youtubeThumbnail;
         private MaterialButton watchlist;
+        private TextView btShowmore;
 
         private View similarView;
         private TextView similarTexview;
@@ -256,15 +293,21 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private View castView;
         private TextView casttextview;
         private RecyclerView castRecyclerview;
+        private TextView director;
+        private TextView writers;
+        private TextView awards;
 
         CoverSimilarViewHolder(View view) {
             super(view);
             this.main_cover = view.findViewById(R.id.main_cover);
             this.main_title = view.findViewById(R.id.main_title);
+            this.year_runtime = view.findViewById(R.id.year_runtime);
+            this.original_title = view.findViewById(R.id.original_title);
             this.trama = view.findViewById(R.id.trama);
             this.chipGroup = view.findViewById(R.id.container_generi);
             this.youtubeThumbnail = view.findViewById(R.id.youtube_thumbnail);
             this.watchlist = view.findViewById(R.id.watchlistButton);
+            this.btShowmore = view.findViewById(R.id.btShowmore);
 
             this.similarView = view.findViewById(R.id.similar_view);
             this.similarTexview = similarView.findViewById(R.id.item_textview);
@@ -273,6 +316,9 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             this.castView = view.findViewById(R.id.cast_view);
             this.casttextview = castView.findViewById(R.id.item_textview);
             this.castRecyclerview = castView.findViewById(R.id.title_recyclerview);
+            this.director = view.findViewById(R.id.director);
+            this.writers = view.findViewById(R.id.writers);
+            this.awards = view.findViewById(R.id.awards_text);
 
             youtubeThumbnail.setOnClickListener(new OnClickListener() {
                 @Override
