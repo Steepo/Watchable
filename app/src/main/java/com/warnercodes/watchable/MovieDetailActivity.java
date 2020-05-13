@@ -51,6 +51,8 @@ public class MovieDetailActivity extends AppCompatActivity {
             requestMovieInfo(181812); //Star Wars The Rise of the Skywalker
         else
             requestMovieInfo(movieId);
+
+
     }
 
     @Override

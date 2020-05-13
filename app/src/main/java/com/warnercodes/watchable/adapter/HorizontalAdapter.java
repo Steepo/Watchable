@@ -159,6 +159,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return castList.size();
     }
 
+
     class RecentiViewHolder extends RecyclerView.ViewHolder {
         private ImageView img_movie;
 
@@ -212,11 +213,4 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    /*class ViewHolder3 extends RecyclerView.ViewHolder {
-        private ImageView img_similar_movie;
-        ViewHolder3(View view) {
-            super(view);
-            this.img_similar_movie = view.findViewById(R.id.img_similar_movie);
-        }
-    }*/
 }

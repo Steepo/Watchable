@@ -47,9 +47,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     private List<Movie> movies;
+
+    private final int imageWidthPixels = 1024;
+    private final int imageHeightPixels = 768;
+    private List<String> myUrls;
 
     public MovieDetailAdapter(List<Movie> movies) {
         this.movies = movies;
@@ -68,7 +73,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_details_test, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_details, parent, false);
         return new CoverSimilarViewHolder(view);
     }
 
@@ -136,6 +141,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         });
 
+
         //gets similar movies
         viewHolder.similarTexview.setText("Similar");
         String url = "https://api.themoviedb.org/3/movie/"+movieId+"/similar?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
@@ -145,7 +151,6 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-
                             RecyclerView recyclerView = viewHolder.similarRecyclerview;
                             recyclerView.setHasFixedSize(true);
                             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
