@@ -3,7 +3,6 @@ package com.warnercodes.watchable.adapter;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,27 +23,22 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.warnercodes.watchable.Cast;
 import com.warnercodes.watchable.Movie;
 import com.warnercodes.watchable.R;
+import com.warnercodes.watchable.Review;
+import com.warnercodes.watchable.databinding.ItemMovieDetailsBinding;
+import com.warnercodes.watchable.databinding.TitleRecyclerviewBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -73,7 +66,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_details, parent, false);
+        ItemMovieDetailsBinding view = ItemMovieDetailsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new CoverSimilarViewHolder(view);
     }
 
@@ -111,35 +104,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         Glide.with(context).load(movies.get(position).getCopertina()).into(viewHolder.main_cover);
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        //check if movie is already in favorite list
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
-        DocumentReference favorites = user.collection("favorites").document(String.valueOf(movieId));
-        Task<DocumentSnapshot> reference = favorites.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    Movie movie = movies.get(0);
-                    if (document.exists()) {
-                        // il film è già aggiunto alla lista preferiti
-                        movie.setInWatchlist(true);
-                        Drawable removeIcon = ContextCompat.getDrawable(context,R.drawable.ic_remove_black_24dp);
-                        viewHolder.watchlist.setIcon(removeIcon);
-                        viewHolder.watchlist.setText("Remove from watchlist");
 
-                    } else {
-                        // il film non è nella lista preferiti
-                        movie.setInWatchlist(false);
-                        Drawable addIcon = ContextCompat.getDrawable(context,R.drawable.ic_add_black_24dp);
-                        viewHolder.watchlist.setIcon(addIcon);
-                        viewHolder.watchlist.setText("Add to watchlist");
-                    }
-                } else {
-                    Log.d("ITEM", "get failed with ", task.getException());
-                }
-            }
-        });
 
 
         //gets similar movies
@@ -255,6 +220,34 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         viewHolder.director.setText(movies.get(position).getDirector());
                         viewHolder.writers.setText(movies.get(position).getWriters());
                         viewHolder.awards.setText(movies.get(position).getAwards());
+                        int score = Integer.parseInt(movies.get(position).getMetascoreScore());
+                        if (score >= 60) {
+                            //verde
+                            viewHolder.metascoreScore.setTextColor(context.getResources().getColor(R.color.white));
+                            viewHolder.metascoreView.setBackgroundColor(context.getResources().getColor(R.color.meta_verde));
+                        } else if (score >= 40) {
+                            //giallo
+                            viewHolder.metascoreScore.setTextColor(context.getResources().getColor(R.color.black));
+                            viewHolder.metascoreView.setBackgroundColor(context.getResources().getColor(R.color.meta_giallo));
+                        } else {
+                            //rosso
+                            viewHolder.metascoreScore.setTextColor(context.getResources().getColor(R.color.white));
+                            viewHolder.metascoreView.setBackgroundColor(context.getResources().getColor(R.color.meta_rosso));
+                        }
+                        viewHolder.metascoreScore.setText(String.valueOf(score));
+                        viewHolder.metascoretext.setText("Metascore");
+
+                        viewHolder.imdb_view.setVisibility(View.VISIBLE);
+                        viewHolder.imdbScore.setText(movies.get(position).getImdbRating());
+                        viewHolder.imdbScoreTen.setText("/10");
+
+                        Integer rottenScore = Integer.parseInt(movies.get(position).getRottenScore().substring(0, 2));
+                        if (rottenScore > 60)
+                            viewHolder.rottenIcon.setBackground(context.getResources().getDrawable(R.drawable.fresh));
+                        else
+                            viewHolder.rottenIcon.setBackground(context.getResources().getDrawable(R.drawable.rotten));
+
+                        viewHolder.rottenScore.setText(movies.get(position).getRottenScore());
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -263,10 +256,43 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         });
 
+        viewHolder.reviewstextview.setText("Reviews");
+        String reviewsUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/reviews?api_key=db18c03be648dd161624fabd8596021a";
+        JsonObjectRequest requestReviews = new JsonObjectRequest(Request.Method.GET, reviewsUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            RecyclerView recyclerView = viewHolder.reviewsRecyclerview;
+                            recyclerView.setHasFixedSize(true);
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                            recyclerView.setLayoutManager(layoutManager);
+                            //List<Cast> dataset = new ArrayList<Cast>();
+                            HorizontalAdapter adapter = new HorizontalAdapter(context);
+                            recyclerView.setAdapter(adapter);
+                            JSONArray array = response.getJSONArray("results");
+                            for (int index = 0; index < 5; index++) {
+                                Log.i("REVIEW", array.getJSONObject(index).getString("content"));
+                                adapter.addReview(index, new Review(array.getJSONObject(index).getString("author"), array.getJSONObject(index).getString("content")));
+                                adapter.notifyDataSetChanged();
+                            }
+                        } catch (JSONException e) {
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+
+
         requestQueue.add(requestCast);
         requestQueue.add(simialrRequest);
         requestQueue.add(videosRequest);
         requestQueue.add(OMdbRequest);
+        requestQueue.add(requestReviews);
 
     }
 
@@ -281,6 +307,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     class CoverSimilarViewHolder extends RecyclerView.ViewHolder {
+        private ItemMovieDetailsBinding binding;
         private ImageView main_cover;
         private TextView main_title;
         private TextView original_title;
@@ -288,42 +315,66 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView trama;
         private ChipGroup chipGroup;
         private ImageView youtubeThumbnail;
-        private MaterialButton watchlist;
         private TextView btShowmore;
+        private TextView metascoreScore;
+        private View metascoreView;
 
-        private View similarView;
+
+        private TitleRecyclerviewBinding similarView;
         private TextView similarTexview;
         private RecyclerView similarRecyclerview;
 
-        private View castView;
+        private TitleRecyclerviewBinding castView;
         private TextView casttextview;
         private RecyclerView castRecyclerview;
         private TextView director;
         private TextView writers;
         private TextView awards;
+        private MaterialButton watched;
 
-        CoverSimilarViewHolder(View view) {
-            super(view);
-            this.main_cover = view.findViewById(R.id.main_cover);
-            this.main_title = view.findViewById(R.id.main_title);
-            this.year_runtime = view.findViewById(R.id.year_runtime);
-            this.original_title = view.findViewById(R.id.original_title);
-            this.trama = view.findViewById(R.id.trama);
-            this.chipGroup = view.findViewById(R.id.container_generi);
-            this.youtubeThumbnail = view.findViewById(R.id.youtube_thumbnail);
-            this.watchlist = view.findViewById(R.id.watchlistButton);
-            this.btShowmore = view.findViewById(R.id.btShowmore);
+        private TextView rottenScore;
+        private ImageView rottenIcon;
+        private ImageView imdb_view;
+        private TextView imdbScore;
+        private TextView imdbScoreTen;
+        private TextView metascoretext;
+        private TitleRecyclerviewBinding reviewsView;
+        private TextView reviewstextview;
+        private RecyclerView reviewsRecyclerview;
 
-            this.similarView = view.findViewById(R.id.similar_view);
-            this.similarTexview = similarView.findViewById(R.id.item_textview);
-            this.similarRecyclerview = similarView.findViewById(R.id.title_recyclerview);
+        CoverSimilarViewHolder(final ItemMovieDetailsBinding binding) {
+            super(binding.getRoot());
+            main_cover = binding.mainCover;
+            main_title = binding.mainTitle;
+            year_runtime = binding.yearRuntime;
+            original_title = binding.originalTitle;
+            trama = binding.trama;
+            chipGroup = binding.containerGeneri;
+            youtubeThumbnail = binding.youtubeThumbnail;
+            btShowmore = binding.btShowmore;
+            metascoreScore = binding.metascoreScore;
+            similarView = binding.similarView;
+            similarTexview = similarView.itemTextview;
+            similarRecyclerview = similarView.titleRecyclerview;
 
-            this.castView = view.findViewById(R.id.cast_view);
-            this.casttextview = castView.findViewById(R.id.item_textview);
-            this.castRecyclerview = castView.findViewById(R.id.title_recyclerview);
-            this.director = view.findViewById(R.id.director);
-            this.writers = view.findViewById(R.id.writers);
-            this.awards = view.findViewById(R.id.awards_text);
+            castView = binding.castView;
+            casttextview = castView.itemTextview;
+            castRecyclerview = castView.titleRecyclerview;
+            director = binding.director;
+            writers = binding.writers;
+            awards = binding.awardsText;
+            rottenIcon = binding.rottenIcon;
+
+            rottenScore = binding.rottenScore;
+            imdbScore = binding.imdbScore;
+            imdbScoreTen = binding.imdbScoreTen;
+            imdb_view = binding.imdbView;
+            metascoretext = binding.metascoretext;
+            metascoreView = binding.metascoreView;
+            reviewsView = binding.reviewsView;
+            reviewstextview = reviewsView.itemTextview;
+            reviewsRecyclerview = reviewsView.titleRecyclerview;
+
 
             youtubeThumbnail.setOnClickListener(new OnClickListener() {
                 @Override
@@ -339,42 +390,6 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         context.startActivity(appIntent);
                     } catch (ActivityNotFoundException ex) {
                         context.startActivity(webIntent);
-                    }
-                }
-            });
-
-            watchlist.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    DocumentReference user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
-                    final Movie movieRef = movies.get(getAdapterPosition());
-                    DocumentReference favorites = user.collection("favorites").document(String.valueOf(movieRef.getMovieId()));
-                    if (movieRef.isInWatchlist()) {
-                        favorites.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Drawable removeIcon = ContextCompat.getDrawable(context,R.drawable.ic_add_black_24dp);
-                                watchlist.setIcon(removeIcon);
-                                watchlist.setText("Add to watchlist");
-                                movieRef.setInWatchlist(false);
-                            }
-                        });
-                    }else{
-                        Map<String, Object> movieInfos = new HashMap<>();
-                        movieInfos.put("title", movieRef.getTitle());
-                        movieInfos.put("movieId", movieRef.getMovieId());
-                        movieInfos.put("copertina", movieRef.getCopertina());
-                        movieInfos.put("runtime", movieRef.getRuntime());
-                        favorites.set(movieInfos).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Drawable removeIcon = ContextCompat.getDrawable(context,R.drawable.ic_remove_black_24dp);
-                                watchlist.setIcon(removeIcon);
-                                watchlist.setText("Remove from watchlist");
-                                movieRef.setInWatchlist(true);
-                            }
-                        });
                     }
                 }
             });

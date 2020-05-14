@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.warnercodes.watchable.Movie;
 import com.warnercodes.watchable.MovieDetailActivity;
-import com.warnercodes.watchable.R;
+import com.warnercodes.watchable.databinding.ItemMovieSearchBinding;
 
 import java.util.List;
 
@@ -40,9 +40,9 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_movie_search, parent,false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        ItemMovieSearchBinding view = ItemMovieSearchBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+
+        return new ViewHolder(view);
     }
 
     @Override
@@ -72,12 +72,13 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView search_movie_title;
         private ConstraintLayout clickable;
         private TextView search_movie_year;
-        ViewHolder(View view) {
-            super(view);
-            this.search_thumb = view.findViewById(R.id.search_thumb);
-            this.search_movie_title = view.findViewById(R.id.search_movie_title);
-            this.clickable = view.findViewById(R.id.clickable);
-            this.search_movie_year = view.findViewById(R.id.search_movie_year);
+
+        ViewHolder(ItemMovieSearchBinding binding) {
+            super(binding.getRoot());
+            search_thumb = binding.searchThumb;
+            search_movie_title = binding.searchMovieTitle;
+            clickable = binding.clickable;
+            search_movie_year = binding.searchMovieYear;
             clickable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

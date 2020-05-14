@@ -44,6 +44,8 @@ public class SearchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
+        ///TODO: implement bindings
+
         TextInputLayout textfield = root.findViewById(R.id.textfield);
 
         TextInputEditText editText = root.findViewById(R.id.textinputedittext);

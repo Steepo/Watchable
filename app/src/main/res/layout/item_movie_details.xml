@@ -68,7 +68,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/cardview"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="8dp"
         app:layout_constraintTop_toBottomOf="@id/trailercardview"
         tools:text="Star Wars: L'ascesa di Skywalker" />
 
@@ -79,7 +80,7 @@
         android:layout_marginTop="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintEnd_toEndOf="@id/trama"
-        app:layout_constraintStart_toStartOf="@+id/trama"
+        app:layout_constraintStart_toStartOf="@id/trama"
         app:layout_constraintTop_toBottomOf="@id/main_title"
         tools:text="Star Wars: The Rise of Skywalker" />
 
@@ -99,16 +100,112 @@
         android:layout_height="wrap_content"
         android:scrollbars="none"
         android:layout_marginTop="8dp"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/year_runtime">
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/container_generi"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            app:chipSpacing="4dp"
             android:layout_height="wrap_content" />
     </HorizontalScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/scrollchipgroup"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="8dp"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <View
+            android:id="@+id/metascore_view"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@color/trasparent"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toEndOf="@id/rotten_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imdb_view"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="16dp"
+            android:visibility="invisible"
+            android:background="@drawable/ic_star_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/rotten_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/imdb_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@id/imdb_score_ten"
+            app:layout_constraintStart_toStartOf="@id/imdb_view"
+            app:layout_constraintTop_toBottomOf="@id/imdb_view"
+            tools:text="6.7" />
+
+        <TextView
+            android:id="@+id/imdb_score_ten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/imdb_view"
+            app:layout_constraintStart_toEndOf="@id/imdb_score"
+            app:layout_constraintBottom_toBottomOf="@id/imdb_score"
+            tools:text="/10" />
+
+        <TextView
+            android:id="@+id/metascoretext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@id/metascore_view"
+            app:layout_constraintStart_toStartOf="@id/metascore_view"
+            app:layout_constraintTop_toBottomOf="@id/metascore_view"
+            tools:text="MetaScore" />
+
+        <TextView
+            android:id="@+id/metascore_score"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="@id/metascore_view"
+            app:layout_constraintLeft_toLeftOf="@id/metascore_view"
+            app:layout_constraintRight_toRightOf="@id/metascore_view"
+            app:layout_constraintTop_toTopOf="@id/metascore_view"
+            tools:text="53" />
+
+        <ImageView
+            android:id="@+id/rotten_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            tools:background="@drawable/rotten"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@id/metascore_view"
+            app:layout_constraintStart_toEndOf="@id/imdb_view"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/rotten_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="@id/rotten_icon"
+            app:layout_constraintStart_toStartOf="@id/rotten_icon"
+            app:layout_constraintBottom_toBottomOf="@id/imdb_score"
+            tools:text="56%" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/trama"
@@ -116,10 +213,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:maxLines="5"
-        android:clickable="true"
-        app:layout_constraintTop_toBottomOf="@id/scrollchipgroup"
-        app:layout_constraintStart_toStartOf="@id/scrollchipgroup"
-        app:layout_constraintEnd_toEndOf="@id/scrollchipgroup"
+        app:layout_constraintTop_toBottomOf="@id/score"
+        app:layout_constraintStart_toStartOf="@id/score"
+        app:layout_constraintEnd_toEndOf="@id/score"
         tools:text="The surviving Resistance faces the First Order once again as the journey of Rey, Finn and Poe Dameron continues. With the power and knowledge of generations behind them, the final battle begins." />
 
     <TextView
@@ -135,35 +231,13 @@
         app:layout_constraintStart_toStartOf="@id/trama"
         app:layout_constraintTop_toBottomOf="@id/trama" />
 
-    <Button
-        android:id="@+id/watchlistButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Add to watchlist"
-        app:icon="@drawable/ic_add_black_24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/watchedButton"
-        app:layout_constraintTop_toBottomOf="@id/btShowmore" />
 
-    <Button
-        android:id="@+id/watchedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="Add to watched"
-        app:icon="@drawable/ic_add_black_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/watchlistButton"
-        app:layout_constraintTop_toTopOf="@id/watchlistButton" />
 
     <include
         android:id="@+id/cast_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/watchlistButton"
+        app:layout_constraintTop_toBottomOf="@id/btShowmore"
         layout="@layout/title_recyclerview" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -260,14 +334,21 @@
             tools:text="Nominated for 3 Oscars. Another 7 wins 35 nominations." />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <include
         android:id="@+id/similar_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reviews_view"
+        layout="@layout/title_recyclerview" />
+
+    <include
+        android:id="@+id/reviews_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         app:layout_constraintTop_toBottomOf="@id/awards_layout"
         layout="@layout/title_recyclerview" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

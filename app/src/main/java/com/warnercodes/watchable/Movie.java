@@ -32,6 +32,10 @@ public class Movie {
     private String director;
     private String writers;
     private String awards;
+    private String metascoreScore;
+    private String imdbRating;
+    private String imdbVotes;
+    private String rottenScore;
 
     private boolean inWatchlist;
 
@@ -106,7 +110,7 @@ public class Movie {
                 }
             item.setGeneri(generi);
         } catch (JSONException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return item;
     }
@@ -114,6 +118,10 @@ public class Movie {
     public void addOMdbInfo(JSONObject response) {
 
         try {
+            this.setRottenScore(response.getJSONArray("Ratings").getJSONObject(1).getString("Value"));
+            this.setMetascoreScore(response.getString("Metascore"));
+            this.setImdbRating(response.getString("imdbRating"));
+            this.setImdbVotes(response.getString("imdbVotes"));
             this.setDirector(response.getString("Director"));
             this.setWriters(response.getString("Writer"));
             this.setAwards(response.getString("Awards"));
@@ -310,6 +318,38 @@ public class Movie {
 
     public void setAwards(String awards) {
         this.awards = awards;
+    }
+
+    public String getMetascoreScore() {
+        return metascoreScore;
+    }
+
+    public void setMetascoreScore(String metascoreScore) {
+        this.metascoreScore = metascoreScore;
+    }
+
+    public String getImdbRating() {
+        return imdbRating;
+    }
+
+    public void setImdbRating(String imdbRating) {
+        this.imdbRating = imdbRating;
+    }
+
+    public String getImdbVotes() {
+        return imdbVotes;
+    }
+
+    public void setImdbVotes(String imdbVotes) {
+        this.imdbVotes = imdbVotes;
+    }
+
+    public String getRottenScore() {
+        return rottenScore;
+    }
+
+    public void setRottenScore(String rottenScore) {
+        this.rottenScore = rottenScore;
     }
 }
 

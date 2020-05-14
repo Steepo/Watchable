@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewbinding.ViewBinding;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
@@ -19,7 +20,11 @@ import com.google.android.material.chip.ChipGroup;
 import com.warnercodes.watchable.Cast;
 import com.warnercodes.watchable.Movie;
 import com.warnercodes.watchable.MovieDetailActivity;
-import com.warnercodes.watchable.R;
+import com.warnercodes.watchable.Review;
+import com.warnercodes.watchable.databinding.ItemAdviceBinding;
+import com.warnercodes.watchable.databinding.ItemCastBinding;
+import com.warnercodes.watchable.databinding.ItemRecentBinding;
+import com.warnercodes.watchable.databinding.ItemReviewBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +35,18 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private Context context;
     private List<Movie> dataList;
     private List<Cast> castList;
+    private List<Review> reviewList;
 
     public HorizontalAdapter(Context context, List<Movie> dataList) {
         this.context = context;
         this.dataList = dataList;
     }
 
+
     public HorizontalAdapter(Context context) {
         this.context = context;
         castList = new ArrayList<Cast>();
+        reviewList = new ArrayList<Review>();
     }
 
     public void add(int position, Movie item) {
@@ -51,6 +59,11 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyItemInserted(position);
     }
 
+    public void addReview(int position, Review item) {
+        reviewList.add(position, item);
+        notifyItemInserted(position);
+    }
+
     public void remove(Movie item) {
         int position = dataList.indexOf(item);
         dataList.remove(position);
@@ -60,25 +73,29 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static int RECENTI = 1;
     private static int CONSIGLIATI = 2;
     private static int CAST = 3;
+    private static int REVIEW = 4;
 
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
+        ViewBinding view;
         if (viewType == RECENTI) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
+            view = ItemRecentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new RecentiViewHolder((ItemRecentBinding) view);
         }
         if (viewType == CONSIGLIATI) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_advice, parent, false);
-            return new AdviceViewHolder(view);
+            view = ItemAdviceBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new AdviceViewHolder((ItemAdviceBinding) view);
         }
         if (viewType == CAST) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cast, parent, false);
-            return new CastViewHolder(view);
+            view = ItemCastBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new CastViewHolder((ItemCastBinding) view);
         }
-
+        if (viewType == REVIEW) {
+            view = ItemReviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new ReviewViewHolder((ItemReviewBinding) view);
+        }
         return null;
     }
 
@@ -120,6 +137,13 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
         }
+        if (getItemViewType(position) == REVIEW) {
+            Log.i("REVIEW", reviewList.get(position).getContent());
+            ReviewViewHolder viewHolder = (ReviewViewHolder) holder;
+            viewHolder.reviewauthor.setText(reviewList.get(position).getAuthor());
+            viewHolder.reviewContent.setText(reviewList.get(position).getContent());
+        }
+        Log.i("REVIEW", String.valueOf(getItemViewType(position)));
     }
 
     @Override
@@ -142,7 +166,9 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return RECENTI;
             if (tipo.equals("cast"))
                 return CAST;
-        } else {
+        } else if (reviewList != null && reviewList.size() > 0) {
+            return REVIEW;
+        } else if (castList != null && castList.size() > 0) {
             String tipo = castList.get(position).getTipo();
             if (tipo.equals("cast"))
                 return CAST;
@@ -155,17 +181,19 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public int getItemCount() {
         if (dataList != null)
             return dataList.size();
-        else
+        else if (castList != null && castList.size() > 0)
             return castList.size();
+        else
+            return reviewList.size();
     }
 
 
     class RecentiViewHolder extends RecyclerView.ViewHolder {
         private ImageView img_movie;
 
-        RecentiViewHolder(View view) {
-            super(view);
-            this.img_movie = view.findViewById(R.id.img_movie);
+        RecentiViewHolder(ItemRecentBinding binding) {
+            super(binding.getRoot());
+            this.img_movie = binding.imgMovie;
             img_movie.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -180,37 +208,43 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     class AdviceViewHolder extends RecyclerView.ViewHolder {
-        private ImageView img_movie;
-
         private ImageView img_advice;
         private TextView title_advice;
         private TextView trama_adv;
         private ChipGroup chipGroup;
 
-        AdviceViewHolder(View view) {
-            super(view);
-            this.img_movie = view.findViewById(R.id.img_movie);
-
-            this.img_advice = view.findViewById(R.id.img_advice);
-            this.title_advice = view.findViewById(R.id.title_advice);
-            this.trama_adv = view.findViewById(R.id.trama_advice);
-            this.chipGroup = view.findViewById(R.id.chip_group_generi);
+        AdviceViewHolder(ItemAdviceBinding binding) {
+            super(binding.getRoot());
+            this.img_advice = binding.imgAdvice;
+            this.title_advice = binding.titleAdvice;
+            this.trama_adv = binding.tramaAdvice;
+            this.chipGroup = binding.chipGroupGeneri;
         }
 
     }
 
 
-    private class CastViewHolder extends RecyclerView.ViewHolder {
+    class CastViewHolder extends RecyclerView.ViewHolder {
         private TextView attore;
         private TextView personaggio;
         private ImageView cover;
 
-        public CastViewHolder(View view) {
-            super(view);
-            this.attore = view.findViewById(R.id.person_name);
-            this.personaggio = view.findViewById(R.id.character_name);
-            this.cover = view.findViewById(R.id.profile_path);
+        CastViewHolder(ItemCastBinding binding) {
+            super(binding.getRoot());
+            this.attore = binding.personName;
+            this.personaggio = binding.characterName;
+            this.cover = binding.profilePath;
         }
     }
 
+    private class ReviewViewHolder extends RecyclerView.ViewHolder {
+        private TextView reviewContent;
+        private TextView reviewauthor;
+
+        ReviewViewHolder(ItemReviewBinding binding) {
+            super(binding.getRoot());
+            this.reviewContent = binding.content;
+            this.reviewauthor = binding.author;
+        }
+    }
 }
