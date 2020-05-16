@@ -122,6 +122,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     public void onResponse(JSONObject response) {
                         movie.addOMdbInfo(response);
                         Log.i("Director", "Entrato");
+                        //TODO: caso in cui non c'è lo score
                         viewHolder.director.setText(movie.getDirector());
                         viewHolder.writers.setText(movie.getWriters());
                         viewHolder.awards.setText(movie.getAwards());

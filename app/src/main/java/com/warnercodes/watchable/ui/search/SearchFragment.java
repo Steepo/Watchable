@@ -45,7 +45,7 @@ public class SearchFragment extends Fragment {
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
         ///TODO: implement bindings
-
+        //TODO: image centrale search
         TextInputLayout textfield = root.findViewById(R.id.textfield);
 
         TextInputEditText editText = root.findViewById(R.id.textinputedittext);

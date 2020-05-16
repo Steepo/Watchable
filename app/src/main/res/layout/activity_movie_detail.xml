@@ -23,8 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="Add to watchlist"
+        app:layout_constraintBottom_toTopOf="@id/watched_fab"
+        android:text="Watched"
         android:visibility="invisible"
         app:icon="@drawable/ic_add_black_24dp" />
 
@@ -34,9 +34,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/watchlist_fab"
-        android:text="Watched"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Add to watchlist"
         android:visibility="invisible"
         app:icon="@drawable/ic_add_black_24dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

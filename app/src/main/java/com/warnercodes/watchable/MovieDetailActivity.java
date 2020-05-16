@@ -57,7 +57,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         binding = ActivityMovieDetailBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
+        //TODO: Slide sinistra
         //getting intent infos
         Intent intent = getIntent();
         movieId = intent.getIntExtra("movieId", 0);
@@ -92,7 +92,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                     binding.watchlistFab.shrink();
                     binding.watchedFab.shrink();
-                    binding.watchedFab.setVisibility(View.INVISIBLE);
+                    binding.watchlistFab.setVisibility(View.INVISIBLE);
                 }
             });
         }
@@ -110,13 +110,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                         watchlist.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_add_black_24dp);
+                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_bookmark_border_black_24dp);
                                 binding.watchlistFab.setIcon(removeIcon);
                                 binding.watchlistFab.setText(R.string.add_watchlist);
                                 movieRef.setInWatchlist(false);
                                 binding.watchlistFab.shrink();
                                 binding.watchedFab.shrink();
-                                binding.watchedFab.setVisibility(View.INVISIBLE);
+                                binding.watchlistFab.setVisibility(View.INVISIBLE);
 
                             }
                         });
@@ -129,13 +129,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                         watchlist.set(movieInfos).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_close_black_24dp);
+                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_bookmark_black_24dp);
                                 binding.watchlistFab.setIcon(removeIcon);
                                 binding.watchlistFab.setText(R.string.remove_watchlist);
                                 movieRef.setInWatchlist(true);
                                 binding.watchlistFab.shrink();
                                 binding.watchedFab.shrink();
-                                binding.watchedFab.setVisibility(View.INVISIBLE);
+                                binding.watchlistFab.setVisibility(View.INVISIBLE);
                             }
                         });
                     }
@@ -146,23 +146,24 @@ public class MovieDetailActivity extends AppCompatActivity {
         binding.watchedFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!binding.watchlistFab.isExtended()) {
+                if (!binding.watchedFab.isExtended()) {
                     binding.watchlistFab.extend();
                     binding.watchedFab.extend();
                     binding.watchedFab.setVisibility(View.VISIBLE);
+                    binding.watchlistFab.setVisibility(View.VISIBLE);
                 } else {
                     final Movie movieRef = mDataset.get(0);
                     if (movieRef.isWatched()) {
                         watched.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_add_black_24dp);
+                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_visibility_white_24dp);
                                 binding.watchedFab.setIcon(removeIcon);
                                 binding.watchedFab.setText(R.string.add_watched);
                                 movieRef.setWatched(false);
                                 binding.watchlistFab.shrink();
                                 binding.watchedFab.shrink();
-                                binding.watchedFab.setVisibility(View.INVISIBLE);
+                                binding.watchlistFab.setVisibility(View.INVISIBLE);
 
                             }
                         });
@@ -175,13 +176,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                         watched.set(movieInfos).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_close_black_24dp);
+                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_visibility_off_white_24dp);
                                 binding.watchedFab.setIcon(removeIcon);
                                 binding.watchedFab.setText(R.string.remove_watched);
                                 movieRef.setWatched(true);
                                 binding.watchlistFab.shrink();
                                 binding.watchedFab.shrink();
-                                binding.watchedFab.setVisibility(View.INVISIBLE);
+                                binding.watchlistFab.setVisibility(View.INVISIBLE);
                             }
                         });
                     }
@@ -236,18 +237,18 @@ public class MovieDetailActivity extends AppCompatActivity {
                     if (document.exists()) {
                         // il film è già aggiunto alla lista preferiti
                         movie.setInWatchlist(true);
-                        Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_close_black_24dp);
+                        Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_bookmark_border_black_24dp);
                         binding.watchlistFab.setIcon(removeIcon);
                         binding.watchlistFab.setText(R.string.remove_watchlist);
 
                     } else {
                         // il film non è nella lista preferiti
                         movie.setInWatchlist(false);
-                        Drawable addIcon = ContextCompat.getDrawable(context, R.drawable.ic_add_black_24dp);
+                        Drawable addIcon = ContextCompat.getDrawable(context, R.drawable.ic_bookmark_black_24dp);
                         binding.watchlistFab.setIcon(addIcon);
                         binding.watchlistFab.setText(R.string.add_watchlist);
                     }
-                    binding.watchlistFab.setVisibility(View.VISIBLE);
+                    binding.watchedFab.setVisibility(View.VISIBLE);
 
                 } else {
                     Log.d("ITEM", "get failed with ", task.getException());
@@ -264,14 +265,14 @@ public class MovieDetailActivity extends AppCompatActivity {
                     Movie movie = mDataset.get(0);
                     if (document.exists()) {
                         movie.setInWatchlist(true);
-                        Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_close_black_24dp);
+                        Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_visibility_off_white_24dp);
                         binding.watchedFab.setIcon(removeIcon);
                         binding.watchedFab.setText(R.string.remove_watched);
 
                     } else {
                         // il film non è nella lista preferiti
                         movie.setInWatchlist(false);
-                        Drawable addIcon = ContextCompat.getDrawable(context, R.drawable.ic_add_black_24dp);
+                        Drawable addIcon = ContextCompat.getDrawable(context, R.drawable.ic_visibility_white_24dp);
                         binding.watchedFab.setIcon(addIcon);
                         binding.watchedFab.setText(R.string.add_watched);
                     }
