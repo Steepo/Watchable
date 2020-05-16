@@ -70,7 +70,7 @@ public class SearchFragment extends Fragment {
 
                 String text = (String) s.toString();
                 String url = "https://api.themoviedb.org/3/search/movie?api_key=db18c03be648dd161624fabd8596021a&language=en-US&query=" + text.replace(" ", "%20") + "&page=1&include_adult=false";
-                if (text.length()<3)
+                if (text.length() < 3)
                     mDataset.removeAll(mDataset);
                 else {
                     final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());

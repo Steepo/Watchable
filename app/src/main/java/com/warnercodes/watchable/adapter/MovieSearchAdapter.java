@@ -31,6 +31,7 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         movies.add(position, item);
         notifyItemInserted(position);
     }
+
     public void remove(Movie item) {
         int position = movies.indexOf(item);
         movies.remove(position);

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#222324</color>
-    <color name="colorPrimaryDark">#222324</color>
-    <color name="colorAccent">#FFC107</color>
+
+    <color name="colorPrimary">#9E9E9E</color>
+    <color name="colorPrimaryDark">#616161</color>
+    <color name="colorAccent">#FF5252</color>
+    <color name="colorSecondary">#FF5252</color>
+
+
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-
     <color name="meta_verde">#7FC84E</color>
     <color name="meta_giallo">#F8CD55</color>
     <color name="meta_rosso">#EC3323</color>

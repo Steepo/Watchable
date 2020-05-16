@@ -48,7 +48,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     private ActivityMovieDetailBinding binding;
     private FirebaseFirestore db;
     private DocumentReference user;
-    private DocumentReference favorites;
+    private DocumentReference watchlist;
+    private DocumentReference watched;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         //firebase init
         db = FirebaseFirestore.getInstance();
         user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
-        favorites = user.collection("favorites").document(String.valueOf(movieId));
+
+        watchlist = user.collection("watchlist").document(String.valueOf(movieId));
+        watched = user.collection("watched").document(String.valueOf(movieId));
 
         // showing back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -80,32 +84,40 @@ public class MovieDetailActivity extends AppCompatActivity {
             requestMovieInfo(181812); //Star Wars The Rise of the Skywalker
         else
             requestMovieInfo(movieId);
-        binding.extFab.shrink();
+        binding.watchlistFab.shrink();
+        binding.watchedFab.shrink();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             binding.detailsRecyclerview.setOnScrollChangeListener(new View.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    binding.extFab.shrink();
+                    binding.watchlistFab.shrink();
+                    binding.watchedFab.shrink();
+                    binding.watchedFab.setVisibility(View.INVISIBLE);
                 }
             });
         }
-        binding.extFab.setOnClickListener(new View.OnClickListener() {
+
+        binding.watchlistFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!binding.extFab.isExtended()) {
-                    binding.extFab.extend();
+                if (!binding.watchlistFab.isExtended()) {
+                    binding.watchlistFab.extend();
+                    binding.watchedFab.extend();
+                    binding.watchedFab.setVisibility(View.VISIBLE);
                 } else {
                     final Movie movieRef = mDataset.get(0);
-
                     if (movieRef.isInWatchlist()) {
-                        favorites.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        watchlist.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_add_black_24dp);
-                                binding.extFab.setIcon(removeIcon);
-                                binding.extFab.setText("Add to watchlist");
+                                binding.watchlistFab.setIcon(removeIcon);
+                                binding.watchlistFab.setText(R.string.add_watchlist);
                                 movieRef.setInWatchlist(false);
-                                binding.extFab.shrink();
+                                binding.watchlistFab.shrink();
+                                binding.watchedFab.shrink();
+                                binding.watchedFab.setVisibility(View.INVISIBLE);
+
                             }
                         });
                     } else {
@@ -114,14 +126,62 @@ public class MovieDetailActivity extends AppCompatActivity {
                         movieInfos.put("movieId", movieRef.getMovieId());
                         movieInfos.put("copertina", movieRef.getCopertina());
                         movieInfos.put("runtime", movieRef.getRuntime());
-                        favorites.set(movieInfos).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        watchlist.set(movieInfos).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_close_black_24dp);
-                                binding.extFab.setIcon(removeIcon);
-                                binding.extFab.setText("Remove from watchlist");
+                                binding.watchlistFab.setIcon(removeIcon);
+                                binding.watchlistFab.setText(R.string.remove_watchlist);
                                 movieRef.setInWatchlist(true);
-                                binding.extFab.shrink();
+                                binding.watchlistFab.shrink();
+                                binding.watchedFab.shrink();
+                                binding.watchedFab.setVisibility(View.INVISIBLE);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+        binding.watchedFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!binding.watchlistFab.isExtended()) {
+                    binding.watchlistFab.extend();
+                    binding.watchedFab.extend();
+                    binding.watchedFab.setVisibility(View.VISIBLE);
+                } else {
+                    final Movie movieRef = mDataset.get(0);
+                    if (movieRef.isWatched()) {
+                        watched.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_add_black_24dp);
+                                binding.watchedFab.setIcon(removeIcon);
+                                binding.watchedFab.setText(R.string.add_watched);
+                                movieRef.setWatched(false);
+                                binding.watchlistFab.shrink();
+                                binding.watchedFab.shrink();
+                                binding.watchedFab.setVisibility(View.INVISIBLE);
+
+                            }
+                        });
+                    } else {
+                        Map<String, Object> movieInfos = new HashMap<>();
+                        movieInfos.put("title", movieRef.getTitle());
+                        movieInfos.put("movieId", movieRef.getMovieId());
+                        movieInfos.put("copertina", movieRef.getCopertina());
+                        movieInfos.put("runtime", movieRef.getRuntime());
+                        watched.set(movieInfos).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_close_black_24dp);
+                                binding.watchedFab.setIcon(removeIcon);
+                                binding.watchedFab.setText(R.string.remove_watched);
+                                movieRef.setWatched(true);
+                                binding.watchlistFab.shrink();
+                                binding.watchedFab.shrink();
+                                binding.watchedFab.setVisibility(View.INVISIBLE);
                             }
                         });
                     }
@@ -151,23 +211,23 @@ public class MovieDetailActivity extends AppCompatActivity {
                         getSupportActionBar().setTitle(mDataset.get(0).getTitle());
                         movieDetailAdapter = new MovieDetailAdapter(mDataset);
                         recyclerView.setAdapter(movieDetailAdapter);
-                        setFabState();
+                        setFabStates();
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(MovieDetailActivity.this,error.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(MovieDetailActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
 
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void setFabState() {
+    private void setFabStates() {
         //check if movie is already in favorite list
-        DocumentReference favorites = user.collection("favorites").document(String.valueOf(movieId));
-        favorites.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        DocumentReference watchlist = user.collection("watchlist").document(String.valueOf(movieId));
+        watchlist.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -177,24 +237,50 @@ public class MovieDetailActivity extends AppCompatActivity {
                         // il film è già aggiunto alla lista preferiti
                         movie.setInWatchlist(true);
                         Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_close_black_24dp);
-                        binding.extFab.setIcon(removeIcon);
-                        binding.extFab.setText("Remove from watchlist");
+                        binding.watchlistFab.setIcon(removeIcon);
+                        binding.watchlistFab.setText(R.string.remove_watchlist);
 
                     } else {
                         // il film non è nella lista preferiti
                         movie.setInWatchlist(false);
                         Drawable addIcon = ContextCompat.getDrawable(context, R.drawable.ic_add_black_24dp);
-                        binding.extFab.setIcon(addIcon);
-                        binding.extFab.setText("Add to watchlist");
+                        binding.watchlistFab.setIcon(addIcon);
+                        binding.watchlistFab.setText(R.string.add_watchlist);
                     }
-                    binding.extFab.setVisibility(View.VISIBLE);
+                    binding.watchlistFab.setVisibility(View.VISIBLE);
+
+                } else {
+                    Log.d("ITEM", "get failed with ", task.getException());
+                }
+            }
+        });
+
+        DocumentReference watched = user.collection("watched").document(String.valueOf(movieId));
+        watched.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    Movie movie = mDataset.get(0);
+                    if (document.exists()) {
+                        movie.setInWatchlist(true);
+                        Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_close_black_24dp);
+                        binding.watchedFab.setIcon(removeIcon);
+                        binding.watchedFab.setText(R.string.remove_watched);
+
+                    } else {
+                        // il film non è nella lista preferiti
+                        movie.setInWatchlist(false);
+                        Drawable addIcon = ContextCompat.getDrawable(context, R.drawable.ic_add_black_24dp);
+                        binding.watchedFab.setIcon(addIcon);
+                        binding.watchedFab.setText(R.string.add_watched);
+                    }
                 } else {
                     Log.d("ITEM", "get failed with ", task.getException());
                 }
             }
         });
     }
-
 
 
 }

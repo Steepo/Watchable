@@ -37,7 +37,8 @@ public class Movie {
     private String imdbVotes;
     private String rottenScore;
 
-    private boolean inWatchlist;
+    private boolean watchlist;
+    private boolean Watched;
 
 
     public Movie(String copertina, String title, String tagline, String trama, List<String> generi, int movieId, String imdbId, String overview, String releaseDate, int runtime) {
@@ -57,7 +58,7 @@ public class Movie {
 
     }
 
-    public void parseJson(JSONObject response)  {
+    public void parseJson(JSONObject response) {
         Movie item = new Movie();
         movies = new ArrayList<Movie>();
         generi = new ArrayList<String>();
@@ -74,7 +75,7 @@ public class Movie {
 
             JSONArray genres = response.getJSONArray("genres");
             if (genres.length() > 0)
-                for (int i=0; i < genres.length(); i++) {
+                for (int i = 0; i < genres.length(); i++) {
                     generi.add(genres.getJSONObject(i).getString("name"));
                 }
             item.setGeneri(generi);
@@ -148,7 +149,7 @@ public class Movie {
                 '}';
     }
 
-    public void addSimilar(Integer movieId){
+    public void addSimilar(Integer movieId) {
         if (similar == null)
             similar = new ArrayList<Integer>();
         similar.add(movieId);
@@ -159,15 +160,13 @@ public class Movie {
     }
 
 
-
-
     public String getCopertina() {
         return copertina;
     }
 
     public void setCopertina(String copertina) {
         this.copertina = "https://image.tmdb.org/t/p/w400" + copertina;
-        Log.i("Copertine", copertina);
+        //Log.i("Copertine", copertina);
 
     }
 
@@ -281,11 +280,11 @@ public class Movie {
     }
 
     public boolean isInWatchlist() {
-        return inWatchlist;
+        return watchlist;
     }
 
     public void setInWatchlist(boolean inWatchlist) {
-        this.inWatchlist = inWatchlist;
+        this.watchlist = inWatchlist;
     }
 
     public String getOriginal_title() {
@@ -350,6 +349,14 @@ public class Movie {
 
     public void setRottenScore(String rottenScore) {
         this.rottenScore = rottenScore;
+    }
+
+    public boolean isWatched() {
+        return Watched;
+    }
+
+    public void setWatched(boolean watched) {
+        Watched = watched;
     }
 }
 

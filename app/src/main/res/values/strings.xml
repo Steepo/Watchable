@@ -25,4 +25,10 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="remove_watchlist">Remove from watchlist</string>
+    <string name="add_watchlist">Add to watchlist</string>
+
+    <string name="remove_watched">Remove from watched</string>
+    <string name="add_watched">Add to Watched</string>
 </resources>

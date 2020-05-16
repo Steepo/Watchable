@@ -202,7 +202,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintEnd_toEndOf="@id/rotten_icon"
             app:layout_constraintStart_toStartOf="@id/rotten_icon"
-            app:layout_constraintBottom_toBottomOf="@id/imdb_score"
+            app:layout_constraintTop_toBottomOf="@id/rotten_icon"
             tools:text="56%" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -303,7 +303,7 @@
             android:id="@+id/cardview_icon"
             android:layout_width="5dp"
             android:layout_height="0dp"
-            android:background="@color/colorAccent"
+            android:background="@color/colorSecondary"
             app:layout_constraintEnd_toStartOf="@id/awards_title"
             android:layout_marginEnd="4dp"
             app:layout_constraintBottom_toBottomOf="@id/awards_title"

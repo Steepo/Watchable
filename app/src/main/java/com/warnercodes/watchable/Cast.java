@@ -13,7 +13,7 @@ public class Cast {
 
     }
 
-    public Cast parseCastJson(JSONObject response, String type)  {
+    public Cast parseCastJson(JSONObject response, String type) {
         Cast item = new Cast();
         item.setTipo(type);
         try {
