@@ -71,49 +71,20 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (viewType == 1) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
         if (viewType == 2) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_advice, parent, false);
             return new AdviceViewHolder(view);
-        }
-        if (viewType == 3) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
-        if (viewType == 4) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
-        if (viewType == 5) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
-        if (viewType == 6) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
-        }
-        if (viewType == 7) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
-            return new RecentiViewHolder(view);
         }
         if (viewType == 8) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cast, parent, false);
             return new CastViewHolder(view);
         }
-
-        return null;
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recent, parent, false);
+        return new RecentiViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-        if (getItemViewType(position) == RECENTI) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
-        }
 
         if (getItemViewType(position) == SIMILI) {
             RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
@@ -121,70 +92,53 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
 
         }
-        if (getItemViewType(position) == CAST) {
-            CastViewHolder viewHolder = (CastViewHolder) holder;
-            context = viewHolder.attore.getContext();
-            Cast itemCast = castList.get(position);
-            Glide.with(context).load(itemCast.getProfile_path()).into(viewHolder.cover);
-            viewHolder.attore.setText(itemCast.getName());
-            viewHolder.personaggio.setText(itemCast.getCharacter());
-        }
+        else {
+            if (getItemViewType(position) == CAST) {
+                CastViewHolder viewHolder = (CastViewHolder) holder;
+                context = viewHolder.attore.getContext();
+                Cast itemCast = castList.get(position);
+                Glide.with(context).load(itemCast.getProfile_path()).into(viewHolder.cover);
+                viewHolder.attore.setText(itemCast.getName());
+                viewHolder.personaggio.setText(itemCast.getCharacter());
+            }
+            else{
+                if (getItemViewType(position) == CONSIGLIATI) {
+                    AdviceViewHolder viewHolder = (AdviceViewHolder) holder;
+                    Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_advice);
+                    TextView textView = viewHolder.title_advice;
+                    TextView textView1 = viewHolder.trama_adv;
+                    textView.setText(dataList.get(position).getTitle());
+                    textView1.setText(dataList.get(position).getTrama());
+                    textView1.setMovementMethod(new ScrollingMovementMethod());
 
-        //giro
-        if (getItemViewType(position) == CONSIGLIATI) {
-            AdviceViewHolder viewHolder = (AdviceViewHolder) holder;
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_advice);
-            TextView textView = viewHolder.title_advice;
-            TextView textView1 = viewHolder.trama_adv;
-            textView.setText(dataList.get(position).getTitle());
-            textView1.setText(dataList.get(position).getTrama());
-            textView1.setMovementMethod(new ScrollingMovementMethod());
+                    if (dataList.get(position).getGeneri() != null) {
+                        Log.i("GENERI", String.valueOf(dataList.get(position).getGeneri().size()));
+                        List<String> generi = new ArrayList<String>(dataList.get(position).getGeneri());
 
-            if (dataList.get(position).getGeneri() != null) {
-                Log.i("GENERI", String.valueOf(dataList.get(position).getGeneri().size()));
-                List<String> generi = new ArrayList<String>(dataList.get(position).getGeneri());
-
-                for (String genere : generi) {
-                    Chip chip = new Chip(context);
-                    chip.setText(genere);
-                    viewHolder.chipGroup.addView(chip);
+                        for (String genere : generi) {
+                            Chip chip = new Chip(context);
+                            chip.setText(genere);
+                            viewHolder.chipGroup.addView(chip);
+                        }
+                    }
+                }
+                else {
+                    if (getItemViewType(position) == CAST) {
+                        CastViewHolder viewHolder = (CastViewHolder) holder;
+                        context = viewHolder.attore.getContext();
+                        Cast itemCast = castList.get(position);
+                        Glide.with(context).load(itemCast.getProfile_path()).into(viewHolder.cover);
+                        viewHolder.attore.setText(itemCast.getName());
+                        viewHolder.personaggio.setText(itemCast.getCharacter());
+                    }
+                    else{
+                        RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
+                        context = viewHolder.img_movie.getContext();
+                        Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
+                    }
                 }
             }
         }
-
-        if (getItemViewType(position) == CINEMA) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
-        }
-
-        if (getItemViewType(position) == POPOLARI) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
-        }
-
-        if (getItemViewType(position) == ARRIVO) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
-        }
-
-        if (getItemViewType(position) == VOTATI) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
-            context = viewHolder.img_movie.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
-        }
-
-        if (getItemViewType(position) == CAST) {
-            CastViewHolder viewHolder = (CastViewHolder) holder;
-            context = viewHolder.attore.getContext();
-            Cast itemCast = castList.get(position);
-            Glide.with(context).load(itemCast.getProfile_path()).into(viewHolder.cover);
-            viewHolder.attore.setText(itemCast.getName());
-            viewHolder.personaggio.setText(itemCast.getCharacter());
-        }
-
     }
 
     @Override
