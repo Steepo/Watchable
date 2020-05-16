@@ -63,41 +63,12 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
-        if (viewType == 1) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
+        if(viewType == 6){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_without_title, parent, false);
+            return new ViewHolderNoTitle(view);
         }
-        if (viewType == 2) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
-        }
-        if (viewType == 3) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
-        }
-        if (viewType == 4) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
-        }
-        if (viewType == 5) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
-        }
-        if (viewType == 6) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
-        }
-        if (viewType == 7) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
-        }
-        if (viewType == 8) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
-        }
-
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -293,9 +264,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             requestQueue.add(jsonObjectRequest1);
         }
         if (getItemViewType(position) == ARRIVO) {
-            final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("In arrivo");
-
+            final ViewHolderNoTitle viewHolder1 = (ViewHolderNoTitle) holder;
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
             String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
@@ -303,7 +272,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder.item_recylerview;
+                                RecyclerView recyclerView = viewHolder1.without_title_recyclerview;
                                 recyclerView.setHasFixedSize(true);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                                 recyclerView.setLayoutManager(layoutManager);
@@ -449,6 +418,15 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             this.item_textview = view.findViewById(R.id.item_textview);
             this.item_recylerview = view.findViewById(R.id.title_recyclerview);
             //this.chip_more = view.findViewById(R.id.chip_more);
+        }
+    }
+
+    class ViewHolderNoTitle extends RecyclerView.ViewHolder {
+        private RecyclerView without_title_recyclerview;
+
+        ViewHolderNoTitle(View view) {
+            super(view);
+            this.without_title_recyclerview = view.findViewById(R.id.without_title_recyclerview);
         }
     }
 }

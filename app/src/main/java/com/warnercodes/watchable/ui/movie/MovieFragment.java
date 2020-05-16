@@ -42,8 +42,8 @@ public class MovieFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         Log.i("adapter", "4");
         recyclerView.setLayoutManager(layoutManager);
-        itemList.add(new ItemType("I più popolari", 5));
         itemList.add(new ItemType("In arrivo", 6));
+        itemList.add(new ItemType("I più popolari", 5));
         itemList.add(new ItemType("Gli attori del momento", 8));
         itemList.add(new ItemType("Adesso al cinema", 4));
         itemList.add(new ItemType("I più votati", 7));
