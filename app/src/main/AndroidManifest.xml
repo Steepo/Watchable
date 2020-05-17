@@ -12,27 +12,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ReviewActivity"></activity>
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".HomePage"
             android:label="@string/title_activity_home_page"
-            android:theme="@style/AppThemeNobar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+            android:theme="@style/AppThemeNobar"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings">
-
-        </activity>
-
+            android:label="@string/title_activity_settings"></activity>
         <activity
             android:name=".MovieDetailActivity"
             android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

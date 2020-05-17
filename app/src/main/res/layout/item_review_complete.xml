@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview_review"
+    android:layout_width="match_parent"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginBottom="8dp"
+    android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+        <ImageView
+            android:id="@+id/imdb_star"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:visibility="visible"
+            android:background="@drawable/ic_star_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/imdb_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintTop_toTopOf="@id/imdb_star"
+            app:layout_constraintBottom_toBottomOf="@id/imdb_star"
+            app:layout_constraintEnd_toStartOf="@id/imdb_score_ten"
+            app:layout_constraintStart_toEndOf="@id/imdb_star"
+            android:text="6.7" />
+
+        <TextView
+            android:id="@+id/imdb_score_ten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/imdb_score"
+            app:layout_constraintBottom_toBottomOf="@id/imdb_score"
+            android:text="/10" />
+
+        <TextView
+            android:id="@+id/review_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            app:layout_constraintTop_toTopOf="@id/imdb_score"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/imdb_score_ten"
+            app:layout_constraintStart_toEndOf="@id/imdb_score_ten"
+            android:text="Hi JJ Abrams And Kathleen Kennedy" />
+
+        <TextView
+            android:id="@+id/author_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imdb_star"
+            android:text="hdmfsds" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/author_date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Thanks for your input and all the upvotes here. Now back to reality and a review for us viewers and Star Wars fans: The film is bad, as bad as the rest of the trilogy that was wholly unneeded and attempted to reboot the whole thing for Disney's kiddie demographic via copying what Lucas had done albeit with weak actors and actresses, no character development and cheap directing. Face it: the dark side won. The emperor is back and can return anytime, Yoda is dead and his vision has been quashed and a Mary Sue is running around magically Mary Suing the universe. The minions of the dark side are deep inside Disney and Bad Robot headquarters and making a billion dollar a pop from their evil visions and hordes of lemmings pay it to them. PS: I love the ignorant and the spammers constantly writing 'oh JJ fixed it.' WHO DO YOU THINK RUINED IT IN THE FIRST PLACE? Your beloved sith JJ was the director of 7 and producer of 8." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

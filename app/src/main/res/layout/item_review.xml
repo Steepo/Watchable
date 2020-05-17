@@ -1,18 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview_review"
     android:layout_width="match_parent"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginBottom="8dp"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="16dp"
+    android:clickable="true"
+    android:focusable="true">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
+
+        <ImageView
+            android:id="@+id/imdb_star"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:visibility="visible"
+            android:background="@drawable/ic_star_black_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/imdb_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintTop_toTopOf="@id/imdb_star"
+            app:layout_constraintBottom_toBottomOf="@id/imdb_star"
+            app:layout_constraintEnd_toStartOf="@id/imdb_score_ten"
+            app:layout_constraintStart_toEndOf="@id/imdb_star"
+            tools:text="6.7" />
+
+        <TextView
+            android:id="@+id/imdb_score_ten"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/imdb_score"
+            app:layout_constraintBottom_toBottomOf="@id/imdb_score"
+            android:text="/10" />
+
+        <TextView
         android:id="@+id/author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/imdb_score"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/imdb_score_ten"
+            app:layout_constraintStart_toEndOf="@id/imdb_score_ten"
         tools:text="paperino" />
 
     <TextView
@@ -23,8 +65,9 @@
         android:maxLines="5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/author"
+        app:layout_constraintTop_toBottomOf="@id/imdb_star"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="mi è piaciuto molto" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

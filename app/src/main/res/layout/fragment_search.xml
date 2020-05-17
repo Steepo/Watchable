@@ -26,6 +26,7 @@
             android:maxLines="1"
             android:inputType="text"
             android:layout_height="wrap_content" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.recyclerview.widget.RecyclerView

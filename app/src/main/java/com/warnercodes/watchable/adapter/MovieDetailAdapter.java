@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -37,8 +38,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -47,6 +53,8 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<Movie> movies;
     private int movieId;
     private Movie movie;
+    private String imdbID;
+
     public MovieDetailAdapter(List<Movie> movies) {
         this.movies = movies;
     }
@@ -70,6 +78,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         movie = movies.get(position);
 
         movieId = movie.getMovieId();
+        imdbID = movie.getImdbId();
 
         viewHolder.main_title.setText(movie.getTitle());
         viewHolder.original_title.setText(String.format("%s (original title)", movie.getOriginal_title()));
@@ -94,7 +103,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         viewHolder.casttextview.setText("Cast");
         viewHolder.similarTexview.setText("Similar");
-        viewHolder.reviewstextview.setText("Reviews");
+        viewHolder.reviewstextview.setText("User Reviews");
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(RequestCast(viewHolder));
@@ -165,9 +174,9 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private JsonObjectRequest RequestReviews(final MovieDetailsViewHolder viewHolder) {
-        String reviewsUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/reviews?api_key=db18c03be648dd161624fabd8596021a";
-        JsonObjectRequest requestReviews = new JsonObjectRequest(Request.Method.GET, reviewsUrl, null,
-                new Response.Listener<JSONObject>() {
+        String reviewsUrl = "https://imdb8.p.rapidapi.com/title/get-user-reviews?currentCountry=US&purchaseCountry=US&tconst=" + imdbID;
+        JsonObjectRequest requestReviews = new JsonObjectRequest
+                (Request.Method.GET, reviewsUrl, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -178,21 +187,45 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             //List<Cast> dataset = new ArrayList<Cast>();
                             HorizontalAdapter adapter = new HorizontalAdapter(context);
                             recyclerView.setAdapter(adapter);
-                            JSONArray array = response.getJSONArray("results");
+                            JSONArray array = response.getJSONArray("reviews");
                             for (int index = 0; index < 5; index++) {
                                 //Log.i("REVIEW", array.getJSONObject(index).getString("content"));
-                                adapter.addReview(index, new Review(array.getJSONObject(index).getString("author"), array.getJSONObject(index).getString("content")));
+                                String author = array.getJSONObject(index).getJSONObject("author").getString("displayName");
+                                String text = array.getJSONObject(index).getString("reviewText");
+                                String title = array.getJSONObject(index).getString("reviewTitle");
+                                int score = array.getJSONObject(index).getInt("authorRating");
+
+                                int voteup = array.getJSONObject(index).getJSONObject("interestingVotes").getInt("up");
+                                int votedown = array.getJSONObject(index).getJSONObject("interestingVotes").getInt("down");
+
+                                String rawDate = array.getJSONObject(index).getString("submissionDate");
+                                Date date = null;
+                                try {
+                                    date = new SimpleDateFormat("yyy-MM-dd").parse(rawDate);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                adapter.addReview(index, new Review(author, text, title, score, voteup, votedown, date));
                                 adapter.notifyDataSetChanged();
                             }
                         } catch (JSONException e) {
-
                         }
                     }
                 }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("REVIEWS", String.valueOf(error));
+                    }
+                }) {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("x-rapidapi-host", "imdb8.p.rapidapi.com");
+                params.put("x-rapidapi-key", "bc1890fdb0msh6891cde9c049b25p1968fcjsn62cb3d35f800");
+
+                return params;
             }
-        });
+        };
         return requestReviews;
     }
 

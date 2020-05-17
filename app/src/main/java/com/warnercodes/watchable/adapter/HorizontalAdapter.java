@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
@@ -21,12 +22,16 @@ import com.warnercodes.watchable.Cast;
 import com.warnercodes.watchable.Movie;
 import com.warnercodes.watchable.MovieDetailActivity;
 import com.warnercodes.watchable.Review;
+import com.warnercodes.watchable.ReviewActivity;
 import com.warnercodes.watchable.databinding.ItemAdviceBinding;
 import com.warnercodes.watchable.databinding.ItemCastBinding;
 import com.warnercodes.watchable.databinding.ItemRecentBinding;
 import com.warnercodes.watchable.databinding.ItemReviewBinding;
+import com.warnercodes.watchable.databinding.ItemReviewCompleteBinding;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -36,6 +41,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<Movie> dataList;
     private List<Cast> castList;
     private List<Review> reviewList;
+    private Review completeReview;
 
     public HorizontalAdapter(Context context, List<Movie> dataList) {
         this.context = context;
@@ -70,10 +76,15 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyItemRemoved(position);
     }
 
+    public void setCompleteReview(Review completeReview) {
+        this.completeReview = completeReview;
+    }
+
     private static int RECENTI = 1;
     private static int CONSIGLIATI = 2;
     private static int CAST = 3;
     private static int REVIEW = 4;
+    private static int COMPLETE_REVIEW = 5;
 
 
     @NonNull
@@ -95,6 +106,10 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (viewType == REVIEW) {
             view = ItemReviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new ReviewViewHolder((ItemReviewBinding) view);
+        }
+        if (viewType == COMPLETE_REVIEW) {
+            view = ItemReviewCompleteBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new CompleteReviewViewHolder((ItemReviewCompleteBinding) view);
         }
         return null;
     }
@@ -138,12 +153,20 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         }
         if (getItemViewType(position) == REVIEW) {
-            Log.i("REVIEW", reviewList.get(position).getContent());
             ReviewViewHolder viewHolder = (ReviewViewHolder) holder;
             viewHolder.reviewauthor.setText(reviewList.get(position).getAuthor());
-            viewHolder.reviewContent.setText(reviewList.get(position).getContent());
+            viewHolder.reviewContent.setText(reviewList.get(position).getText());
+            viewHolder.score.setText(String.valueOf(reviewList.get(position).getScore()));
         }
-        Log.i("REVIEW", String.valueOf(getItemViewType(position)));
+        if (getItemViewType(position) == COMPLETE_REVIEW) {
+            CompleteReviewViewHolder viewHolder = (CompleteReviewViewHolder) holder;
+            String author = completeReview.getAuthor();
+            Date date = completeReview.getDate();
+            viewHolder.author_date.setText(author + "  " + date);
+            viewHolder.text.setText(completeReview.getText());
+            viewHolder.score.setText(String.valueOf(completeReview.getScore()));
+            viewHolder.title.setText(completeReview.getTitle());
+        }
     }
 
     @Override
@@ -172,6 +195,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String tipo = castList.get(position).getTipo();
             if (tipo.equals("cast"))
                 return CAST;
+        } else {
+            return COMPLETE_REVIEW;
         }
         return super.getItemViewType(position);
     }
@@ -183,8 +208,10 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return dataList.size();
         else if (castList != null && castList.size() > 0)
             return castList.size();
-        else
+        else if (reviewList != null && reviewList.size() > 0)
             return reviewList.size();
+        else
+            return 1;
     }
 
 
@@ -238,13 +265,43 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private class ReviewViewHolder extends RecyclerView.ViewHolder {
+        private CardView cardView;
         private TextView reviewContent;
         private TextView reviewauthor;
+        private TextView score;
 
         ReviewViewHolder(ItemReviewBinding binding) {
             super(binding.getRoot());
             this.reviewContent = binding.content;
             this.reviewauthor = binding.author;
+            this.score = binding.imdbScore;
+            this.cardView = binding.cardviewReview;
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Review review = reviewList.get(getAdapterPosition());
+                    Intent intent = new Intent(context, ReviewActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("review", (Serializable) review);
+                    context.startActivity(intent);
+                }
+            });
+        }
+    }
+
+    private class CompleteReviewViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView text;
+        private TextView author_date;
+        private TextView score;
+        private TextView title;
+
+        CompleteReviewViewHolder(ItemReviewCompleteBinding binding) {
+            super(binding.getRoot());
+            this.text = binding.content;
+            this.author_date = binding.authorDate;
+            this.score = binding.imdbScore;
+            this.title = binding.reviewTitle;
         }
     }
 }
