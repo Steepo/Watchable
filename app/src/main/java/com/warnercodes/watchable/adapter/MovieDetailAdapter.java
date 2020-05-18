@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,13 +25,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.warnercodes.watchable.Cast;
 import com.warnercodes.watchable.Movie;
 import com.warnercodes.watchable.R;
 import com.warnercodes.watchable.Review;
+import com.warnercodes.watchable.ReviewActivity;
 import com.warnercodes.watchable.databinding.ItemMovieDetailsBinding;
 import com.warnercodes.watchable.databinding.TitleRecyclerviewBinding;
 
@@ -38,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private Context context;
     private List<Movie> movies;
+    private List<Review> reviewList;
     private int movieId;
     private Movie movie;
     private String imdbID;
@@ -92,6 +95,16 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             public void onClick(View v) {
                 viewHolder.trama.setMaxLines(Integer.MAX_VALUE);
                 viewHolder.btShowmore.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        viewHolder.more_reviews.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ReviewActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("reviews", (Serializable) reviewList);
+                context.startActivity(intent);
             }
         });
 
@@ -180,6 +193,9 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            viewHolder.progressBar.setVisibility(View.INVISIBLE);
+                            viewHolder.more_reviews.setVisibility(View.VISIBLE);
+                            reviewList = new ArrayList<Review>();
                             RecyclerView recyclerView = viewHolder.reviewsRecyclerview;
                             recyclerView.setHasFixedSize(true);
                             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -188,24 +204,37 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             HorizontalAdapter adapter = new HorizontalAdapter(context);
                             recyclerView.setAdapter(adapter);
                             JSONArray array = response.getJSONArray("reviews");
-                            for (int index = 0; index < 5; index++) {
-                                //Log.i("REVIEW", array.getJSONObject(index).getString("content"));
-                                String author = array.getJSONObject(index).getJSONObject("author").getString("displayName");
-                                String text = array.getJSONObject(index).getString("reviewText");
-                                String title = array.getJSONObject(index).getString("reviewTitle");
-                                int score = array.getJSONObject(index).getInt("authorRating");
-
-                                int voteup = array.getJSONObject(index).getJSONObject("interestingVotes").getInt("up");
-                                int votedown = array.getJSONObject(index).getJSONObject("interestingVotes").getInt("down");
-
-                                String rawDate = array.getJSONObject(index).getString("submissionDate");
-                                Date date = null;
+                            for (int index = 0; index < array.length(); index++) {
                                 try {
+                                    String author = array.getJSONObject(index).getJSONObject("author").getString("displayName");
+                                    String text = array.getJSONObject(index).getString("reviewText");
+                                    String title = array.getJSONObject(index).getString("reviewTitle");
+
+                                    int score = 0;
+                                    if (array.getJSONObject(index).has("authorRating"))
+                                        score = array.getJSONObject(index).getInt("authorRating");
+
+                                    JSONObject votes = array.getJSONObject(index).getJSONObject("interestingVotes");
+
+                                    int voteup = 0;
+                                    if (votes.has("up"))
+                                        voteup = votes.getInt("up");
+
+                                    int votedown = 0;
+                                    if (votes.has("down"))
+                                        votedown = votes.getInt("down");
+
+                                    String rawDate = array.getJSONObject(index).getString("submissionDate");
+                                    Date date = null;
                                     date = new SimpleDateFormat("yyy-MM-dd").parse(rawDate);
-                                } catch (ParseException e) {
+                                    reviewList.add(index, new Review(author, text, title, score, voteup, votedown, date));
+                                } catch (JSONException | ParseException e) {
                                     e.printStackTrace();
+                                    index--;
                                 }
-                                adapter.addReview(index, new Review(author, text, title, score, voteup, votedown, date));
+                            }
+                            for (int j = 0; j < 5; j++) {
+                                adapter.addReview(j, reviewList.get(j));
                                 adapter.notifyDataSetChanged();
                             }
                         } catch (JSONException e) {
@@ -361,7 +390,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView director;
         private TextView writers;
         private TextView awards;
-        private MaterialButton watched;
+        private TextView more_reviews;
 
         private TextView rottenScore;
         private ImageView rottenIcon;
@@ -372,6 +401,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TitleRecyclerviewBinding reviewsView;
         private TextView reviewstextview;
         private RecyclerView reviewsRecyclerview;
+        private ProgressBar progressBar;
 
         MovieDetailsViewHolder(final ItemMovieDetailsBinding binding) {
             super(binding.getRoot());
@@ -387,6 +417,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             similarView = binding.similarView;
             similarTexview = similarView.itemTextview;
             similarRecyclerview = similarView.titleRecyclerview;
+            progressBar = binding.progressBar;
 
             castView = binding.castView;
             casttextview = castView.itemTextview;
@@ -405,6 +436,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             reviewsView = binding.reviewsView;
             reviewstextview = reviewsView.itemTextview;
             reviewsRecyclerview = reviewsView.titleRecyclerview;
+            more_reviews = binding.loadMoreReviews;
 
             youtubeThumbnail.setOnClickListener(new OnClickListener() {
                 @Override

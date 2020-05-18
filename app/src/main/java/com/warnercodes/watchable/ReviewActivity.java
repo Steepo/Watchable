@@ -2,7 +2,6 @@ package com.warnercodes.watchable;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -13,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.warnercodes.watchable.adapter.HorizontalAdapter;
 import com.warnercodes.watchable.databinding.ActivityReviewsBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReviewActivity extends AppCompatActivity {
 
@@ -29,7 +31,9 @@ public class ReviewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Review review = (Review) intent.getSerializableExtra("review");
-        Log.i("PARCELABEL", review.toString());
+        List<Review> reviewList = new ArrayList<Review>();
+        reviewList = (List<Review>) intent.getSerializableExtra("reviews");
+        //Log.i("PARCELABEL", review.toString());
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("User Reviews");
@@ -41,7 +45,11 @@ public class ReviewActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
 
         HorizontalAdapter movieDetailAdapter = new HorizontalAdapter(this);
-        movieDetailAdapter.setCompleteReview(review);
+        if (review != null)
+            movieDetailAdapter.setCompleteReview(review);
+        else
+            movieDetailAdapter.setReviewList(reviewList);
+
         recyclerView.setAdapter(movieDetailAdapter);
         movieDetailAdapter.notifyDataSetChanged();
 

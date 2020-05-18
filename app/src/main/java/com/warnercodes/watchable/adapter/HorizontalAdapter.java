@@ -30,6 +30,7 @@ import com.warnercodes.watchable.databinding.ItemReviewBinding;
 import com.warnercodes.watchable.databinding.ItemReviewCompleteBinding;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -78,6 +79,11 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setCompleteReview(Review completeReview) {
         this.completeReview = completeReview;
+    }
+
+    public void setReviewList(List<Review> reviewList) {
+        this.reviewList = reviewList;
+        notifyDataSetChanged();
     }
 
     private static int RECENTI = 1;
@@ -162,10 +168,17 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             CompleteReviewViewHolder viewHolder = (CompleteReviewViewHolder) holder;
             String author = completeReview.getAuthor();
             Date date = completeReview.getDate();
-            viewHolder.author_date.setText(author + "  " + date);
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+            String format = formatter.format(date);
+            System.out.println(format);
+            viewHolder.author_date.setText(author + "  " + format);
             viewHolder.text.setText(completeReview.getText());
             viewHolder.score.setText(String.valueOf(completeReview.getScore()));
             viewHolder.title.setText(completeReview.getTitle());
+            int totalvotes = completeReview.getVotedown() + completeReview.getVoteup();
+            viewHolder.votes.setText(completeReview.getVoteup() + " of " + totalvotes + " found this review helpful");
+
         }
     }
 
@@ -295,6 +308,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private TextView author_date;
         private TextView score;
         private TextView title;
+        private TextView votes;
 
         CompleteReviewViewHolder(ItemReviewCompleteBinding binding) {
             super(binding.getRoot());
@@ -302,6 +316,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             this.author_date = binding.authorDate;
             this.score = binding.imdbScore;
             this.title = binding.reviewTitle;
+            this.votes = binding.votes;
         }
     }
 }

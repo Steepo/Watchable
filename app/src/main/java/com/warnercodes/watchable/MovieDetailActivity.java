@@ -82,9 +82,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         //API db18c03be648dd161624fabd8596021a
         if (movieId == 0)
-            requestMovieInfo(181812); //Star Wars The Rise of the Skywalker
-        else
-            requestMovieInfo(movieId);
+            movieId = 1892; //Return of the Jedi
+        requestMovieInfo(movieId);
+
+        Log.i("MovieID", String.valueOf(movieId));
+
         binding.watchlistFab.shrink();
         binding.watchedFab.shrink();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

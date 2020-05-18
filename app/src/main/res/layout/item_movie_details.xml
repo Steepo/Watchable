@@ -335,19 +335,40 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
-        android:id="@+id/similar_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/reviews_view"
-        layout="@layout/title_recyclerview" />
-
-    <include
         android:id="@+id/reviews_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         app:layout_constraintTop_toBottomOf="@id/awards_layout"
+        layout="@layout/title_recyclerview" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toEndOf="@id/reviews_view"
+        app:layout_constraintStart_toStartOf="@id/reviews_view"
+        app:layout_constraintTop_toTopOf="@id/reviews_view" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/load_more_reviews"
+        style="?attr/materialButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View more"
+        android:visibility="invisible"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintEnd_toEndOf="@id/reviews_view"
+        app:layout_constraintStart_toStartOf="@id/reviews_view"
+        app:layout_constraintTop_toBottomOf="@id/reviews_view" />
+
+    <include
+        android:id="@+id/similar_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/load_more_reviews"
         layout="@layout/title_recyclerview" />
 
 
