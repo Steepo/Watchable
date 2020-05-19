@@ -22,7 +22,7 @@ public class ProfileFragment extends Fragment {
 
     private ProfileViewModel profileViewModel;
     private RecyclerView recyclerView;
-    private ProfileAdapter attivitaAdapter;
+    private ProfileAdapter profileAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private List<ItemType> itemList;
     private int movieId;
@@ -45,9 +45,9 @@ public class ProfileFragment extends Fragment {
         itemList.add(new ItemType("", 1));
         itemList.add(new ItemType("Preferiti", 2));
         itemList.add(new ItemType("Da guardare", 3));
-        attivitaAdapter = new ProfileAdapter(itemList);
-        recyclerView.setAdapter(attivitaAdapter);
 
+        profileAdapter = new ProfileAdapter(itemList);
+        recyclerView.setAdapter(profileAdapter);
         return root;
 
 

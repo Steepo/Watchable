@@ -167,9 +167,12 @@ public class Movie {
     }
 
     public void setCopertina(String copertina) {
-        this.copertina = "https://image.tmdb.org/t/p/w400" + copertina;
+        setCopertinaFull("https://image.tmdb.org/t/p/w400" + copertina);
         //Log.i("Copertine", copertina);
+    }
 
+    public void setCopertinaFull(String copertina) {
+        this.copertina = copertina;
     }
 
     public String getTitle() {

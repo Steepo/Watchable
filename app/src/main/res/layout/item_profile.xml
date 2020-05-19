@@ -4,35 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animationCache="false"
-    android:background="#424242"
     tools:context=".ui.profile.ProfileFragment">
 
     <ImageView
         android:id="@+id/cover_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="280dp"
-        android:background="#FFFFFF"
-        android:scaleType="fitXY"
-        android:src="@drawable/sfondo_profilo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/profile_bg"
+        app:layout_constraintDimensionRatio="H,5:3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <TextView
-        android:id="@+id/profile_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/profile_name"
-        android:textColor="#FDFDFD"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/avatar_profile" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar_profile"
@@ -45,43 +28,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/settings_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/IconOnlyButton"
+        app:icon="@drawable/settings_white_18dp"
+        app:layout_constraintStart_toEndOf="@+id/avatar_profile"
+        app:layout_constraintTop_toTopOf="@id/avatar_profile"
+        app:layout_constraintBottom_toBottomOf="@id/avatar_profile" />
+
+    <TextView
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/avatar_profile"
+        tools:text="@string/profile_name" />
+
     <TextView
         android:id="@+id/profile_mail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/profile_mail"
-        android:textColor="#FFFFFF"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_name" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_name"
+        tools:text="@string/profile_mail" />
 
     <TextView
         android:id="@+id/hours_spent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/hour_spent"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_mail" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_mail"
+        tools:text="@string/hour_spent" />
 
-    <ImageButton
-        android:id="@+id/settings_imageView"
-        style="@style/Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="60dp"
-        android:clickable="true"
-        android:onClick="settings_OnClick"
-        app:layout_constraintStart_toEndOf="@+id/avatar_profile"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_settings_white_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

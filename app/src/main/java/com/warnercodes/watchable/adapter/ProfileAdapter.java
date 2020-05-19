@@ -1,19 +1,29 @@
 package com.warnercodes.watchable.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.warnercodes.watchable.ItemType;
 import com.warnercodes.watchable.Movie;
-import com.warnercodes.watchable.R;
+import com.warnercodes.watchable.databinding.ItemProfileBinding;
+import com.warnercodes.watchable.databinding.TitleRecyclerviewBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -21,6 +31,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<ItemType> dataList;
     public int typeReq;
     Context mContex;
+    private Context context;
 
     public ProfileAdapter(List<ItemType> dataList) {
         this.dataList = dataList;
@@ -45,17 +56,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
-        if (viewType == 1) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_profile, parent, false);
+        if (viewType == PROFILO) {
+            ItemProfileBinding view = ItemProfileBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new ProfileViewHolder(view);
         }
-        if (viewType == 2) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
-        }
-        if (viewType == 3) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
+        if (viewType == PREFERITI || viewType == GUARDARE) {
+            TitleRecyclerviewBinding view = TitleRecyclerviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new ViewHolder(view);
         }
         return null;
@@ -63,17 +69,99 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
+        CollectionReference watched = user.collection("watched");
+        CollectionReference watchlist = user.collection("watchlist");
         if (getItemViewType(position) == PROFILO) {
-
+            context = ((ProfileViewHolder) holder).avatar_profile.getContext();
+            final ProfileViewHolder viewHolder = (ProfileViewHolder) holder;
+            //TODO: add image from firebase
+            //Glide.with(context).load().into(viewHolder.avatar_profile);
+            watched.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                    int total = 0;
+                    for (DocumentSnapshot document : documents) {
+                        long runtime = (long) document.get("runtime");
+                        total += runtime;
+                        Log.i("Profile", String.valueOf(document.get("runtime")));
+                    }
+                    int hours = total / 60;
+                    viewHolder.hours_spent.setText("You've watched " + hours + " hours of movies");
+                }
+            });
+            user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    viewHolder.profile_mail.setText((CharSequence) documentSnapshot.get("email"));
+                    String completeName = documentSnapshot.get("Nome") + " " + documentSnapshot.get("Cognome");
+                    viewHolder.profile_name.setText(completeName);
+                }
+            });
         }
         if (getItemViewType(position) == PREFERITI) {
             final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("Preferiti");
+            viewHolder.item_textview.setText("Guardati");
+            final RecyclerView recyclerView = viewHolder.item_recylerview;
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            final List<Movie> dataset = new ArrayList<Movie>();
+
+            watched.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                    int index = 0;
+                    HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+                    recyclerView.setAdapter(adapter);
+                    for (DocumentSnapshot document : documents) {
+                        Movie movie = new Movie();
+                        movie.setCopertinaFull(document.getString("copertina"));
+                        movie.setMovieId(document.getLong("movieId").intValue());
+                        movie.setRuntime((document.getLong("runtime").intValue()));
+                        movie.setTitle(document.getString("title"));
+                        movie.setTipo("recenti");
+                        adapter.add(index, movie);
+                        adapter.notifyDataSetChanged();
+                        index++;
+                    }
+                }
+            });
         }
         if (getItemViewType(position) == GUARDARE) {
             final ViewHolder viewHolder = (ViewHolder) holder;
             viewHolder.item_textview.setText("Da guardare");
+            final RecyclerView recyclerView = viewHolder.item_recylerview;
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            final List<Movie> dataset = new ArrayList<Movie>();
+
+            watchlist.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                    int index = 0;
+                    HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+                    recyclerView.setAdapter(adapter);
+                    for (DocumentSnapshot document : documents) {
+                        Movie movie = new Movie();
+                        movie.setCopertinaFull(document.getString("copertina"));
+                        movie.setMovieId(document.getLong("movieId").intValue());
+                        movie.setRuntime((document.getLong("runtime").intValue()));
+                        movie.setTitle(document.getString("title"));
+                        movie.setTipo("recenti");
+                        adapter.add(index, movie);
+                        adapter.notifyDataSetChanged();
+                        index++;
+                    }
+                }
+            });
         }
+
     }
 
     @Override
@@ -97,10 +185,10 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private TextView item_textview;
         private RecyclerView item_recylerview;
 
-        ViewHolder(View view) {
-            super(view);
-            this.item_textview = view.findViewById(R.id.item_textview);
-            this.item_recylerview = view.findViewById(R.id.title_recyclerview);
+        ViewHolder(TitleRecyclerviewBinding binding) {
+            super(binding.getRoot());
+            this.item_textview = binding.itemTextview;
+            this.item_recylerview = binding.titleRecyclerview;
         }
     }
 
@@ -108,16 +196,16 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private TextView profile_name;
         private TextView profile_mail;
         private TextView hours_spent;
-        private ImageView settings_imageView;
+        private MaterialButton settings_imageView;
         private ImageView avatar_profile;
 
-        public ProfileViewHolder(View view) {
-            super(view);
-            this.avatar_profile = view.findViewById(R.id.avatar_profile);
-            this.settings_imageView = view.findViewById(R.id.settings_imageView);
-            this.hours_spent = view.findViewById(R.id.hours_spent);
-            this.profile_mail = view.findViewById(R.id.profile_mail);
-            this.profile_name = view.findViewById(R.id.profile_name);
+        ProfileViewHolder(ItemProfileBinding binding) {
+            super(binding.getRoot());
+            this.avatar_profile = binding.avatarProfile;
+            this.settings_imageView = binding.settingsImageView;
+            this.hours_spent = binding.hoursSpent;
+            this.profile_mail = binding.profileMail;
+            this.profile_name = binding.profileName;
         }
     }
 }

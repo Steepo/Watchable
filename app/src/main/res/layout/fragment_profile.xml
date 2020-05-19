@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animationCache="false"
-    android:background="#424242"
     tools:context=".ui.profile.ProfileFragment">
 
     <androidx.recyclerview.widget.RecyclerView

@@ -24,6 +24,7 @@
     <style name="IconOnlyButton" parent="Widget.MaterialComponents.Button">
         <item name="iconPadding">0dp</item>
         <item name="iconGravity">textStart</item>
+        <item name="backgroundTint">@color/trasparent</item>
         <item name="rippleColor">@android:color/transparent</item>
         <item name="android:shadowColor">@android:color/transparent</item>
         <item name="strokeColor">@android:color/transparent</item>
