@@ -54,7 +54,8 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ImageView search_thumb = viewHolder.search_thumb;
         TextView textView = viewHolder.search_movie_title;
         textView.setText(movies.get(position).getTitle());
-        viewHolder.search_movie_year.setText(movies.get(position).getReleaseDate().split("-")[0]); //shows only the year
+        if (movies.get(position).getReleaseDate() != null)
+            viewHolder.search_movie_year.setText(movies.get(position).getReleaseDate().split("-")[0]); //shows only the year
         Glide.with(context).load(movies.get(position).getCopertina()).into(viewHolder.search_thumb);
     }
 

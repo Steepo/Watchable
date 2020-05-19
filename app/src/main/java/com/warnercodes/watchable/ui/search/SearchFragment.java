@@ -1,15 +1,21 @@
 package com.warnercodes.watchable.ui.search;
 
+import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,10 +45,11 @@ public class SearchFragment extends Fragment {
     private MovieSearchAdapter movieSearchAdapter;
     private List<Movie> mDataset;
     private RecyclerView recyclerView;
+    private ImageView searchImageview;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_search, container, false);
+        final View root = inflater.inflate(R.layout.fragment_search, container, false);
         ///TODO: implement bindings
         TextInputEditText editText = root.findViewById(R.id.textinputedittext);
 
@@ -53,6 +60,7 @@ public class SearchFragment extends Fragment {
         mDataset = new ArrayList<Movie>();
         movieSearchAdapter = new MovieSearchAdapter(mDataset);
         recyclerView.setAdapter(movieSearchAdapter);
+        searchImageview = root.findViewById(R.id.search_imageview);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -62,13 +70,14 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //mDataset = new ArrayList<Movie>();
-
                 String text = s.toString();
-                String url = "https://api.themoviedb.org/3/search/movie?api_key=db18c03be648dd161624fabd8596021a&language=en-US&query=" + text.replace(" ", "%20") + "&page=1&include_adult=false";
-                if (text.length() < 3)
+                if (text.length() < 3) {
                     mDataset.removeAll(mDataset);
-                else {
+                    movieSearchAdapter.notifyDataSetChanged();
+                    searchImageview.setVisibility(View.VISIBLE);
+                } else {
+                    String url = "https://api.themoviedb.org/3/search/movie?api_key=db18c03be648dd161624fabd8596021a&language=en-US&query=" + text.replace(" ", "%20") + "&page=1&include_adult=false";
+                    searchImageview.setVisibility(View.INVISIBLE);
                     final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                             (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -105,7 +114,27 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    if (Math.abs(scrollY + oldScrollY) > 0) {
+                        Log.i("scrolly", String.valueOf(scrollY));
+                        Log.i("scrollyo", String.valueOf(oldScrollY));
+                        hideKeyboard(getActivity());
+                    }
+                }
+            });
+        }
 
         return root;
+    }
+
+    private void hideKeyboard(FragmentActivity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 }

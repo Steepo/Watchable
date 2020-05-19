@@ -39,4 +39,15 @@
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <ImageView
+        android:id="@+id/search_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintTop_toTopOf="@id/results_recyclerview"
+        app:layout_constraintBottom_toBottomOf="@id/results_recyclerview"
+        app:layout_constraintStart_toStartOf="@id/results_recyclerview"
+        app:layout_constraintEnd_toEndOf="@id/results_recyclerview"
+        android:src="@drawable/search" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

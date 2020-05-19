@@ -177,7 +177,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                         //TODO: rotten if null
                         if (movie.getRottenScore() != null) {
-                            Integer rottenScore = Integer.parseInt(movie.getRottenScore().substring(0, 2));
+                            Integer rottenScore = Integer.parseInt(movie.getRottenScore().split("%")[0]);
                             if (rottenScore > 60)
                                 viewHolder.rottenIcon.setBackground(context.getResources().getDrawable(R.drawable.fresh));
                             else
