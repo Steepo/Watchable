@@ -29,7 +29,6 @@ import com.warnercodes.watchable.databinding.ItemRecentBinding;
 import com.warnercodes.watchable.databinding.ItemReviewBinding;
 import com.warnercodes.watchable.databinding.ItemReviewCompleteBinding;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -295,7 +294,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     Review review = reviewList.get(getAdapterPosition());
                     Intent intent = new Intent(context, ReviewActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("review", (Serializable) review);
+                    intent.putExtra("review", review);
                     context.startActivity(intent);
                 }
             });

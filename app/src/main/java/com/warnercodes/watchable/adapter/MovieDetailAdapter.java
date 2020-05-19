@@ -144,38 +144,49 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     public void onResponse(JSONObject response) {
                         movie.addOMdbInfo(response);
                         Log.i("Director", "Entrato");
-                        //TODO: caso in cui non c'è lo score
                         viewHolder.director.setText(movie.getDirector());
                         viewHolder.writers.setText(movie.getWriters());
                         viewHolder.awards.setText(movie.getAwards());
-                        int score = Integer.parseInt(movie.getMetascoreScore());
-                        if (score >= 60) {
-                            //verde
-                            viewHolder.metascoreScore.setTextColor(context.getResources().getColor(R.color.white));
-                            viewHolder.metascoreView.setBackgroundColor(context.getResources().getColor(R.color.meta_verde));
-                        } else if (score >= 40) {
-                            //giallo
+                        String metascoreScore = movie.getMetascoreScore();
+                        if (metascoreScore.equals("N/A")) {
                             viewHolder.metascoreScore.setTextColor(context.getResources().getColor(R.color.black));
+                            viewHolder.metascoreScore.setTextSize(18);
                             viewHolder.metascoreView.setBackgroundColor(context.getResources().getColor(R.color.meta_giallo));
                         } else {
-                            //rosso
-                            viewHolder.metascoreScore.setTextColor(context.getResources().getColor(R.color.white));
-                            viewHolder.metascoreView.setBackgroundColor(context.getResources().getColor(R.color.meta_rosso));
-                        }
-                        viewHolder.metascoreScore.setText(String.valueOf(score));
-                        viewHolder.metascoretext.setText("Metascore");
+                            int score = Integer.parseInt(metascoreScore);
+                            if (score >= 60) {
+                                //verde
+                                viewHolder.metascoreScore.setTextColor(context.getResources().getColor(R.color.white));
+                                viewHolder.metascoreView.setBackgroundColor(context.getResources().getColor(R.color.meta_verde));
+                            } else if (score >= 40) {
+                                //giallo
+                                viewHolder.metascoreScore.setTextColor(context.getResources().getColor(R.color.black));
+                                viewHolder.metascoreView.setBackgroundColor(context.getResources().getColor(R.color.meta_giallo));
+                            } else {
+                                //rosso
+                                viewHolder.metascoreScore.setTextColor(context.getResources().getColor(R.color.white));
+                                viewHolder.metascoreView.setBackgroundColor(context.getResources().getColor(R.color.meta_rosso));
+                            }
 
+                        }
+                        viewHolder.metascoreScore.setText(metascoreScore);
+                        viewHolder.metascoretext.setText("Metascore");
                         viewHolder.imdb_view.setVisibility(View.VISIBLE);
                         viewHolder.imdbScore.setText(movie.getImdbRating());
                         viewHolder.imdbScoreTen.setText("/10");
 
-                        Integer rottenScore = Integer.parseInt(movie.getRottenScore().substring(0, 2));
-                        if (rottenScore > 60)
+                        //TODO: rotten if null
+                        if (movie.getRottenScore() != null) {
+                            Integer rottenScore = Integer.parseInt(movie.getRottenScore().substring(0, 2));
+                            if (rottenScore > 60)
+                                viewHolder.rottenIcon.setBackground(context.getResources().getDrawable(R.drawable.fresh));
+                            else
+                                viewHolder.rottenIcon.setBackground(context.getResources().getDrawable(R.drawable.rotten));
+                            viewHolder.rottenScore.setText(movie.getRottenScore());
+                        } else {
                             viewHolder.rottenIcon.setBackground(context.getResources().getDrawable(R.drawable.fresh));
-                        else
-                            viewHolder.rottenIcon.setBackground(context.getResources().getDrawable(R.drawable.rotten));
-
-                        viewHolder.rottenScore.setText(movie.getRottenScore());
+                            viewHolder.rottenScore.setText("N/A");
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -187,7 +198,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private JsonObjectRequest RequestReviews(final MovieDetailsViewHolder viewHolder) {
-        String reviewsUrl = "https://imdb8.p.rapidapi.com/title/get-user-reviews?currentCountry=US&purchaseCountry=US&tconst=" + imdbID;
+        String reviewsUrl = "https://imdb8.p.rapidapi.com/title/get-user-reviews?tconst=" + imdbID;
         JsonObjectRequest requestReviews = new JsonObjectRequest
                 (Request.Method.GET, reviewsUrl, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -233,10 +244,12 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     index--;
                                 }
                             }
-                            for (int j = 0; j < 5; j++) {
+                            for (int j = 0; j < reviewList.size() && j < 5; j++) {
                                 adapter.addReview(j, reviewList.get(j));
                                 adapter.notifyDataSetChanged();
                             }
+                            if (reviewList.size() < 5)
+                                viewHolder.more_reviews.setVisibility(View.INVISIBLE);
                         } catch (JSONException e) {
                         }
                     }
@@ -298,17 +311,21 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     public void onResponse(JSONObject response) {
                         try {
                             JSONArray array = response.getJSONArray("results");
-                            for (int index = 0; index < 4; index++) {
-                                if (array.getJSONObject(index).getString("type").equals("Trailer")) {
-                                    String youtubekey = array.getJSONObject(index).getString("key");
-                                    String title = array.getJSONObject(index).getString("name");
-                                    movies.get(0).setYoutubekey(youtubekey);
-                                    Glide.with(context)
-                                            .load("https://img.youtube.com/vi/" + youtubekey + "/maxresdefault.jpg")
-                                            .error(Glide.with(context)
-                                                    .load("https://img.youtube.com/vi/" + youtubekey + "/mqdefault.jpg"))
-                                            .into(viewHolder.youtubeThumbnail);
+                            if (array.length() > 0) {
+                                for (int index = 0; index < 4; index++) {
+                                    if (array.getJSONObject(index).getString("type").equals("Trailer")) {
+                                        String youtubekey = array.getJSONObject(index).getString("key");
+                                        String title = array.getJSONObject(index).getString("name");
+                                        movies.get(0).setYoutubekey(youtubekey);
+                                        Glide.with(context)
+                                                .load("https://img.youtube.com/vi/" + youtubekey + "/maxresdefault.jpg")
+                                                .error(Glide.with(context)
+                                                        .load("https://img.youtube.com/vi/" + youtubekey + "/mqdefault.jpg"))
+                                                .into(viewHolder.youtubeThumbnail);
+                                    }
                                 }
+                            } else {
+                                viewHolder.playicon.setVisibility(View.INVISIBLE);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -345,6 +362,12 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         adapter.add(index, movie.parseSingleMovieJson(array.getJSONObject(index), "simili"));
                         adapter.notifyDataSetChanged();
                     }
+                    if (array.length() == 0) {
+                        viewHolder.similarView.titleRecyclerview.setVisibility(View.INVISIBLE);
+                        viewHolder.similarView.itemTextview.setVisibility(View.INVISIBLE);
+                        viewHolder.similarView.view.setVisibility(View.INVISIBLE);
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -402,6 +425,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView reviewstextview;
         private RecyclerView reviewsRecyclerview;
         private ProgressBar progressBar;
+        private ImageView playicon;
 
         MovieDetailsViewHolder(final ItemMovieDetailsBinding binding) {
             super(binding.getRoot());
@@ -412,6 +436,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             trama = binding.trama;
             chipGroup = binding.containerGeneri;
             youtubeThumbnail = binding.youtubeThumbnail;
+            playicon = binding.playIcon;
             btShowmore = binding.btShowmore;
             metascoreScore = binding.metascoreScore;
             similarView = binding.similarView;

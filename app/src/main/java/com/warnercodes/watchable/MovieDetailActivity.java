@@ -36,17 +36,16 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private MovieDetailAdapter movieDetailAdapter;
     private List<Movie> mDataset;
-    private RecyclerView.LayoutManager mLayoutManager;
     private int movieId;
     private Context context;
     private ActivityMovieDetailBinding binding;
-    private FirebaseFirestore db;
     private DocumentReference user;
     private DocumentReference watchlist;
     private DocumentReference watched;
@@ -65,24 +64,25 @@ public class MovieDetailActivity extends AppCompatActivity {
         context = this;
 
         //firebase init
-        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
 
         watchlist = user.collection("watchlist").document(String.valueOf(movieId));
         watched = user.collection("watched").document(String.valueOf(movieId));
 
         // showing back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         // rv init
         recyclerView = binding.detailsRecyclerview;
         recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
 
         //API db18c03be648dd161624fabd8596021a
         if (movieId == 0)
-            movieId = 1892; //Return of the Jedi
+            //movieId = 1892; //Return of the Jedi
+            movieId = 35554; //Cado dalle nubi
         requestMovieInfo(movieId);
 
         Log.i("MovieID", String.valueOf(movieId));

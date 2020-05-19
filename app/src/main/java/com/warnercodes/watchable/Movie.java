@@ -119,13 +119,15 @@ public class Movie {
     public void addOMdbInfo(JSONObject response) {
 
         try {
-            this.setRottenScore(response.getJSONArray("Ratings").getJSONObject(1).getString("Value"));
-            this.setMetascoreScore(response.getString("Metascore"));
-            this.setImdbRating(response.getString("imdbRating"));
-            this.setImdbVotes(response.getString("imdbVotes"));
             this.setDirector(response.getString("Director"));
             this.setWriters(response.getString("Writer"));
             this.setAwards(response.getString("Awards"));
+
+            this.setImdbRating(response.getString("imdbRating"));
+            this.setImdbVotes(response.getString("imdbVotes"));
+            this.setMetascoreScore(response.getString("Metascore"));
+            if (response.getJSONArray("Ratings").length() > 1 && response.getJSONArray("Ratings").getJSONObject(1).getString("Source").contains("Rotten"))
+                this.setRottenScore(response.getJSONArray("Ratings").getJSONObject(1).getString("Value"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
