@@ -5,12 +5,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +46,7 @@ public class SearchFragment extends Fragment {
     private List<Movie> mDataset;
     private RecyclerView recyclerView;
     private ImageView searchImageview;
+    private TextView noMoviesText;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
@@ -61,6 +62,7 @@ public class SearchFragment extends Fragment {
         movieSearchAdapter = new MovieSearchAdapter(mDataset);
         recyclerView.setAdapter(movieSearchAdapter);
         searchImageview = root.findViewById(R.id.search_imageview);
+        noMoviesText = root.findViewById(R.id.textview_no_movies);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -75,9 +77,11 @@ public class SearchFragment extends Fragment {
                     mDataset.removeAll(mDataset);
                     movieSearchAdapter.notifyDataSetChanged();
                     searchImageview.setVisibility(View.VISIBLE);
+                    noMoviesText.setVisibility(View.VISIBLE);
                 } else {
                     String url = "https://api.themoviedb.org/3/search/movie?api_key=db18c03be648dd161624fabd8596021a&language=en-US&query=" + text.replace(" ", "%20") + "&page=1&include_adult=false";
                     searchImageview.setVisibility(View.INVISIBLE);
+                    noMoviesText.setVisibility(View.INVISIBLE);
                     final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                             (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -119,8 +123,6 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                     if (Math.abs(scrollY + oldScrollY) > 0) {
-                        Log.i("scrolly", String.valueOf(scrollY));
-                        Log.i("scrollyo", String.valueOf(oldScrollY));
                         hideKeyboard(getActivity());
                     }
                 }
