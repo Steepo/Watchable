@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animationCache="false"
-    android:background="#424242"
-    tools:context=".ui.profile.ProfileFragment">
+    android:animationCache="false">
 
     <ImageView
         android:id="@+id/cover_imageView"
@@ -14,7 +12,7 @@
         android:layout_height="280dp"
         android:background="#FFFFFF"
         android:scaleType="fitXY"
-        android:src="@drawable/sfondo_profilo"
+        android:src="@drawable/profile_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
