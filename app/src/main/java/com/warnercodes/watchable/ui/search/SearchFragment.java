@@ -38,6 +38,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.warnercodes.watchable.Costants.API_KEY;
+import static com.warnercodes.watchable.Costants.LANG;
+
 public class SearchFragment extends Fragment {
 
     private SearchViewModel searchViewModel;
@@ -79,7 +82,7 @@ public class SearchFragment extends Fragment {
                     searchImageview.setVisibility(View.VISIBLE);
                     noMoviesText.setVisibility(View.VISIBLE);
                 } else {
-                    String url = "https://api.themoviedb.org/3/search/movie?api_key=db18c03be648dd161624fabd8596021a&language=en-US&query=" + text.replace(" ", "%20") + "&page=1&include_adult=false";
+                    String url = "https://api.themoviedb.org/3/search/movie?api_key=" + API_KEY + "&language=" + LANG + "&query=" + text.replace(" ", "%20") + "&page=1&include_adult=false";
                     searchImageview.setVisibility(View.INVISIBLE);
                     noMoviesText.setVisibility(View.INVISIBLE);
                     final RequestQueue requestQueue = Volley.newRequestQueue(getActivity());

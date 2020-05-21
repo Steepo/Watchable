@@ -2,6 +2,8 @@ package com.warnercodes.watchable;
 
 import org.junit.Test;
 
+import static com.warnercodes.watchable.Costants.API_KEY;
+import static com.warnercodes.watchable.Costants.LANG;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -18,7 +20,7 @@ public class ExampleUnitTest {
     @Test
     public void MovieTest(){
         Movie movie = new Movie();
-        String url = "https://api.themoviedb.org/3/movie/181812?api_key=" + API_KEY + "&language=en-US";
+        String url = "https://api.themoviedb.org/3/movie/181812?api_key=" + API_KEY + "&language=" + LANG + "";
 
         
 

@@ -189,16 +189,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return RECENTI;
             if (tipo.equals("consigliati"))
                 return CONSIGLIATI;
-            if (tipo.equals("simili"))
-                return RECENTI;
-            if (tipo.equals("cinema"))
-                return RECENTI;
-            if (tipo.equals("popolari"))
-                return RECENTI;
-            if (tipo.equals("arrivo"))
-                return RECENTI;
-            if (tipo.equals("votati"))
-                return RECENTI;
             if (tipo.equals("cast"))
                 return CAST;
         } else if (reviewList != null && reviewList.size() > 0) {
@@ -207,7 +197,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String tipo = castList.get(position).getTipo();
             if (tipo.equals("cast"))
                 return CAST;
-        } else {
+        } else if (completeReview != null) {
             return COMPLETE_REVIEW;
         }
         return super.getItemViewType(position);
@@ -222,8 +212,9 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return castList.size();
         else if (reviewList != null && reviewList.size() > 0)
             return reviewList.size();
-        else
+        else if (completeReview != null)
             return 1;
+        return 0;
     }
 
 
@@ -246,7 +237,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    class AdviceViewHolder extends RecyclerView.ViewHolder {
+    private static class AdviceViewHolder extends RecyclerView.ViewHolder {
         private ImageView img_advice;
         private TextView title_advice;
         private TextView trama_adv;
@@ -263,7 +254,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
 
-    class CastViewHolder extends RecyclerView.ViewHolder {
+    private static class CastViewHolder extends RecyclerView.ViewHolder {
         private TextView attore;
         private TextView personaggio;
         private ImageView cover;
@@ -301,7 +292,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private class CompleteReviewViewHolder extends RecyclerView.ViewHolder {
+    private static class CompleteReviewViewHolder extends RecyclerView.ViewHolder {
 
         private TextView text;
         private TextView author_date;

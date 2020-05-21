@@ -48,6 +48,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.warnercodes.watchable.Costants.API_KEY;
+import static com.warnercodes.watchable.Costants.LANG;
+
 
 public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -272,7 +275,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private JsonObjectRequest RequestCast(final MovieDetailsViewHolder viewHolder) {
-        String castUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=db18c03be648dd161624fabd8596021a";
+        String castUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=" + API_KEY;
         JsonObjectRequest requestCast = new JsonObjectRequest(Request.Method.GET, castUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -304,7 +307,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private JsonObjectRequest RequestTrailer(final MovieDetailsViewHolder viewHolder) {
-        String videosUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/videos?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+        String videosUrl = "https://api.themoviedb.org/3/movie/" + movieId + "/videos?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
         JsonObjectRequest trailerRequest = new JsonObjectRequest
                 (Request.Method.GET, videosUrl, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -343,7 +346,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private JsonObjectRequest RequestSimilar(final MovieDetailsViewHolder viewHolder) {
-        String url = "https://api.themoviedb.org/3/movie/" + movieId + "/similar?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+        String url = "https://api.themoviedb.org/3/movie/" + movieId + "/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
         JsonObjectRequest simialrRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -359,7 +362,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     JSONArray array = response.getJSONArray("results");
                     for (int index = 0; index < array.length(); index++) {
                         Movie movie = new Movie();
-                        adapter.add(index, movie.parseSingleMovieJson(array.getJSONObject(index), "simili"));
+                        adapter.add(index, movie.parseSingleMovieJson(array.getJSONObject(index), "recenti"));
                         adapter.notifyDataSetChanged();
                     }
                     if (array.length() == 0) {

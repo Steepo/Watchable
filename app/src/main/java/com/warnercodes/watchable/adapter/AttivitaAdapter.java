@@ -38,6 +38,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.warnercodes.watchable.Costants.API_KEY;
+import static com.warnercodes.watchable.Costants.LANG;
+
 public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<ItemType> dataList;
@@ -71,16 +74,15 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == RECENTI) {
+        if (viewType == RECENTI || viewType == ARRIVO) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_without_title, parent, false);
             return new ViewHolderNoTitle(view);
         }
-        if (viewType == ARRIVO) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_without_title, parent, false);
-            return new ViewHolderNoTitle(view);
+        if (viewType == CONSIGLIATI || viewType == SIMILI || viewType == POPOLARI || viewType == CAST || viewType == CINEMA || viewType == VOTATI) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
+            return new ViewHolder(view);
         }
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-        return new ViewHolder(view);
+        return null;
     }
 
     @Override
@@ -128,54 +130,13 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
             });
         }
-/*
-        if (getItemViewType(position) == RECENTI) {
-            final ViewHolderNoTitle viewHolder = (ViewHolderNoTitle) holder;
-            viewHolder.imageView.setBackgroundResource(R.drawable.recently_bg);
-            final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/popular?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
-            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                RecyclerView recyclerView = viewHolder.without_title_recyclerview;
-                                recyclerView.setHasFixedSize(true);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                                recyclerView.setLayoutManager(layoutManager);
-                                List<Movie> dataset = new ArrayList<Movie>();
-                                HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                                recyclerView.setAdapter(adapter);
-                                JSONArray movie_array = response.getJSONArray("results");
-                                for (int index = 0; index < movie_array.length(); index++) {
-                                    Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
-                                    adapter.notifyDataSetChanged();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.e("DEBUG", String.valueOf(error));
-                        }
-                    });
-            requestQueue.add(jsonObjectRequest1);
-
-        }
-
-
- */
         if (getItemViewType(position) == CONSIGLIATI) {
             final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("Ti consigliamo anche");
+            viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/255/similar?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+            String url = "https://api.themoviedb.org/3/movie/255/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -212,10 +173,10 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (getItemViewType(position) == SIMILI) {
             final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("Altri simili");
+            viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/255/similar?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+            String url = "https://api.themoviedb.org/3/movie/255/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -232,7 +193,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < movie_array.length(); index++) {
                                     Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "simili"));
+                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {
@@ -252,10 +213,10 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (getItemViewType(position) == CINEMA) {
             final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("Adesso al cinema");
+            viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+            String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -272,7 +233,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < movie_array.length(); index++) {
                                     Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "cinema"));
+                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {
@@ -292,10 +253,10 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (getItemViewType(position) == POPOLARI) {
             final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("I più popolari");
+            viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/popular?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+            String url = "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -312,7 +273,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < movie_array.length(); index++) {
                                     Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "popolari"));
+                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {
@@ -333,7 +294,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (getItemViewType(position) == ARRIVO) {
             final ViewHolderNoTitle viewHolder1 = (ViewHolderNoTitle) holder;
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+            String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -350,7 +311,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < movie_array.length(); index++) {
                                     Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "arrivo"));
+                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {
@@ -370,10 +331,10 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (getItemViewType(position) == VOTATI) {
             final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("I più votati");
+            viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/top_rated?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+            String url = "https://api.themoviedb.org/3/movie/top_rated?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -390,7 +351,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < movie_array.length(); index++) {
                                     Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "votati"));
+                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
                                     adapter.notifyDataSetChanged();
                                 }
                             } catch (JSONException e) {
@@ -410,10 +371,10 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (getItemViewType(position) == CAST) {
             final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("Gli attori del momento");
+            viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/person/popular?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
+            String url = "https://api.themoviedb.org/3/person/popular?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -450,24 +411,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        int tipo = dataList.get(position).getType();
-        if (tipo == 1)
-            return RECENTI;
-        if (tipo == 2)
-            return CONSIGLIATI;
-        if (tipo == 3)
-            return SIMILI;
-        if (tipo == 4)
-            return CINEMA;
-        if (tipo == 5)
-            return POPOLARI;
-        if (tipo == 6)
-            return ARRIVO;
-        if (tipo == 7)
-            return VOTATI;
-        if (tipo == 8)
-            return CAST;
-        return super.getItemViewType(position);
+        return dataList.get(position).getType();
     }
 
     @Override

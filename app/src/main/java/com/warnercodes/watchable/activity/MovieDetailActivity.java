@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.warnercodes.watchable.Costants.API_KEY;
+
 public class MovieDetailActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -88,7 +90,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        //API db18c03be648dd161624fabd8596021a
         if (movieId == 0)
             //movieId = 1892; //Return of the Jedi
             movieId = 35554; //Cado dalle nubi
@@ -213,7 +214,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void requestMovieInfo(final int movieId) {
-        String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=db18c03be648dd161624fabd8596021a&language=it-it";
+        String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + API_KEY + "&language=it-it";
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
