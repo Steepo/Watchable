@@ -1,4 +1,4 @@
-package com.warnercodes.watchable;
+package com.warnercodes.watchable.activity;
 
 import android.content.Context;
 import android.view.View;

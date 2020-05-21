@@ -20,10 +20,9 @@
         <item name="android:fontFamily">@font/googlesans_regular</item>
     </style>
 
-
     <!-- Base application theme. -->
 
-    <style name="IconOnlyButton" parent="Widget.MaterialComponents.Button">
+    <style name="IconOnlyButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="iconPadding">0dp</item>
         <item name="iconGravity">textStart</item>
         <item name="backgroundTint">@color/trasparent</item>
@@ -33,6 +32,8 @@
         <item name="android:fontFamily">@font/googlesans_regular</item>
     </style>
 
-
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background</item>
+    </style>
 
 </resources>

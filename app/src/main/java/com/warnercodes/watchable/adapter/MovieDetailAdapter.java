@@ -31,7 +31,7 @@ import com.warnercodes.watchable.Cast;
 import com.warnercodes.watchable.Movie;
 import com.warnercodes.watchable.R;
 import com.warnercodes.watchable.Review;
-import com.warnercodes.watchable.ReviewActivity;
+import com.warnercodes.watchable.activity.ReviewActivity;
 import com.warnercodes.watchable.databinding.ItemMovieDetailsBinding;
 import com.warnercodes.watchable.databinding.TitleRecyclerviewBinding;
 

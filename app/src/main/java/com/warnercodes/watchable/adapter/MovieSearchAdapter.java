@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.warnercodes.watchable.Movie;
-import com.warnercodes.watchable.MovieDetailActivity;
+import com.warnercodes.watchable.activity.MovieDetailActivity;
 import com.warnercodes.watchable.databinding.ItemMovieSearchBinding;
 
 import java.util.List;

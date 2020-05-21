@@ -1,7 +1,7 @@
 package com.warnercodes.watchable.adapter;
 
 import android.content.Context;
-import android.util.Log;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.CollectionReference;
@@ -50,8 +51,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private static int PROFILO = 1;
-    private static int PREFERITI = 2;
-    private static int GUARDARE = 3;
+    private static int WATCHED = 2;
+    private static int WATCHLIST = 3;
 
     @NonNull
     @Override
@@ -60,7 +61,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ItemProfileBinding view = ItemProfileBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new ProfileViewHolder(view);
         }
-        if (viewType == PREFERITI || viewType == GUARDARE) {
+        if (viewType == WATCHED || viewType == WATCHLIST) {
             TitleRecyclerviewBinding view = TitleRecyclerviewBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new ViewHolder(view);
         }
@@ -69,15 +70,26 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+        context = holder.itemView.getContext();
+        SharedPreferences sharedPref = context.getSharedPreferences("infos", Context.MODE_PRIVATE);
+        final String email = sharedPref.getString("email", null);
+        String uid = sharedPref.getString("uid", null);
+        final String fullname = sharedPref.getString("name", null);
+        final String profileUrl = sharedPref.getString("photourl", null);
+
+        //Log.i("Glide", profileUrl);
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
+        DocumentReference user = db.collection("utenti").document(uid);
         CollectionReference watched = user.collection("watched");
         CollectionReference watchlist = user.collection("watchlist");
         if (getItemViewType(position) == PROFILO) {
             context = ((ProfileViewHolder) holder).avatar_profile.getContext();
             final ProfileViewHolder viewHolder = (ProfileViewHolder) holder;
+
             //TODO: add image from firebase
-            //Glide.with(context).load().into(viewHolder.avatar_profile);
+            Glide.with(context).load(profileUrl).into(viewHolder.avatar_profile);
+
             watched.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -86,7 +98,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     for (DocumentSnapshot document : documents) {
                         long runtime = (long) document.get("runtime");
                         total += runtime;
-                        Log.i("Profile", String.valueOf(document.get("runtime")));
+                        //Log.i("Profile", String.valueOf(document.get("runtime")));
                     }
                     int hours = total / 60;
                     viewHolder.hours_spent.setText("You've watched " + hours + " hours of movies");
@@ -95,13 +107,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    viewHolder.profile_mail.setText((CharSequence) documentSnapshot.get("email"));
-                    String completeName = documentSnapshot.get("Nome") + " " + documentSnapshot.get("Cognome");
-                    viewHolder.profile_name.setText(completeName);
+                    viewHolder.profile_mail.setText(email);
+                    viewHolder.profile_name.setText(fullname);
                 }
             });
         }
-        if (getItemViewType(position) == PREFERITI) {
+
+        if (getItemViewType(position) == WATCHED) {
             final ViewHolder viewHolder = (ViewHolder) holder;
             viewHolder.item_textview.setText("Guardati");
             final RecyclerView recyclerView = viewHolder.item_recylerview;
@@ -131,7 +143,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             });
         }
-        if (getItemViewType(position) == GUARDARE) {
+
+        if (getItemViewType(position) == WATCHLIST) {
             final ViewHolder viewHolder = (ViewHolder) holder;
             viewHolder.item_textview.setText("Da guardare");
             final RecyclerView recyclerView = viewHolder.item_recylerview;
@@ -170,9 +183,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (tipo == 1)
             return PROFILO;
         if (tipo == 2)
-            return PREFERITI;
+            return WATCHED;
         if (tipo == 3)
-            return GUARDARE;
+            return WATCHLIST;
         return super.getItemViewType(position);
     }
 

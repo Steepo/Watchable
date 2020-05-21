@@ -1,4 +1,4 @@
-package com.warnercodes.watchable;
+package com.warnercodes.watchable.activity;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +7,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.warnercodes.watchable.R;
 import com.warnercodes.watchable.databinding.SettingsActivityBinding;
 
 public class SettingsActivity extends AppCompatActivity {

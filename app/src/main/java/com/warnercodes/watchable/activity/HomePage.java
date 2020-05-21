@@ -1,4 +1,4 @@
-package com.warnercodes.watchable;
+package com.warnercodes.watchable.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.warnercodes.watchable.R;
 
 public class HomePage extends AppCompatActivity {
 

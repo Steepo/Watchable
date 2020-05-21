@@ -1,7 +1,8 @@
-package com.warnercodes.watchable;
+package com.warnercodes.watchable.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.warnercodes.watchable.Movie;
+import com.warnercodes.watchable.R;
 import com.warnercodes.watchable.adapter.MovieDetailAdapter;
 import com.warnercodes.watchable.databinding.ActivityMovieDetailBinding;
 
@@ -63,9 +66,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieId = intent.getIntExtra("movieId", 0);
         context = this;
 
+        SharedPreferences sharedPref = context.getSharedPreferences("infos", Context.MODE_PRIVATE);
+        final String email = sharedPref.getString("email", null);
+        String uid = sharedPref.getString("uid", null);
+        final String fullname = sharedPref.getString("name", null);
+
+
         //firebase init
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        user = db.collection("utenti").document("7OUM3aVwSdD0J3MS1uor");
+        user = db.collection("utenti").document(uid);
 
         watchlist = user.collection("watchlist").document(String.valueOf(movieId));
         watched = user.collection("watched").document(String.valueOf(movieId));

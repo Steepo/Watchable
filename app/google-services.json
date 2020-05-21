@@ -8,18 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:261483787315:android:84367b6c7b5ab84a455f46",
+        "mobilesdk_app_id": "1:261483787315:android:32676540543e2ff1455f46",
         "android_client_info": {
           "package_name": "com.warnercodes.watchable"
         }
       },
       "oauth_client": [
         {
-          "client_id": "261483787315-fa0q06nut22ln8n348d836bj7s7ie5h4.apps.googleusercontent.com",
+          "client_id": "261483787315-9oad14r7e3i85li3kbagaff3vkkivr3c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.warnercodes.watchable",
-            "certificate_hash": "3f9a3d57370f207faf17d8331c77c1dab4e8318a"
+            "certificate_hash": "ff69ed11c91f7f618d652e739baa80b9792c41a5"
           }
         },
         {

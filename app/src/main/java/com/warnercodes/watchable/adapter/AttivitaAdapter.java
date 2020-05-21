@@ -1,6 +1,7 @@
 package com.warnercodes.watchable.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.warnercodes.watchable.Cast;
 import com.warnercodes.watchable.ItemType;
 import com.warnercodes.watchable.Movie;
@@ -64,11 +71,11 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == 1){
+        if (viewType == RECENTI) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_without_title, parent, false);
             return new ViewHolderNoTitle(view);
         }
-        if(viewType == 6){
+        if (viewType == ARRIVO) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_without_title, parent, false);
             return new ViewHolderNoTitle(view);
         }
@@ -78,9 +85,53 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+        context = holder.itemView.getContext();
+        SharedPreferences sharedPref = context.getSharedPreferences("infos", Context.MODE_PRIVATE);
+        final String email = sharedPref.getString("email", null);
+        String uid = sharedPref.getString("uid", null);
+        final String fullname = sharedPref.getString("name", null);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference user = db.collection("utenti").document(uid);
+        CollectionReference watched = user.collection("watched");
+
+        if (getItemViewType(position) == RECENTI) {
+
+            final ViewHolderNoTitle viewHolder = (ViewHolderNoTitle) holder;
+            viewHolder.imageView.setBackgroundResource(R.drawable.recently_bg);
+
+            viewHolder.imageView.setBackgroundResource(R.drawable.recently_bg);
+            final RecyclerView recyclerView = viewHolder.without_title_recyclerview;
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            final List<Movie> dataset = new ArrayList<Movie>();
+
+            watched.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                    int index = 0;
+                    HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+                    recyclerView.setAdapter(adapter);
+                    for (DocumentSnapshot document : documents) {
+                        Movie movie = new Movie();
+                        movie.setCopertinaFull(document.getString("copertina"));
+                        movie.setMovieId(document.getLong("movieId").intValue());
+                        movie.setRuntime((document.getLong("runtime").intValue()));
+                        movie.setTitle(document.getString("title"));
+                        movie.setTipo("recenti");
+                        adapter.add(index, movie);
+                        adapter.notifyDataSetChanged();
+                        index++;
+                    }
+                }
+            });
+        }
+/*
         if (getItemViewType(position) == RECENTI) {
             final ViewHolderNoTitle viewHolder = (ViewHolderNoTitle) holder;
-            viewHolder.imageView.setBackgroundResource(R.drawable.homepage);
+            viewHolder.imageView.setBackgroundResource(R.drawable.recently_bg);
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
             String url = "https://api.themoviedb.org/3/movie/popular?api_key=db18c03be648dd161624fabd8596021a&language=en-US&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
@@ -116,6 +167,9 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             requestQueue.add(jsonObjectRequest1);
 
         }
+
+
+ */
         if (getItemViewType(position) == CONSIGLIATI) {
             final ViewHolder viewHolder = (ViewHolder) holder;
             viewHolder.item_textview.setText("Ti consigliamo anche");
@@ -155,6 +209,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     });
             requestQueue.add(jsonObjectRequest1);
         }
+
         if (getItemViewType(position) == SIMILI) {
             final ViewHolder viewHolder = (ViewHolder) holder;
             viewHolder.item_textview.setText("Altri simili");
@@ -194,6 +249,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     });
             requestQueue.add(jsonObjectRequest1);
         }
+
         if (getItemViewType(position) == CINEMA) {
             final ViewHolder viewHolder = (ViewHolder) holder;
             viewHolder.item_textview.setText("Adesso al cinema");
@@ -273,6 +329,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     });
             requestQueue.add(jsonObjectRequest1);
         }
+
         if (getItemViewType(position) == ARRIVO) {
             final ViewHolderNoTitle viewHolder1 = (ViewHolderNoTitle) holder;
             final RequestQueue requestQueue = Volley.newRequestQueue(context);

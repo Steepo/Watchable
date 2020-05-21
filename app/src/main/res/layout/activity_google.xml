@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="4"
-    tools:context=".GoogleSignInActivity">
+    tools:context=".activity.GoogleSignInActivity">
 
     <ProgressBar
         android:id="@+id/progressBar"

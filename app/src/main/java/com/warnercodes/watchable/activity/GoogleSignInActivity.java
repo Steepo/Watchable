@@ -1,6 +1,8 @@
-package com.warnercodes.watchable;
+package com.warnercodes.watchable.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +22,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.warnercodes.watchable.databinding.ActivityGoogleBinding;
+import com.warnercodes.watchable.R;
+import com.warnercodes.watchable.databinding.ActivityLoginBinding;
 
 /**
  * Demonstrate Firebase Authentication using a Google ID Token.
@@ -36,19 +39,19 @@ public class GoogleSignInActivity extends BaseActivity implements
     // [END declare_auth]
 
     private GoogleSignInClient mGoogleSignInClient;
-    private ActivityGoogleBinding mBinding;
+    private ActivityLoginBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = ActivityGoogleBinding.inflate(getLayoutInflater());
+        mBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-        setProgressBar(mBinding.progressBar);
+        //setProgressBar(mBinding.progressBar);
 
         // Button listeners
-        mBinding.signInButton.setOnClickListener(this);
-        mBinding.signOutButton.setOnClickListener(this);
-        mBinding.disconnectButton.setOnClickListener(this);
+        mBinding.buttonGoogle.setOnClickListener(this);
+        //mBinding.signOutButton.setOnClickListener(this);
+        //mBinding.disconnectButton.setOnClickListener(this);
 
         // [START config_signin]
         // Configure Google Sign In
@@ -118,7 +121,7 @@ public class GoogleSignInActivity extends BaseActivity implements
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Snackbar.make(mBinding.mainLayout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mBinding.container, "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             updateUI(null);
                         }
 
@@ -168,24 +171,32 @@ public class GoogleSignInActivity extends BaseActivity implements
     private void updateUI(FirebaseUser user) {
         hideProgressBar();
         if (user != null) {
-            mBinding.status.setText(getString(R.string.google_status_fmt, user.getEmail()));
-            mBinding.detail.setText(getString(R.string.firebase_status_fmt, user.getUid()));
+            //mBinding.status.setText(getString(R.string.google_status_fmt, user.getEmail()));
+            //mBinding.detail.setText(getString(R.string.firebase_status_fmt, user.getUid()));
 
-            mBinding.signInButton.setVisibility(View.GONE);
-            mBinding.signOutAndDisconnect.setVisibility(View.VISIBLE);
+            SharedPreferences sharedPref = getSharedPreferences("infos", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("name", user.getDisplayName());
+            editor.putString("photourl", String.valueOf(user.getPhotoUrl()));
+            editor.putString("email", user.getEmail());
+            editor.putString("uid", user.getUid());
+            editor.apply();
+            //mBinding.signInButton.setVisibility(View.GONE);
+            //mBinding.signOutAndDisconnect.setVisibility(View.VISIBLE);
+            startActivity(new Intent(this, HomePage.class));
         } else {
-            mBinding.status.setText(R.string.signed_out);
-            mBinding.detail.setText(null);
+            //mBinding.status.setText(R.string.signed_out);
+            //mBinding.detail.setText(null);
 
-            mBinding.signInButton.setVisibility(View.VISIBLE);
-            mBinding.signOutAndDisconnect.setVisibility(View.GONE);
+            //mBinding.signInButton.setVisibility(View.VISIBLE);
+            //mBinding.signOutAndDisconnect.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.signInButton) {
+        if (i == R.id.button_google) {
             signIn();
         } else if (i == R.id.signOutButton) {
             signOut();

@@ -1,4 +1,4 @@
-package com.warnercodes.watchable;
+package com.warnercodes.watchable.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.warnercodes.watchable.Review;
 import com.warnercodes.watchable.adapter.HorizontalAdapter;
 import com.warnercodes.watchable.databinding.ActivityReviewsBinding;
 
