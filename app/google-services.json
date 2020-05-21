@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "261483787315-fa0q06nut22ln8n348d836bj7s7ie5h4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.warnercodes.watchable",
+            "certificate_hash": "3f9a3d57370f207faf17d8331c77c1dab4e8318a"
+          }
+        },
+        {
           "client_id": "261483787315-n3erb46mi4or5r1jp4c4r6ggmgtjpbgn.apps.googleusercontent.com",
           "client_type": 3
         }
