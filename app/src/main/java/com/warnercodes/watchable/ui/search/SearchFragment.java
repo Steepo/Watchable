@@ -29,7 +29,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
 import com.warnercodes.watchable.Movie;
 import com.warnercodes.watchable.R;
-import com.warnercodes.watchable.adapter.MovieSearchAdapter;
+import com.warnercodes.watchable.adapter.SearchAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +45,7 @@ public class SearchFragment extends Fragment {
 
     private SearchViewModel searchViewModel;
     private RecyclerView.LayoutManager mLayoutManager;
-    private MovieSearchAdapter movieSearchAdapter;
+    private SearchAdapter searchAdapter;
     private List<Movie> mDataset;
     private RecyclerView recyclerView;
     private ImageView searchImageview;
@@ -62,8 +62,8 @@ public class SearchFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
         mDataset = new ArrayList<Movie>();
-        movieSearchAdapter = new MovieSearchAdapter(mDataset);
-        recyclerView.setAdapter(movieSearchAdapter);
+        searchAdapter = new SearchAdapter(mDataset);
+        recyclerView.setAdapter(searchAdapter);
         searchImageview = root.findViewById(R.id.search_imageview);
         noMoviesText = root.findViewById(R.id.textview_no_movies);
 
@@ -78,7 +78,7 @@ public class SearchFragment extends Fragment {
                 String text = s.toString();
                 if (text.length() < 3) {
                     mDataset.removeAll(mDataset);
-                    movieSearchAdapter.notifyDataSetChanged();
+                    searchAdapter.notifyDataSetChanged();
                     searchImageview.setVisibility(View.VISIBLE);
                     noMoviesText.setVisibility(View.VISIBLE);
                 } else {
@@ -96,8 +96,8 @@ public class SearchFragment extends Fragment {
                                         movie_array = response.getJSONArray("results");
                                         for (int index = 0; index < movie_array.length(); index++) {
                                             Movie movie = new Movie();
-                                            movieSearchAdapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), ""));
-                                            movieSearchAdapter.notifyDataSetChanged();
+                                            searchAdapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), ""));
+                                            searchAdapter.notifyDataSetChanged();
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();

@@ -42,7 +42,7 @@ public class RecentFragment extends Fragment {
         attivitaAdapter = new AttivitaAdapter(getActivity(), itemList);
         itemList.add(new ItemType("Attività recenti", 1));
         itemList.add(new ItemType("Ti consigliamo anche", 2));
-        itemList.add(new ItemType("Altri simili", 3));
+        //itemList.add(new ItemType("Altri simili", 3));
         recyclerView.setAdapter(attivitaAdapter);
 
         return root;

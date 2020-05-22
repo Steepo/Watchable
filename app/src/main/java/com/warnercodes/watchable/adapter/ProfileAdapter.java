@@ -1,8 +1,10 @@
 package com.warnercodes.watchable.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.warnercodes.watchable.ItemType;
 import com.warnercodes.watchable.Movie;
+import com.warnercodes.watchable.activity.SettingsActivity;
 import com.warnercodes.watchable.databinding.ItemProfileBinding;
 import com.warnercodes.watchable.databinding.TitleRecyclerviewBinding;
 
@@ -209,16 +211,22 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private TextView profile_name;
         private TextView profile_mail;
         private TextView hours_spent;
-        private MaterialButton settings_imageView;
         private ImageView avatar_profile;
 
         ProfileViewHolder(ItemProfileBinding binding) {
             super(binding.getRoot());
             this.avatar_profile = binding.avatarProfile;
-            this.settings_imageView = binding.settingsImageView;
             this.hours_spent = binding.hoursSpent;
             this.profile_mail = binding.profileMail;
             this.profile_name = binding.profileName;
+            binding.settingsImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, SettingsActivity.class);
+                    context.startActivity(intent);
+                }
+            });
         }
+
     }
 }

@@ -136,7 +136,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/255/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
+            String url = "https://api.themoviedb.org/3/movie/11/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override
@@ -176,7 +176,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/255/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
+            String url = "https://api.themoviedb.org/3/movie/11/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                     (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                         @Override

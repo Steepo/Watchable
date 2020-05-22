@@ -19,11 +19,11 @@ import com.warnercodes.watchable.databinding.ItemMovieSearchBinding;
 
 import java.util.List;
 
-public class MovieSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<Movie> movies;
 
-    public MovieSearchAdapter(List<Movie> movies) {
+    public SearchAdapter(List<Movie> movies) {
         this.movies = movies;
     }
 
