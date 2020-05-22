@@ -278,14 +278,14 @@ public class MovieDetailActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     Movie movie = mDataset.get(0);
                     if (document.exists()) {
-                        movie.setInWatchlist(true);
+                        movie.setWatched(true);
                         Drawable removeIcon = ContextCompat.getDrawable(context, R.drawable.ic_visibility_off_white_24dp);
                         binding.watchedFab.setIcon(removeIcon);
                         binding.watchedFab.setText(R.string.remove_watched);
 
                     } else {
                         // il film non è nella lista preferiti
-                        movie.setInWatchlist(false);
+                        movie.setWatched(false);
                         Drawable addIcon = ContextCompat.getDrawable(context, R.drawable.ic_visibility_white_24dp);
                         binding.watchedFab.setIcon(addIcon);
                         binding.watchedFab.setText(R.string.add_watched);

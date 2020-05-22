@@ -1,4 +1,4 @@
-package com.warnercodes.watchable.ui.movie;
+package com.warnercodes.watchable.ui.upcoming;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -19,9 +19,9 @@ import com.warnercodes.watchable.adapter.AttivitaAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieFragment extends Fragment {
+public class UpcomingFragment extends Fragment {
 
-    private MovieViewModel movieViewModel;
+    private UpcomingViewModel upcomingViewModel;
     private RecyclerView recyclerView;
     private AttivitaAdapter attivitaAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -30,8 +30,8 @@ public class MovieFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        movieViewModel =
-                ViewModelProviders.of(this).get(MovieViewModel.class);
+        upcomingViewModel =
+                ViewModelProviders.of(this).get(UpcomingViewModel.class);
         View root = inflater.inflate(R.layout.fragment_movie, container, false);
         itemList = new ArrayList<ItemType>();
         Log.i("adapter", "1");

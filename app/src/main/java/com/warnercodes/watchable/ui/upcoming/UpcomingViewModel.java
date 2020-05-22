@@ -1,13 +1,13 @@
-package com.warnercodes.watchable.ui.movie;
+package com.warnercodes.watchable.ui.upcoming;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class MovieViewModel extends ViewModel {
+public class UpcomingViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
-    public MovieViewModel() {
+    public UpcomingViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is home fragment");
     }

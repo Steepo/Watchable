@@ -1,4 +1,4 @@
-package com.warnercodes.watchable.ui.attivita;
+package com.warnercodes.watchable.ui.recent;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,9 +19,9 @@ import com.warnercodes.watchable.adapter.AttivitaAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityFragment extends Fragment {
+public class RecentFragment extends Fragment {
 
-    private ActivityViewModel activityViewModel;
+    private RecentViewModel recentViewModel;
     private RecyclerView recyclerView;
     private AttivitaAdapter attivitaAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -29,8 +29,8 @@ public class ActivityFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        activityViewModel =
-                ViewModelProviders.of(this).get(ActivityViewModel.class);
+        recentViewModel =
+                ViewModelProviders.of(this).get(RecentViewModel.class);
         View root = inflater.inflate(R.layout.fragment_activity, container, false);
         itemList = new ArrayList<ItemType>();
 

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_activity"
-        android:name="com.warnercodes.watchable.ui.attivita.ActivityFragment"
+        android:name="com.warnercodes.watchable.ui.recent.RecentFragment"
         android:label=""
         tools:layout="@layout/fragment_activity" />
 
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_movie"
-        android:name="com.warnercodes.watchable.ui.movie.MovieFragment"
+        android:name="com.warnercodes.watchable.ui.upcoming.UpcomingFragment"
         android:label=""
         tools:layout="@layout/fragment_movie" />
 
