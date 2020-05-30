@@ -49,7 +49,6 @@ public class ProfileFragment extends Fragment {
         profileAdapter = new ProfileAdapter(itemList);
         recyclerView.setAdapter(profileAdapter);
         return root;
-
-
     }
+
 }

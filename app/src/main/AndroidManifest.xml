@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,24 +15,16 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.GoogleSignInActivity"
-            android:theme="@style/AppThemeNobar"></activity>
-
-        <activity android:name=".activity.ReviewActivity"></activity>
-
+            android:theme="@style/AppThemeNobar" />
+        <activity android:name=".activity.ReviewActivity" />
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name=".activity.HomePage"
             android:label="@string/title_activity_home_page"
-            android:theme="@style/AppThemeNobar">
-
-        </activity>
-
+            android:theme="@style/AppThemeNobar"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="@string/title_activity_settings">
-
-        </activity>
-
+            android:label="@string/title_activity_settings"></activity>
         <activity
             android:name=".activity.MovieDetailActivity"
             android:theme="@style/AppTheme" />
@@ -41,13 +32,12 @@
             android:name=".activity.SplashActivity"
             android:label="Watchable"
             android:theme="@style/SplashTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
     </application>
+
 </manifest>

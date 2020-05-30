@@ -140,7 +140,7 @@ public class GoogleSignInActivity extends BaseActivity implements
     }
     // [END signin]
 
-    private void signOut() {
+    public void signOut() {
         // Firebase sign out
         mAuth.signOut();
 
