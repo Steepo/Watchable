@@ -232,13 +232,13 @@
         app:layout_constraintTop_toBottomOf="@id/trama" />
 
 
-
     <include
         android:id="@+id/cast_view"
+        layout="@layout/title_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/btShowmore"
-        layout="@layout/title_recyclerview" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/btShowmore" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/director_writer_layout"
@@ -299,16 +299,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/director_writer_layout">
 
-        <View
-            android:id="@+id/cardview_icon"
-            android:layout_width="5dp"
-            android:layout_height="0dp"
-            android:background="@color/colorSecondary"
-            app:layout_constraintEnd_toStartOf="@id/awards_title"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintBottom_toBottomOf="@id/awards_title"
-            app:layout_constraintTop_toTopOf="@id/awards_title" />
-
         <TextView
             android:id="@+id/awards_title"
             android:layout_width="wrap_content"
@@ -336,11 +326,11 @@
 
     <include
         android:id="@+id/reviews_view"
+        layout="@layout/advice_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/awards_layout"
-        layout="@layout/title_recyclerview" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/awards_layout" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -364,11 +354,11 @@
 
     <include
         android:id="@+id/similar_view"
+        layout="@layout/title_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/load_more_reviews"
-        layout="@layout/title_recyclerview" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/load_more_reviews" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,6 +34,7 @@ import com.warnercodes.watchable.Review;
 import com.warnercodes.watchable.activity.ReviewActivity;
 import com.warnercodes.watchable.databinding.ItemMovieDetailsBinding;
 import com.warnercodes.watchable.databinding.TitleRecyclerviewBinding;
+import com.warnercodes.watchable.databinding.AdviceRecyclerviewBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -368,7 +369,6 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if (array.length() == 0) {
                         viewHolder.similarView.titleRecyclerview.setVisibility(View.INVISIBLE);
                         viewHolder.similarView.itemTextview.setVisibility(View.INVISIBLE);
-                        viewHolder.similarView.view.setVisibility(View.INVISIBLE);
                     }
 
                 } catch (JSONException e) {
@@ -424,7 +424,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView imdbScore;
         private TextView imdbScoreTen;
         private TextView metascoretext;
-        private TitleRecyclerviewBinding reviewsView;
+        private AdviceRecyclerviewBinding reviewsView;
         private TextView reviewstextview;
         private RecyclerView reviewsRecyclerview;
         private ProgressBar progressBar;
@@ -463,7 +463,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             metascoreView = binding.metascoreView;
             reviewsView = binding.reviewsView;
             reviewstextview = reviewsView.itemTextview;
-            reviewsRecyclerview = reviewsView.titleRecyclerview;
+            reviewsRecyclerview = reviewsView.adviceTitleRecyclerview;
             more_reviews = binding.loadMoreReviews;
 
             youtubeThumbnail.setOnClickListener(new OnClickListener() {

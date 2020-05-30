@@ -237,7 +237,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private static class AdviceViewHolder extends RecyclerView.ViewHolder {
+    private class AdviceViewHolder extends RecyclerView.ViewHolder {
         private ImageView img_advice;
         private TextView title_advice;
         private TextView trama_adv;
@@ -249,10 +249,19 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             this.title_advice = binding.titleAdvice;
             this.trama_adv = binding.tramaAdvice;
             this.chipGroup = binding.chipGroupGeneri;
+            img_advice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Integer id = dataList.get(getAdapterPosition()).getMovieId();
+                    Intent intent = new Intent(context, MovieDetailActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("movieId", id);
+                    context.startActivity(intent);
+                }
+            });
         }
 
     }
-
 
     private static class CastViewHolder extends RecyclerView.ViewHolder {
         private TextView attore;

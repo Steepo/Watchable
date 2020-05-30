@@ -40,9 +40,8 @@ public class RecentFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         attivitaAdapter = new AttivitaAdapter(getActivity(), itemList);
-        itemList.add(new ItemType("Attività recenti", 1));
-        itemList.add(new ItemType("Ti consigliamo anche", 2));
-        //itemList.add(new ItemType("Altri simili", 3));
+        itemList.add(new ItemType(getString(R.string.recent_activities_title), 1));
+        itemList.add(new ItemType(getString(R.string.suggested_title), 2));
         recyclerView.setAdapter(attivitaAdapter);
 
         return root;
@@ -50,8 +49,6 @@ public class RecentFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
     }
 }

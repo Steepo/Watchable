@@ -63,6 +63,7 @@
             <!-- Title, secondary and supporting text -->
             <TextView
                 android:id="@+id/title_advice"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
@@ -97,12 +98,5 @@
                 android:textColor="?android:attr/textColorSecondary" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </com.google.android.material.card.MaterialCardView>
