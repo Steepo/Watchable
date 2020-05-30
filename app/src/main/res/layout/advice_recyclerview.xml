@@ -17,7 +17,7 @@ android:layout_height="wrap_content">
         app:layout_goneMarginStart="20dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/advice_title_recyclerview"
+        android:id="@+id/title_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

@@ -80,12 +80,8 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_without_title, parent, false);
             return new ViewHolderNoTitle(view);
         }
-        if (viewType == SIMILI || viewType == POPOLARI || viewType == CAST || viewType == CINEMA || viewType == VOTATI) {
+        if (viewType == CONSIGLIATI || viewType == SIMILI || viewType == POPOLARI || viewType == CAST || viewType == CINEMA || viewType == VOTATI) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
-            return new ViewHolder(view);
-        }
-        if(viewType == CONSIGLIATI){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.advice_recyclerview, parent, false);
             return new ViewHolderNoCard(view);
         }
         return null;
@@ -148,7 +144,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder.advice_title_recyclerview;
+                                RecyclerView recyclerView = viewHolder.title_recyclerview;
                                 recyclerView.setHasFixedSize(true);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                                 recyclerView.setLayoutManager(layoutManager);
@@ -179,7 +175,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (getItemViewType(position) == SIMILI) {
-            final ViewHolder viewHolder = (ViewHolder) holder;
+            final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -189,7 +185,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder.item_recylerview;
+                                RecyclerView recyclerView = viewHolder.title_recyclerview;
                                 recyclerView.setHasFixedSize(true);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                                 recyclerView.setLayoutManager(layoutManager);
@@ -220,7 +216,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (getItemViewType(position) == CINEMA) {
-            final ViewHolder viewHolder = (ViewHolder) holder;
+            final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -230,7 +226,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder.item_recylerview;
+                                RecyclerView recyclerView = viewHolder.title_recyclerview;
                                 recyclerView.setHasFixedSize(true);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                                 recyclerView.setLayoutManager(layoutManager);
@@ -261,7 +257,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (getItemViewType(position) == POPOLARI) {
-            final ViewHolder viewHolder = (ViewHolder) holder;
+            final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -271,7 +267,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder.item_recylerview;
+                                RecyclerView recyclerView = viewHolder.title_recyclerview;
                                 recyclerView.setHasFixedSize(true);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                                 recyclerView.setLayoutManager(layoutManager);
@@ -342,7 +338,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (getItemViewType(position) == VOTATI) {
-            final ViewHolder viewHolder = (ViewHolder) holder;
+            final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -352,7 +348,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder.item_recylerview;
+                                RecyclerView recyclerView = viewHolder.title_recyclerview;
                                 recyclerView.setHasFixedSize(true);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                                 recyclerView.setLayoutManager(layoutManager);
@@ -383,7 +379,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (getItemViewType(position) == CAST) {
-            final ViewHolder viewHolder = (ViewHolder) holder;
+            final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -393,7 +389,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder.item_recylerview;
+                                RecyclerView recyclerView = viewHolder.title_recyclerview;
                                 recyclerView.setHasFixedSize(true);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                                 recyclerView.setLayoutManager(layoutManager);
@@ -439,19 +435,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return dataList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView item_textview;
-        private RecyclerView item_recylerview;
-        //private Chip chip_more;
-
-        ViewHolder(View view) {
-            super(view);
-            this.item_textview = view.findViewById(R.id.item_textview);
-            this.item_recylerview = view.findViewById(R.id.title_recyclerview);
-            //this.chip_more = view.findViewById(R.id.chip_more);
-        }
-    }
-
     class ViewHolderNoTitle extends RecyclerView.ViewHolder {
         private RecyclerView without_title_recyclerview;
         private ImageView imageView;
@@ -466,12 +449,12 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     class ViewHolderNoCard extends RecyclerView.ViewHolder {
-        private RecyclerView advice_title_recyclerview;
+        private RecyclerView title_recyclerview;
         private TextView item_textview;
 
         ViewHolderNoCard(View view) {
             super(view);
-            this.advice_title_recyclerview = view.findViewById(R.id.advice_title_recyclerview);
+            this.title_recyclerview = view.findViewById(R.id.title_recyclerview);
             this.item_textview = view.findViewById(R.id.item_textview);
         }
     }

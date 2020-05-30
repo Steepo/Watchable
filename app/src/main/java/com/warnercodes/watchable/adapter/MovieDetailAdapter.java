@@ -34,7 +34,6 @@ import com.warnercodes.watchable.Review;
 import com.warnercodes.watchable.activity.ReviewActivity;
 import com.warnercodes.watchable.databinding.ItemMovieDetailsBinding;
 import com.warnercodes.watchable.databinding.TitleRecyclerviewBinding;
-import com.warnercodes.watchable.databinding.AdviceRecyclerviewBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -424,7 +423,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView imdbScore;
         private TextView imdbScoreTen;
         private TextView metascoretext;
-        private AdviceRecyclerviewBinding reviewsView;
+        private TitleRecyclerviewBinding reviewsView;
         private TextView reviewstextview;
         private RecyclerView reviewsRecyclerview;
         private ProgressBar progressBar;
@@ -463,7 +462,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             metascoreView = binding.metascoreView;
             reviewsView = binding.reviewsView;
             reviewstextview = reviewsView.itemTextview;
-            reviewsRecyclerview = reviewsView.adviceTitleRecyclerview;
+            reviewsRecyclerview = reviewsView.titleRecyclerview;
             more_reviews = binding.loadMoreReviews;
 
             youtubeThumbnail.setOnClickListener(new OnClickListener() {

@@ -326,7 +326,7 @@
 
     <include
         android:id="@+id/reviews_view"
-        layout="@layout/advice_recyclerview"
+        layout="@layout/title_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
