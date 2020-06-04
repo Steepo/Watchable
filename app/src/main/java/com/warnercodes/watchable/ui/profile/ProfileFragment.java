@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,10 +36,16 @@ public class ProfileFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
         //final TextView textView = root.findViewById(R.id.text_notifications);
 
+
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         itemList = new ArrayList<ItemType>();
 
         //First recyclerView
-        recyclerView = root.findViewById(R.id.recyclerview_profile);
+        recyclerView = view.findViewById(R.id.recyclerview_profile);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -48,7 +55,5 @@ public class ProfileFragment extends Fragment {
 
         profileAdapter = new ProfileAdapter(itemList);
         recyclerView.setAdapter(profileAdapter);
-        return root;
     }
-
 }

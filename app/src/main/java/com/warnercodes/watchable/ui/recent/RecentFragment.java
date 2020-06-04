@@ -32,10 +32,22 @@ public class RecentFragment extends Fragment {
         recentViewModel =
                 ViewModelProviders.of(this).get(RecentViewModel.class);
         View root = inflater.inflate(R.layout.fragment_activity, container, false);
+
+
+        return root;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         itemList = new ArrayList<ItemType>();
 
         //First recyclerView
-        recyclerView = root.findViewById(R.id.main_recylerview);
+        recyclerView = view.findViewById(R.id.main_recylerview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -44,14 +56,5 @@ public class RecentFragment extends Fragment {
         itemList.add(new ItemType("Ti consigliamo anche", 2));
         //itemList.add(new ItemType("Altri simili", 3));
         recyclerView.setAdapter(attivitaAdapter);
-
-        return root;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-
-
-        super.onCreate(savedInstanceState);
     }
 }

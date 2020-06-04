@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
@@ -54,18 +55,24 @@ public class SearchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_search, container, false);
-        ///TODO: implement bindings
-        TextInputEditText editText = root.findViewById(R.id.textinputedittext);
 
-        recyclerView = root.findViewById(R.id.results_recyclerview);
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        ///TODO: implement bindings
+        TextInputEditText editText = view.findViewById(R.id.textinputedittext);
+
+        recyclerView = view.findViewById(R.id.results_recyclerview);
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
         mDataset = new ArrayList<Movie>();
         searchAdapter = new SearchAdapter(mDataset);
         recyclerView.setAdapter(searchAdapter);
-        searchImageview = root.findViewById(R.id.search_imageview);
-        noMoviesText = root.findViewById(R.id.textview_no_movies);
+        searchImageview = view.findViewById(R.id.search_imageview);
+        noMoviesText = view.findViewById(R.id.textview_no_movies);
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -126,13 +133,12 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                     if (Math.abs(scrollY + oldScrollY) > 0) {
-                        hideKeyboard(getActivity());
+                        hideKeyboard(requireActivity());
                     }
                 }
             });
         }
 
-        return root;
     }
 
     private void hideKeyboard(FragmentActivity activity) {

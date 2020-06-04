@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,17 +31,18 @@ public class UpcomingFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        upcomingViewModel =
-                ViewModelProviders.of(this).get(UpcomingViewModel.class);
+        upcomingViewModel = ViewModelProviders.of(this).get(UpcomingViewModel.class);
         View root = inflater.inflate(R.layout.fragment_movie, container, false);
+
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         itemList = new ArrayList<ItemType>();
-        Log.i("adapter", "1");
-        recyclerView = root.findViewById(R.id.main_recylerview_movie);
-        Log.i("adapter", "2");
+        recyclerView = view.findViewById(R.id.main_recylerview_movie);
         recyclerView.setHasFixedSize(true);
-        Log.i("adapter", "3");
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        Log.i("adapter", "4");
         recyclerView.setLayoutManager(layoutManager);
         itemList.add(new ItemType("In arrivo", 6));
         itemList.add(new ItemType("Adesso al cinema", 4));
@@ -52,6 +54,5 @@ public class UpcomingFragment extends Fragment {
         Log.i("adapter", "6");
         recyclerView.setAdapter(attivitaAdapter);
         Log.i("adapter", "7");
-        return root;
     }
 }

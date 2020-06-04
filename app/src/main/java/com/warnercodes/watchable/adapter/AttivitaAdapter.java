@@ -92,7 +92,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final String email = sharedPref.getString("email", null);
         String uid = sharedPref.getString("uid", null);
         final String fullname = sharedPref.getString("name", null);
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference user = db.collection("utenti").document(uid);
         CollectionReference watched = user.collection("watched");
@@ -101,7 +100,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             final ViewHolderNoTitle viewHolder = (ViewHolderNoTitle) holder;
             viewHolder.imageView.setBackgroundResource(R.drawable.recently_bg);
-
             viewHolder.imageView.setBackgroundResource(R.drawable.recently_bg);
             final RecyclerView recyclerView = viewHolder.without_title_recyclerview;
             recyclerView.setHasFixedSize(true);
@@ -292,7 +290,8 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (getItemViewType(position) == ARRIVO) {
-            final ViewHolderNoTitle viewHolder1 = (ViewHolderNoTitle) holder;
+            final ViewHolderNoTitle viewHolder = (ViewHolderNoTitle) holder;
+            viewHolder.imageView.setBackgroundResource(R.drawable.upcoming_bg);
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
             String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
@@ -300,7 +299,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder1.without_title_recyclerview;
+                                RecyclerView recyclerView = viewHolder.without_title_recyclerview;
                                 recyclerView.setHasFixedSize(true);
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                                 recyclerView.setLayoutManager(layoutManager);

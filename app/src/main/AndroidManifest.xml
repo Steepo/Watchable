@@ -21,10 +21,14 @@
             android:name=".activity.HomePage"
             android:label="@string/title_activity_home_page"
             android:theme="@style/AppThemeNobar"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
         <activity
             android:name=".activity.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings">
+
+        </activity>
         <activity
             android:name=".activity.MovieDetailActivity"
             android:theme="@style/AppTheme" />
