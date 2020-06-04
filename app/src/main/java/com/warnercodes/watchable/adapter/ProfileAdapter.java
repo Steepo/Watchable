@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,7 +19,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.warnercodes.watchable.ItemType;
 import com.warnercodes.watchable.Movie;
@@ -92,25 +95,28 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             //TODO: add image from firebase
             Glide.with(context).load(profileUrl).into(viewHolder.avatar_profile);
 
-            watched.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                    int total = 0;
-                    for (DocumentSnapshot document : documents) {
-                        long runtime = (long) document.get("runtime");
-                        total += runtime;
-                        //Log.i("Profile", String.valueOf(document.get("runtime")));
-                    }
-                    int hours = total / 60;
-                    viewHolder.hours_spent.setText("You've watched " + hours + " hours of movies");
-                }
-            });
             user.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     viewHolder.profile_mail.setText(email);
                     viewHolder.profile_name.setText(fullname);
+                }
+            });
+
+            watched.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                        int total = 0;
+                        for (DocumentSnapshot document : documents) {
+                            long runtime = (long) document.get("runtime");
+                            total += runtime;
+                            //Log.i("Profile", String.valueOf(document.get("runtime")));
+                        }
+                        int hours = total / 60;
+                        viewHolder.hours_spent.setText("You've watched " + hours + " hours of movies");
+                    }
                 }
             });
         }
@@ -124,23 +130,26 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             recyclerView.setLayoutManager(layoutManager);
             final List<Movie> dataset = new ArrayList<Movie>();
 
-            watched.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            watched.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                    int index = 0;
-                    HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                    recyclerView.setAdapter(adapter);
-                    for (DocumentSnapshot document : documents) {
-                        Movie movie = new Movie();
-                        movie.setCopertinaFull(document.getString("copertina"));
-                        movie.setMovieId(document.getLong("movieId").intValue());
-                        movie.setRuntime((document.getLong("runtime").intValue()));
-                        movie.setTitle(document.getString("title"));
-                        movie.setTipo("recenti");
-                        adapter.add(index, movie);
-                        adapter.notifyDataSetChanged();
-                        index++;
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                        int index = 0;
+                        HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+                        recyclerView.setAdapter(adapter);
+                        adapter.clear();
+                        for (DocumentSnapshot document : documents) {
+                            Movie movie = new Movie();
+                            movie.setCopertinaFull(document.getString("copertina"));
+                            movie.setMovieId(document.getLong("movieId").intValue());
+                            movie.setRuntime((document.getLong("runtime").intValue()));
+                            movie.setTitle(document.getString("title"));
+                            movie.setTipo("recenti");
+                            adapter.add(index, movie);
+                            adapter.notifyDataSetChanged();
+                            index++;
+                        }
                     }
                 }
             });
@@ -155,23 +164,26 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             recyclerView.setLayoutManager(layoutManager);
             final List<Movie> dataset = new ArrayList<Movie>();
 
-            watchlist.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            watchlist.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                    int index = 0;
-                    HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                    recyclerView.setAdapter(adapter);
-                    for (DocumentSnapshot document : documents) {
-                        Movie movie = new Movie();
-                        movie.setCopertinaFull(document.getString("copertina"));
-                        movie.setMovieId(document.getLong("movieId").intValue());
-                        movie.setRuntime((document.getLong("runtime").intValue()));
-                        movie.setTitle(document.getString("title"));
-                        movie.setTipo("recenti");
-                        adapter.add(index, movie);
-                        adapter.notifyDataSetChanged();
-                        index++;
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                        int index = 0;
+                        HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+                        recyclerView.setAdapter(adapter);
+                        adapter.clear();
+                        for (DocumentSnapshot document : documents) {
+                            Movie movie = new Movie();
+                            movie.setCopertinaFull(document.getString("copertina"));
+                            movie.setMovieId(document.getLong("movieId").intValue());
+                            movie.setRuntime((document.getLong("runtime").intValue()));
+                            movie.setTitle(document.getString("title"));
+                            movie.setTipo("recenti");
+                            adapter.add(index, movie);
+                            adapter.notifyDataSetChanged();
+                            index++;
+                        }
                     }
                 }
             });

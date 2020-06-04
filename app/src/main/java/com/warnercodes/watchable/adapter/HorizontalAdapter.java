@@ -70,10 +70,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyItemInserted(position);
     }
 
-    public void remove(Movie item) {
-        int position = dataList.indexOf(item);
-        dataList.remove(position);
-        notifyItemRemoved(position);
+    public void clear() {
+        dataList.clear();
     }
 
     public void setCompleteReview(Review completeReview) {

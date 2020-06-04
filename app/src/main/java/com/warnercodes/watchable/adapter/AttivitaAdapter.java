@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,11 +21,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.warnercodes.watchable.Cast;
 import com.warnercodes.watchable.ItemType;
@@ -107,23 +109,33 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             recyclerView.setLayoutManager(layoutManager);
             final List<Movie> dataset = new ArrayList<Movie>();
 
-            watched.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            watched.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                    int index = 0;
-                    HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                    recyclerView.setAdapter(adapter);
-                    for (DocumentSnapshot document : documents) {
-                        Movie movie = new Movie();
-                        movie.setCopertinaFull(document.getString("copertina"));
-                        movie.setMovieId(document.getLong("movieId").intValue());
-                        movie.setRuntime((document.getLong("runtime").intValue()));
-                        movie.setTitle(document.getString("title"));
-                        movie.setTipo("recenti");
-                        adapter.add(index, movie);
-                        adapter.notifyDataSetChanged();
-                        index++;
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.w("FIREBASE", "Listen failed.", e);
+                        return;
+                    }
+                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                        Log.d("FIREBASE", "Current data: " + queryDocumentSnapshots.getDocuments());
+                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                        int index = 0;
+                        HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+                        recyclerView.setAdapter(adapter);
+                        adapter.clear();
+                        for (DocumentSnapshot document : documents) {
+                            Movie movie = new Movie();
+                            movie.setCopertinaFull(document.getString("copertina"));
+                            movie.setMovieId(document.getLong("movieId").intValue());
+                            movie.setRuntime((document.getLong("runtime").intValue()));
+                            movie.setTitle(document.getString("title"));
+                            movie.setTipo("recenti");
+                            adapter.add(index, movie);
+                            adapter.notifyDataSetChanged();
+                            index++;
+                        }
+                    } else {
+                        Log.d("FIREBASE", "Current data: null");
                     }
                 }
             });

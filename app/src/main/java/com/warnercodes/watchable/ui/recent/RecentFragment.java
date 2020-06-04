@@ -32,8 +32,6 @@ public class RecentFragment extends Fragment {
         recentViewModel =
                 ViewModelProviders.of(this).get(RecentViewModel.class);
         View root = inflater.inflate(R.layout.fragment_activity, container, false);
-
-
         return root;
     }
 
