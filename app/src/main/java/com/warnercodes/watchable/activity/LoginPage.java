@@ -6,11 +6,14 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.common.SignInButton;
 import com.warnercodes.watchable.databinding.ActivityLoginBinding;
 
 public class LoginPage extends AppCompatActivity {
     private ActivityLoginBinding binding;
-    public Button buttonFacebook, buttonGoogle;
+    public Button buttonFacebook;
+    public SignInButton buttonGoogle;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());

@@ -22,6 +22,16 @@
     <string name="top_rated_title">Top rated</string>
     <string name="cast_title">Best actors</string>
 
+    <!-- Elements -->
+    <string name="recent">Recent</string>
+    <string name="adviced">Adviced</string>
+    <string name="similar">Similar</string>
+    <string name="cinema">Cinema</string>
+    <string name="popular">Popular</string>
+    <string name="incoming">Incoming</string>
+    <string name="rated">Rated</string>
+    <string name="cast">Cast</string>
+
     <!-- Preference Titles -->
     <string name="messages_header">General</string>
     <string name="sync_header">About</string>
