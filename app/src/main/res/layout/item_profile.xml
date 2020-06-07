@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         style="@style/IconOnlyButton"
         app:icon="@drawable/settings_white_18dp"
+        app:iconTint="@color/white"
         app:layout_constraintStart_toEndOf="@+id/avatar_profile"
         app:layout_constraintTop_toTopOf="@id/avatar_profile"
         app:layout_constraintBottom_toBottomOf="@id/avatar_profile" />
@@ -67,7 +68,7 @@
         android:id="@+id/hours_spent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"

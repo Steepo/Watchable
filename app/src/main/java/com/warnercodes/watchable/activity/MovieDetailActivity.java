@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.warnercodes.watchable.Costants.API_KEY;
+import static com.warnercodes.watchable.Costants.LANG;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -214,7 +215,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void requestMovieInfo(final int movieId) {
-        String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + API_KEY + "&language=it-it";
+        String url = "https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + API_KEY + "&language=" + LANG;
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {

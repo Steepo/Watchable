@@ -17,6 +17,6 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(new Intent(SplashActivity.this, GoogleSignInActivity.class));
                 finish();
             }
-        }, secondsDelayed * 500);
+        }, secondsDelayed * 1000);
     }
 }

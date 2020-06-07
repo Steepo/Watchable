@@ -21,7 +21,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -100,7 +99,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference user = db.collection("utenti").document(uid);
-        CollectionReference watched = user.collection("watched");
+        CollectionReference watchlist = user.collection("watchlist");
 
         if (getItemViewType(position) == RECENTI) {
 
@@ -114,7 +113,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             recyclerView.setLayoutManager(layoutManager);
             final List<Movie> dataset = new ArrayList<Movie>();
 
-            watched.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            watchlist.addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                     if (e != null) {
@@ -311,7 +310,9 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (getItemViewType(position) == ARRIVO) {
+
             final ViewHolderNoTitle viewHolder1 = (ViewHolderNoTitle) holder;
+            viewHolder1.imageView.setBackgroundResource(R.drawable.upcoming_bg);
             viewHolder1.item_textview.setText(dataList.get(position).getTitolo());
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
             String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=" + API_KEY + "&language=" + LANG + "&page=1";

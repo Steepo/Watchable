@@ -50,7 +50,7 @@ public class RecentFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         attivitaAdapter = new AttivitaAdapter(getActivity(), itemList);
-        itemList.add(new ItemType(getString(R.string.recent_activities_title), 1));
+        itemList.add(new ItemType(getString(R.string.watchlist), 1));
         itemList.add(new ItemType(getString(R.string.suggested_title), 2));
         recyclerView.setAdapter(attivitaAdapter);
     }

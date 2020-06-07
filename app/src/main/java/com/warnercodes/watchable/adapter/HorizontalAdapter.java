@@ -2,6 +2,7 @@ package com.warnercodes.watchable.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.warnercodes.watchable.Cast;
 import com.warnercodes.watchable.Movie;
 import com.warnercodes.watchable.Review;
@@ -32,7 +36,9 @@ import com.warnercodes.watchable.databinding.ItemReviewCompleteBinding;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -240,6 +246,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private TextView title_advice;
         private TextView trama_adv;
         private ChipGroup chipGroup;
+        private ImageView add_watchlist;
 
         AdviceViewHolder(ItemAdviceBinding binding) {
             super(binding.getRoot());
@@ -255,6 +262,31 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("movieId", id);
                     context.startActivity(intent);
+                }
+            });
+            this.add_watchlist = binding.icon;
+            this.add_watchlist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    SharedPreferences sharedPref = context.getSharedPreferences("infos", Context.MODE_PRIVATE);
+                    String uid = sharedPref.getString("uid", null);
+                    DocumentReference user = db.collection("utenti").document(uid);
+                    Movie movieRef = dataList.get(getAdapterPosition());
+                    DocumentReference watchlist = user.collection("watchlist").document(String.valueOf(movieRef.getMovieId()));
+
+                    Map<String, Object> movieInfos = new HashMap<>();
+                    movieInfos.put("title", movieRef.getTitle());
+                    movieInfos.put("movieId", movieRef.getMovieId());
+                    movieInfos.put("copertina", movieRef.getCopertina());
+                    movieInfos.put("runtime", movieRef.getRuntime());
+                    watchlist.set(movieInfos).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            dataList.remove(getAdapterPosition());
+                            notifyDataSetChanged();
+                        }
+                    });
                 }
             });
         }

@@ -12,7 +12,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Home Page Recyclerview Titles -->
-    <string name="recent_activities_title">Recent activities</string>
+    <string name="watchlist">Watch List</string>
     <string name="suggested_title">We suggest you</string>
 
     <!-- Upcoming page Recyclerview Titles -->
@@ -47,8 +47,8 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
-    <string name="remove_watchlist">Remove from watchlist</string>
-    <string name="add_watchlist">Add to watchlist</string>
+    <string name="remove_watchlist">Remove from watch list</string>
+    <string name="add_watchlist">Add to watch list</string>
 
     <string name="remove_watched">Remove from watched</string>
     <string name="add_watched">Add to Watched</string>
