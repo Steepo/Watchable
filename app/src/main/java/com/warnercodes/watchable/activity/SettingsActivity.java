@@ -1,6 +1,7 @@
 package com.warnercodes.watchable.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -72,11 +73,13 @@ public class SettingsActivity extends AppCompatActivity {
             Preference logout = findPreference("logout");
             logout.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    mAuth.signOut();
+                    FirebaseAuth.getInstance().signOut();
                     // Google sign out
-                    GoogleSignInActivity activity = new GoogleSignInActivity();
-                    activity.signOut();
+                    Intent intent = new Intent(getContext(), GoogleSignInActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                     return true;
                 }
             });

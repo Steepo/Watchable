@@ -154,6 +154,13 @@ public class GoogleSignInActivity extends BaseActivity implements
                 });
     }
 
+    @Override
+    public void onBackPressed() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) ;
+        finish();
+    }
+
     private void revokeAccess() {
         // Firebase sign out
         mAuth.signOut();
