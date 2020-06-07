@@ -3,7 +3,6 @@
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     card_view:cardCornerRadius="5dp"
     card_view:cardMaxElevation="20dp"
@@ -63,6 +62,7 @@
             <!-- Title, secondary and supporting text -->
             <TextView
                 android:id="@+id/title_advice"
+                android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceHeadline6" />
@@ -97,12 +97,5 @@
                 android:textColor="?android:attr/textColorSecondary" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </com.google.android.material.card.MaterialCardView>

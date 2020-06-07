@@ -368,7 +368,6 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if (array.length() == 0) {
                         viewHolder.similarView.titleRecyclerview.setVisibility(View.INVISIBLE);
                         viewHolder.similarView.itemTextview.setVisibility(View.INVISIBLE);
-                        viewHolder.similarView.view.setVisibility(View.INVISIBLE);
                     }
 
                 } catch (JSONException e) {

@@ -44,11 +44,11 @@ public class UpcomingFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        itemList.add(new ItemType("In arrivo", 6));
-        itemList.add(new ItemType("Adesso al cinema", 4));
-        itemList.add(new ItemType("I più popolari", 5));
-        itemList.add(new ItemType("I più votati", 7));
-        itemList.add(new ItemType("Gli attori del momento", 8));
+        itemList.add(new ItemType(getString(R.string.upcoming_title), 6));
+        itemList.add(new ItemType(getString(R.string.now_playing_title), 4));
+        itemList.add(new ItemType(getString(R.string.popular_title), 5));
+        itemList.add(new ItemType(getString(R.string.top_rated_title), 7));
+        itemList.add(new ItemType(getString(R.string.cast_title), 8));
         Log.i("adapter", "5");
         attivitaAdapter = new AttivitaAdapter(getActivity(), itemList);
         Log.i("adapter", "6");
