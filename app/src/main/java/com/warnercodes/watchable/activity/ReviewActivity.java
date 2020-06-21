@@ -53,7 +53,7 @@ public class ReviewActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(movieDetailAdapter);
         movieDetailAdapter.notifyDataSetChanged();
-
+        //TODO: fix crash review
     }
 
     @Override

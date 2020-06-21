@@ -230,7 +230,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (getItemViewType(position) == CINEMA) {
             final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
-
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
             String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
@@ -243,16 +242,53 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
                                 recyclerView.setLayoutManager(layoutManager);
                                 List<Movie> dataset = new ArrayList<Movie>();
-                                HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+                                final HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
                                 recyclerView.setAdapter(adapter);
-                                JSONArray movie_array = response.getJSONArray("results");
+                                final JSONArray movie_array = response.getJSONArray("results");
                                 itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
                                 Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < itemsRecyclerView; index++) {
+                                    int movieid = movie_array.getJSONObject(index).getInt("id");
+                                    RequestQueue trailersQueue = Volley.newRequestQueue(context);
+                                    String videosUrl = "https://api.themoviedb.org/3/movie/" + movieid + "/videos?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
+                                    JsonObjectRequest trailerRequest = new JsonObjectRequest
+                                            (Request.Method.GET, videosUrl, null, new Response.Listener<JSONObject>() {
+                                                @Override
+                                                public void onResponse(JSONObject response) {
+                                                    try {
+                                                        JSONArray array = response.getJSONArray("results");
+                                                        if (array.length() > 0) {
+                                                            for (int index = 0; index < 4; index++) {
+                                                                if (array.getJSONObject(index).getString("type").equals("Trailer")) {
+                                                                    String youtubekey = array.getJSONObject(index).getString("key");
+                                                                    String title = array.getJSONObject(index).getString("name");
+                                                                    Movie temp = new Movie();
+                                                                    temp.setYoutubekey(youtubekey);
+                                                                    temp.setTitle(title);
+                                                                    temp.setTipo("trailer");
+                                                                    adapter.add(index, temp);
+                                                                    adapter.notifyDataSetChanged();
+                                                                }
+                                                            }
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }, new Response.ErrorListener() {
+
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    //Toast.makeText(MovieDetailActivity.this,error.getMessage(), Toast.LENGTH_LONG).show();
+                                                    Log.e("DEBUG", String.valueOf(error));
+                                                }
+                                            });
                                     Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
-                                    adapter.notifyDataSetChanged();
+                                    //adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
+                                    //adapter.notifyDataSetChanged();
+                                    trailersQueue.add(trailerRequest);
                                 }
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

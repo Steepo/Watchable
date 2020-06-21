@@ -1,8 +1,10 @@
 package com.warnercodes.watchable.adapter;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import androidx.viewbinding.ViewBinding;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,6 +35,7 @@ import com.warnercodes.watchable.databinding.ItemCastBinding;
 import com.warnercodes.watchable.databinding.ItemRecentBinding;
 import com.warnercodes.watchable.databinding.ItemReviewBinding;
 import com.warnercodes.watchable.databinding.ItemReviewCompleteBinding;
+import com.warnercodes.watchable.databinding.ItemTrailerBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -94,6 +98,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static int CAST = 3;
     private static int REVIEW = 4;
     private static int COMPLETE_REVIEW = 5;
+    private static int TRAILER = 6;
 
 
     @NonNull
@@ -119,6 +124,10 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (viewType == COMPLETE_REVIEW) {
             view = ItemReviewCompleteBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new CompleteReviewViewHolder((ItemReviewCompleteBinding) view);
+        }
+        if (viewType == TRAILER) {
+            view = ItemTrailerBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new TrailersViewHolder((ItemTrailerBinding) view);
         }
         return null;
     }
@@ -183,7 +192,18 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             viewHolder.votes.setText(completeReview.getVoteup() + " of " + totalvotes + " found this review helpful");
 
         }
+        if (getItemViewType(position) == TRAILER) {
+            TrailersViewHolder viewHolder = (TrailersViewHolder) holder;
+            Log.i("TRAILER", dataList.get(position).toString());
+            Movie item = dataList.get(position);
+            Glide.with(context)
+                    .load("https://img.youtube.com/vi/" + item.getYoutubekey() + "/maxresdefault.jpg")
+                    .error(Glide.with(context)
+                            .load("https://img.youtube.com/vi/" + item.getYoutubekey() + "/mqdefault.jpg"))
+                    .into(viewHolder.cover);
+        }
     }
+
 
     @Override
     public int getItemViewType(int position) {
@@ -195,6 +215,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return CONSIGLIATI;
             if (tipo.equals("cast"))
                 return CAST;
+            if (tipo.equals("trailer"))
+                return TRAILER;
         } else if (reviewList != null && reviewList.size() > 0) {
             return REVIEW;
         } else if (castList != null && castList.size() > 0) {
@@ -293,16 +315,25 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     }
 
-    private static class CastViewHolder extends RecyclerView.ViewHolder {
+    private class CastViewHolder extends RecyclerView.ViewHolder {
         private TextView attore;
         private TextView personaggio;
         private ImageView cover;
+        private CardView cardView;
 
         CastViewHolder(ItemCastBinding binding) {
             super(binding.getRoot());
             this.attore = binding.personName;
             this.personaggio = binding.characterName;
             this.cover = binding.profilePath;
+            this.cardView = binding.castCardview;
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Cast cast = castList.get(getAdapterPosition());
+                    Log.i("CAST", cast.toString());
+                }
+            });
         }
     }
 
@@ -331,7 +362,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private static class CompleteReviewViewHolder extends RecyclerView.ViewHolder {
+    private class CompleteReviewViewHolder extends RecyclerView.ViewHolder {
 
         private TextView text;
         private TextView author_date;
@@ -346,6 +377,34 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             this.score = binding.imdbScore;
             this.title = binding.reviewTitle;
             this.votes = binding.votes;
+        }
+    }
+
+    private class TrailersViewHolder extends RecyclerView.ViewHolder {
+        private ImageView cover;
+        private TextView title;
+        private MaterialCardView cardView;
+
+        public TrailersViewHolder(ItemTrailerBinding binding) {
+            super(binding.getRoot());
+            this.cover = binding.youtubeThumbnail;
+            this.cardView = binding.card;
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String key = dataList.get(getAdapterPosition()).getYoutubekey();
+                    Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + key));
+                    appIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://www.youtube.com/watch?v=" + key));
+                    webIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    try {
+                        context.startActivity(appIntent);
+                    } catch (ActivityNotFoundException ex) {
+                        context.startActivity(webIntent);
+                    }
+                }
+            });
         }
     }
 }

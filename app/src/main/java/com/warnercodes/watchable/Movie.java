@@ -95,7 +95,7 @@ public class Movie {
         item.setTipo(type);
         generi = new ArrayList<String>();
         try {
-
+            item.setMovieId(response.getInt("id"));
             item.setCopertina(response.getString("poster_path"));
             item.setTitle(response.getString("title"));
             item.setOriginal_title(response.getString("original_title"));
