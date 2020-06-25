@@ -23,7 +23,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -52,10 +51,12 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context context;
     private static final int MAX_ITEMS_RECYCLERVIEW = 8;
     private int itemsRecyclerView = 0;
+    private RequestQueue requestQueue;
 
-    public AttivitaAdapter(Context context, List<ItemType> dataList) {
+    public AttivitaAdapter(Context context, List<ItemType> dataList, RequestQueue requestQueue) {
         this.context = context;
         this.dataList = dataList;
+        this.requestQueue = requestQueue;
     }
 
     public void add(int position, ItemType item) {
@@ -71,7 +72,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private static int RECENTI = 1;
     private static int CONSIGLIATI = 2;
-    private static int SIMILI = 3;
     private static int CINEMA = 4;
     private static int POPOLARI = 5;
     private static int ARRIVO = 6;
@@ -85,7 +85,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_without_title, parent, false);
             return new ViewHolderNoTitle(view);
         }
-        if (viewType == CONSIGLIATI || viewType == SIMILI || viewType == POPOLARI || viewType == CAST || viewType == CINEMA || viewType == VOTATI) {
+        if (viewType == CONSIGLIATI || viewType == POPOLARI || viewType == CAST || viewType == CINEMA || viewType == VOTATI) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
             return new ViewHolderNoCard(view);
         }
@@ -196,46 +196,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
         }
 
-        if (getItemViewType(position) == SIMILI) {
-            final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
-            viewHolder.item_textview.setText(dataList.get(position).getTitolo());
-
-            final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/11/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
-            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                RecyclerView recyclerView = viewHolder.title_recyclerview;
-                                recyclerView.setHasFixedSize(true);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                                recyclerView.setLayoutManager(layoutManager);
-                                List<Movie> dataset = new ArrayList<Movie>();
-                                HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                                recyclerView.setAdapter(adapter);
-                                JSONArray movie_array = response.getJSONArray("results");
-                                itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                for (int index = 0; index < itemsRecyclerView; index++) {
-                                    Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
-                                    adapter.notifyDataSetChanged();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.e("DEBUG", String.valueOf(error));
-                        }
-                    });
-            requestQueue.add(jsonObjectRequest1);
-        }
-
         if (getItemViewType(position) == CINEMA) {
             final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
 
@@ -250,229 +210,190 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             EnableAutoScroll(recyclerView, layoutManager, adapter, 2);
 
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
-            final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
-            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                final JSONArray movie_array = response.getJSONArray("results");
-                                for (int index = 0; index < movie_array.length(); index++) {
-                                    int movieid = movie_array.getJSONObject(index).getInt("id");
-                                    RequestQueue trailersQueue = Volley.newRequestQueue(context);
-                                    String videosUrl = "https://api.themoviedb.org/3/movie/" + movieid + "/videos?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
-                                    JsonObjectRequest trailerRequest = new JsonObjectRequest
-                                            (Request.Method.GET, videosUrl, null, new Response.Listener<JSONObject>() {
-                                                @Override
-                                                public void onResponse(JSONObject response) {
-                                                    try {
-                                                        JSONArray array = response.getJSONArray("results");
-                                                        if (array.length() > 0) {
-                                                            for (int index = 0; index < response.length(); index++) {
-                                                                if (array.getJSONObject(index).getString("type").equals("Trailer")) {
-                                                                    String youtubekey = array.getJSONObject(index).getString("key");
-                                                                    String title = array.getJSONObject(index).getString("name");
-                                                                    Movie temp = new Movie();
-                                                                    temp.setYoutubekey(youtubekey);
-                                                                    temp.setTitle(title);
-                                                                    temp.setTipo("trailer");
-                                                                    adapter.add(adapter.getItemCount(), temp);
-                                                                    adapter.notifyDataSetChanged();
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
+            String endpoint = "https://api.themoviedb.org/3/movie/now_playing";
+            RequestJson(endpoint, new VolleyCallback() {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    try {
+                        final JSONArray movie_array = result.getJSONArray("results");
+                        // for each movie request videos
+                        for (int index = 0; index < movie_array.length(); index++) {
+                            int movieid = movie_array.getJSONObject(index).getInt("id");
+                            String endpoint = "https://api.themoviedb.org/3/movie/" + movieid + "/videos";
+                            RequestJson(endpoint, new VolleyCallback() {
+                                @Override
+                                public void onSuccess(JSONObject result) {
+                                    try {
+                                        JSONArray array = result.getJSONArray("results");
+                                        if (array.length() > 0) {
+                                            for (int index = 0; index < result.length(); index++) {
+                                                if (array.getJSONObject(index).getString("type").equals("Trailer")) {
+                                                    String youtubekey = array.getJSONObject(index).getString("key");
+                                                    String title = array.getJSONObject(index).getString("name");
+                                                    Movie temp = new Movie();
+                                                    temp.setYoutubekey(youtubekey);
+                                                    temp.setTitle(title);
+                                                    temp.setTipo("trailer");
+                                                    adapter.add(adapter.getItemCount(), temp);
+                                                    adapter.notifyDataSetChanged();
+                                                    break; //after finding one trailer the method exits
                                                 }
-                                            }, new Response.ErrorListener() {
-
-                                                @Override
-                                                public void onErrorResponse(VolleyError error) {
-                                                    //Toast.makeText(MovieDetailActivity.this,error.getMessage(), Toast.LENGTH_LONG).show();
-                                                    Log.e("DEBUG", String.valueOf(error));
-                                                }
-                                            });
-                                    trailersQueue.add(trailerRequest);
+                                            }
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            });
                         }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.e("DEBUG", String.valueOf(error));
-                        }
-                    });
-            requestQueue.add(jsonObjectRequest1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         if (getItemViewType(position) == POPOLARI) {
             final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
-
-            final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
-            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                RecyclerView recyclerView = viewHolder.title_recyclerview;
-                                recyclerView.setHasFixedSize(true);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                                recyclerView.setLayoutManager(layoutManager);
-                                List<Movie> dataset = new ArrayList<Movie>();
-                                HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                                recyclerView.setAdapter(adapter);
-                                JSONArray movie_array = response.getJSONArray("results");
-                                itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                for (int index = 0; index < itemsRecyclerView; index++) {
-                                    Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
-                                    adapter.notifyDataSetChanged();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+            RecyclerView recyclerView = viewHolder.title_recyclerview;
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            List<Movie> dataset = new ArrayList<Movie>();
+            final HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+            recyclerView.setAdapter(adapter);
+            String endpoint = "https://api.themoviedb.org/3/movie/popular";
+            RequestJson(endpoint, new VolleyCallback() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    try {
+                        JSONArray movie_array = response.getJSONArray("results");
+                        itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
+                        for (int index = 0; index < itemsRecyclerView; index++) {
+                            Movie movie = new Movie();
+                            adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
+                            adapter.notifyDataSetChanged();
                         }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.e("DEBUG", String.valueOf(error));
-                        }
-                    });
-            requestQueue.add(jsonObjectRequest1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         if (getItemViewType(position) == ARRIVO) {
-
             final ViewHolderNoTitle viewHolder1 = (ViewHolderNoTitle) holder;
             viewHolder1.imageView.setBackgroundResource(R.drawable.upcoming_bg);
             viewHolder1.item_textview.setText(dataList.get(position).getTitolo());
-            final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/upcoming?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
-            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                RecyclerView recyclerView = viewHolder1.without_title_recyclerview;
-                                recyclerView.setHasFixedSize(true);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                                recyclerView.setLayoutManager(layoutManager);
-                                List<Movie> dataset = new ArrayList<Movie>();
-                                HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                                recyclerView.setAdapter(adapter);
-                                JSONArray movie_array = response.getJSONArray("results");
-                                itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                for (int index = 0; index < itemsRecyclerView; index++) {
-                                    Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
-                                    adapter.notifyDataSetChanged();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+            RecyclerView recyclerView = viewHolder1.without_title_recyclerview;
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            List<Movie> dataset = new ArrayList<Movie>();
+            final HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+            recyclerView.setAdapter(adapter);
+            String endpoint = "https://api.themoviedb.org/3/movie/upcoming";
+            RequestJson(endpoint, new VolleyCallback() {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    try {
+                        JSONArray movie_array = result.getJSONArray("results");
+                        itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
+                        for (int index = 0; index < itemsRecyclerView; index++) {
+                            Movie movie = new Movie();
+                            adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
+                            adapter.notifyDataSetChanged();
                         }
-                    }, new Response.ErrorListener() {
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.e("DEBUG", String.valueOf(error));
-                        }
-                    });
-            requestQueue.add(jsonObjectRequest1);
         }
 
         if (getItemViewType(position) == VOTATI) {
             final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
+            RecyclerView recyclerView = viewHolder.title_recyclerview;
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            List<Movie> dataset = new ArrayList<Movie>();
+            final HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+            recyclerView.setAdapter(adapter);
 
-            final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/top_rated?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
-            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                RecyclerView recyclerView = viewHolder.title_recyclerview;
-                                recyclerView.setHasFixedSize(true);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                                recyclerView.setLayoutManager(layoutManager);
-                                List<Movie> dataset = new ArrayList<Movie>();
-                                HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                                recyclerView.setAdapter(adapter);
-                                JSONArray movie_array = response.getJSONArray("results");
-                                itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                for (int index = 0; index < itemsRecyclerView; index++) {
-                                    Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
-                                    adapter.notifyDataSetChanged();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+            String endpoint = "https://api.themoviedb.org/3/movie/top_rated";
+            RequestJson(endpoint, new VolleyCallback() {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    try {
+                        JSONArray movie_array = result.getJSONArray("results");
+                        itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
+                        for (int index = 0; index < itemsRecyclerView; index++) {
+                            Movie movie = new Movie();
+                            adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
+                            adapter.notifyDataSetChanged();
                         }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.e("DEBUG", String.valueOf(error));
-                        }
-                    });
-            requestQueue.add(jsonObjectRequest1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
 
         if (getItemViewType(position) == CAST) {
             final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
-            final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/person/popular?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
-            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                RecyclerView recyclerView = viewHolder.title_recyclerview;
-                                recyclerView.setHasFixedSize(true);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                                recyclerView.setLayoutManager(layoutManager);
-                                HorizontalAdapter adapter = new HorizontalAdapter(context);
-                                recyclerView.setAdapter(adapter);
-                                JSONArray cast_array = response.getJSONArray("results");
-                                itemsRecyclerView = setMaxElemntsNumber(cast_array.length());
-                                Log.i("TAG", String.valueOf(cast_array.length()));
-                                for (int index = 0; index < itemsRecyclerView; index++) {
-                                    Cast cast = new Cast();
-                                    adapter.addCast(index, cast.parseCastJson(cast_array.getJSONObject(index), "cast"));
-                                    adapter.notifyDataSetChanged();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+            RecyclerView recyclerView = viewHolder.title_recyclerview;
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            final HorizontalAdapter adapter = new HorizontalAdapter(context);
+            recyclerView.setAdapter(adapter);
+            String endpoint = "https://api.themoviedb.org/3/person/popular";
+            RequestJson(endpoint, new VolleyCallback() {
+                @Override
+                public void onSuccess(JSONObject result) {
+                    try {
+                        JSONArray cast_array = result.getJSONArray("results");
+                        itemsRecyclerView = setMaxElemntsNumber(cast_array.length());
+                        Log.i("TAG", String.valueOf(cast_array.length()));
+                        for (int index = 0; index < itemsRecyclerView; index++) {
+                            Cast cast = new Cast();
+                            adapter.addCast(index, cast.parseCastJson(cast_array.getJSONObject(index), "cast"));
+                            adapter.notifyDataSetChanged();
                         }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.e("DEBUG", String.valueOf(error));
-                        }
-                    });
-            requestQueue.add(jsonObjectRequest1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
+    }
+
+    private void RequestJson(String endpoint, final VolleyCallback callback) {
+        String url = endpoint + "?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
+        JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                callback.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("DEBUG", String.valueOf(error));
+            }
+        }) {
+            @Override
+            public Priority getPriority() {
+                return Priority.IMMEDIATE;
+            }
+        };
+        requestQueue.add(jsonObjectRequest1);
     }
 
     private void EnableAutoScroll(final RecyclerView recyclerView, final LinearLayoutManager layoutManager, final HorizontalAdapter adapter, int speed) {
@@ -522,7 +443,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         final HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
         recyclerView.setAdapter(adapter);
         EnableAutoScroll(recyclerView, layoutManager, adapter, 2);
-        final RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         String url = "https://api.themoviedb.org/3/movie/" + listaFilmGuardati.get(0) + "/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
         JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
@@ -562,6 +482,10 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (length > MAX_ITEMS_RECYCLERVIEW)
             return MAX_ITEMS_RECYCLERVIEW;
         else return length;
+    }
+
+    public interface VolleyCallback {
+        void onSuccess(JSONObject result);
     }
 
     @Override

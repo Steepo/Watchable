@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.warnercodes.watchable.ItemType;
 import com.warnercodes.watchable.R;
 import com.warnercodes.watchable.adapter.AttivitaAdapter;
@@ -51,7 +53,8 @@ public class RecentFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        attivitaAdapter = new AttivitaAdapter(getContext(), itemList);
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        attivitaAdapter = new AttivitaAdapter(getContext(), itemList, requestQueue);
         itemList.add(new ItemType(getString(R.string.watchlist), 1));
         itemList.add(new ItemType(getString(R.string.suggested_title), 2));
         recyclerView.setAdapter(attivitaAdapter);

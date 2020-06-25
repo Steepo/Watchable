@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.warnercodes.watchable.ItemType;
 import com.warnercodes.watchable.R;
 import com.warnercodes.watchable.adapter.AttivitaAdapter;
@@ -27,7 +29,7 @@ public class UpcomingFragment extends Fragment {
     private AttivitaAdapter attivitaAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private List<ItemType> itemList;
-
+    private RequestQueue requestQueue;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -50,7 +52,8 @@ public class UpcomingFragment extends Fragment {
         itemList.add(new ItemType(getString(R.string.top_rated_title), 7));
         itemList.add(new ItemType(getString(R.string.cast_title), 8));
         Log.i("adapter", "5");
-        attivitaAdapter = new AttivitaAdapter(getContext(), itemList);
+        requestQueue = Volley.newRequestQueue(getActivity());
+        attivitaAdapter = new AttivitaAdapter(getContext(), itemList, requestQueue);
         Log.i("adapter", "6");
         recyclerView.setAdapter(attivitaAdapter);
         Log.i("adapter", "7");
