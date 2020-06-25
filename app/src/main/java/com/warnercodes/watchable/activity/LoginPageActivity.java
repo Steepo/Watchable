@@ -3,16 +3,16 @@ package com.warnercodes.watchable.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.common.SignInButton;
 import com.warnercodes.watchable.databinding.ActivityLoginBinding;
 
 public class LoginPageActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     //public Button buttonFacebook;
-    public SignInButton buttonGoogle;
+    public Button buttonGoogle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
