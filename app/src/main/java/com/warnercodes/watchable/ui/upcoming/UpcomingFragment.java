@@ -50,7 +50,7 @@ public class UpcomingFragment extends Fragment {
         itemList.add(new ItemType(getString(R.string.top_rated_title), 7));
         itemList.add(new ItemType(getString(R.string.cast_title), 8));
         Log.i("adapter", "5");
-        attivitaAdapter = new AttivitaAdapter(getActivity(), itemList);
+        attivitaAdapter = new AttivitaAdapter(getContext(), itemList);
         Log.i("adapter", "6");
         recyclerView.setAdapter(attivitaAdapter);
         Log.i("adapter", "7");

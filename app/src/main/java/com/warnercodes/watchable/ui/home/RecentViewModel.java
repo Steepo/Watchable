@@ -1,4 +1,4 @@
-package com.warnercodes.watchable.ui.recent;
+package com.warnercodes.watchable.ui.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

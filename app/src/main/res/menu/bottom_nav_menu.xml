@@ -4,20 +4,20 @@
     <item
         android:id="@+id/navigation_activity"
         android:icon="@drawable/ic_apps_black_24dp"
-        android:title="Home" />
+        android:title="@string/home" />
 
     <item
         android:id="@+id/navigation_movie"
         android:icon="@drawable/ic_local_movies_black_24dp"
-        android:title="Upcoming" />
+        android:title="@string/upcoming" />
 
     <item
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_search_black_24dp"
-        android:title="Search" />
+        android:title="@string/search" />
 
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_person_black_24dp"
-        android:title="Profile" />
+        android:title="@string/profile" />
 </menu>

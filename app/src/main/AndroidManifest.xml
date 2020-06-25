@@ -36,11 +36,11 @@
 
         <activity
             android:name=".activity.ReviewActivity"
-            android:theme="@style/AppThemeNobar"></activity>
+            android:theme="@style/AppTheme" />
 
 
         <activity
-            android:name=".activity.HomePage"
+            android:name=".activity.HomePageActivity"
             android:label="@string/title_activity_home_page"
             android:theme="@style/AppThemeNobar"
             android:windowSoftInputMode="adjustPan">

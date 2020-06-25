@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.warnercodes.watchable.ItemType;
 import com.warnercodes.watchable.Movie;
+import com.warnercodes.watchable.R;
 import com.warnercodes.watchable.activity.SettingsActivity;
 import com.warnercodes.watchable.databinding.ItemProfileBinding;
 import com.warnercodes.watchable.databinding.TitleRecyclerviewBinding;
@@ -123,7 +124,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (getItemViewType(position) == WATCHED) {
             final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("Guardati");
+            viewHolder.item_textview.setText(R.string.watched);
             final RecyclerView recyclerView = viewHolder.item_recylerview;
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);

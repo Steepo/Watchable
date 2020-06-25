@@ -50,8 +50,8 @@ public class ProfileFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         itemList.add(new ItemType("", 1));
-        itemList.add(new ItemType("Preferiti", 2));
-        itemList.add(new ItemType("Da guardare", 3));
+        itemList.add(new ItemType(getString(R.string.watched), 2));
+        //itemList.add(new ItemType(getString(R.string.watchlist), 3));
 
         profileAdapter = new ProfileAdapter(itemList);
         recyclerView.setAdapter(profileAdapter);

@@ -152,6 +152,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (getItemViewType(position) == CONSIGLIATI) {
             AdviceViewHolder viewHolder = (AdviceViewHolder) holder;
+            context = viewHolder.img_advice.getContext();
             Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_advice);
             TextView textView = viewHolder.title_advice;
             TextView textView1 = viewHolder.trama_adv;
@@ -194,7 +195,6 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         if (getItemViewType(position) == TRAILER) {
             TrailersViewHolder viewHolder = (TrailersViewHolder) holder;
-            Log.i("TRAILER", dataList.get(position).toString());
             Movie item = dataList.get(position);
             Glide.with(context)
                     .load("https://img.youtube.com/vi/" + item.getYoutubekey() + "/maxresdefault.jpg")

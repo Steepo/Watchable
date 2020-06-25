@@ -65,5 +65,10 @@
 
     <string name="facebook_app_id">3175042632517865</string>
     <string name="fb_login_protocol_scheme">fb3175042632517865</string>
+    <string name="home">Home</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="search">Search</string>
+    <string name="profile">Profile</string>
+    <string name="watched">Watched</string>
 
 </resources>

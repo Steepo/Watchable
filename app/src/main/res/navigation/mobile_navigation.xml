@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/navigation_activity"
-        android:name="com.warnercodes.watchable.ui.recent.RecentFragment"
+        android:name="com.warnercodes.watchable.ui.home.RecentFragment"
         android:label=""
         tools:layout="@layout/fragment_activity" />
 

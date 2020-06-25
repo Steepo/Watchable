@@ -10,12 +10,12 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.warnercodes.watchable.R;
+import com.warnercodes.watchable.ui.home.RecentFragment;
 import com.warnercodes.watchable.ui.profile.ProfileFragment;
-import com.warnercodes.watchable.ui.recent.RecentFragment;
 import com.warnercodes.watchable.ui.search.SearchFragment;
 import com.warnercodes.watchable.ui.upcoming.UpcomingFragment;
 
-public class HomePage extends AppCompatActivity {
+public class HomePageActivity extends AppCompatActivity {
 
     final Fragment fragment1 = new RecentFragment();
     final Fragment fragment2 = new UpcomingFragment();
@@ -31,12 +31,12 @@ public class HomePage extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
         fm.beginTransaction().add(R.id.nav_host_fragment, fragment1, "1").hide(fragment1).commit();
         fm.beginTransaction().add(R.id.nav_host_fragment, fragment2, "2").hide(fragment2).commit();
         fm.beginTransaction().add(R.id.nav_host_fragment, fragment3, "3").hide(fragment3).commit();
         fm.beginTransaction().add(R.id.nav_host_fragment, fragment4, "4").hide(fragment4).commit();
         fm.beginTransaction().show(active).commit();
+        fm.executePendingTransactions();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {

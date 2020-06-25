@@ -1,6 +1,8 @@
-package com.warnercodes.watchable.ui.recent;
+package com.warnercodes.watchable.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,9 +51,45 @@ public class RecentFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        attivitaAdapter = new AttivitaAdapter(getActivity(), itemList);
+        attivitaAdapter = new AttivitaAdapter(getContext(), itemList);
         itemList.add(new ItemType(getString(R.string.watchlist), 1));
         itemList.add(new ItemType(getString(R.string.suggested_title), 2));
         recyclerView.setAdapter(attivitaAdapter);
+    }
+
+    @Override
+    public void onStart() {
+        Log.i("CYCLE", "START");
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        Log.i("CYCLE", "RESUME");
+        super.onResume();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        Log.i("CYCLE", "ATTACH");
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onAttachFragment(@NonNull Fragment childFragment) {
+        Log.i("CYCLE", "ATT Fragment");
+        super.onAttachFragment(childFragment);
+    }
+
+    @Override
+    public void onPause() {
+        Log.i("CYCLE", "PAUSE");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.i("CYCLE", "STOP");
+        super.onStop();
     }
 }
