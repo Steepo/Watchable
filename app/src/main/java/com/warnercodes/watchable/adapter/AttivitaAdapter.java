@@ -194,10 +194,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
             });
-
-
-
-
         }
 
         if (getItemViewType(position) == SIMILI) {
@@ -543,9 +539,9 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             int i = 0;
                             for (int index = 0; index < movie_array.length(); index++) {
                                 Movie movie = new Movie();
-                                if(!(listaFilmDaGuardare.contains(movie.parseSingleMovieJson(movie_array.getJSONObject(index), "consigliati").getMovieId()) ||
-                                        listaFilmGuardati.contains(movie.parseSingleMovieJson(movie_array.getJSONObject(index), "consigliati").getMovieId()))){
-                                    adapter.add(i, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "consigliati"));
+                                if(!(listaFilmDaGuardare.contains(movie.parseAdviceMovieJson(movie_array.getJSONObject(index), "consigliati").getMovieId()) ||
+                                        listaFilmGuardati.contains(movie.parseAdviceMovieJson(movie_array.getJSONObject(index), "consigliati").getMovieId()))){
+                                    adapter.add(i, movie.parseAdviceMovieJson(movie_array.getJSONObject(index), "consigliati"));
                                     adapter.notifyDataSetChanged();
                                     i++;
                                 }
