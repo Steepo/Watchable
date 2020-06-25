@@ -1,5 +1,6 @@
 package com.warnercodes.watchable.adapter;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -174,7 +175,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (getItemViewType(position) == CONSIGLIATI) {
             AdviceViewHolder viewHolder = (AdviceViewHolder) holder;
             context = viewHolder.img_advice.getContext();
-            Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_advice);
+            if (!((Activity) context).isFinishing())
+                Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_advice);
             TextView textView = viewHolder.title_advice;
             TextView textView1 = viewHolder.trama_adv;
             textView.setText(dataList.get(position).getTitle());

@@ -95,6 +95,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             //movieId = 1892; //Return of the Jedi
             movieId = 35554; //Cado dalle nubi
         requestMovieInfo(movieId);
+        getSupportActionBar().setTitle(R.string.empty);
 
         Log.i("MovieID", String.valueOf(movieId));
 

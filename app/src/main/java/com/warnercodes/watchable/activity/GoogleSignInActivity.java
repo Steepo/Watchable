@@ -190,7 +190,20 @@ public class GoogleSignInActivity extends BaseActivity implements
             editor.apply();
             //mBinding.signInButton.setVisibility(View.GONE);
             //mBinding.signOutAndDisconnect.setVisibility(View.VISIBLE);
-            startActivity(new Intent(this, HomePageActivity.class));
+
+            Intent intent = getIntent();
+            int movieId = intent.getIntExtra("movieId", 0);
+            if (movieId != 0) {
+                Intent detailsIntent = new Intent(this, MovieDetailActivity.class);
+                detailsIntent.putExtra("movieId", movieId);
+                startActivity(detailsIntent);
+                finish();
+                Log.d("Extra", "MovieIdSplash: " + movieId);
+            } else {
+                startActivity(new Intent(this, HomePageActivity.class));
+                finish();
+            }
+
         } else {
             //mBinding.status.setText(R.string.signed_out);
             //mBinding.detail.setText(null);

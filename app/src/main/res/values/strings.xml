@@ -63,5 +63,6 @@
     <string name="dateformat">dd MMM yyyy</string>
     <string name="user_reviews">User Reviews</string>
     <string name="metascore">Metascore</string>
+    <string name="empty" />
 
 </resources>
