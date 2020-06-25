@@ -489,7 +489,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 int lastItem = layoutManager.findLastCompletelyVisibleItemPosition();
                 if (dx != pixelsToMove) {
                     mHandler.removeCallbacks(SCROLLING_RUNNABLE);
-                    mHandler.postDelayed(SCROLLING_RUNNABLE, 1000);
+                    mHandler.postDelayed(SCROLLING_RUNNABLE, 2000);
                 }
                 if (lastItem == layoutManager.getItemCount() - 1) {
                     //mHandler.removeCallbacks(SCROLLING_RUNNABLE);

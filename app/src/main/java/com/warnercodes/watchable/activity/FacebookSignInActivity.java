@@ -3,8 +3,6 @@ package com.warnercodes.watchable.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +15,6 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -34,7 +31,7 @@ public class FacebookSignInActivity extends AppCompatActivity {
     private static final String TAG = "FacebookSignInActivity";
     private FirebaseAuth mAuth;
     //Facebook Declaration
-    private Button buttonFacebook;
+    //private Button buttonFacebook;
     CallbackManager callbackManager;
     LoginManager loginManager;
 
@@ -42,16 +39,19 @@ public class FacebookSignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        buttonFacebook = (LoginButton) findViewById(R.id.button_facebook);
+        //buttonFacebook = (LoginButton) findViewById(R.id.button_facebook);
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         mAuth = FirebaseAuth.getInstance();
+        /*
         buttonFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 faceBookLogin();
             }
         });
+
+         */
     }
     private void faceBookLogin() {
         loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {

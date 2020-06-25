@@ -70,5 +70,10 @@
     <string name="search">Search</string>
     <string name="profile">Profile</string>
     <string name="watched">Watched</string>
+    <string name="about">Warner Codes</string>
+    <string name="logout">Log out</string>
+    <string name="resetdb">Reset Database</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="login_with_facebook">Login with Facebook</string>
 
 </resources>

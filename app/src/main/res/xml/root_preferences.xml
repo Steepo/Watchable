@@ -5,26 +5,19 @@
 
         <Preference
             app:key="reset"
-            app:title="Reset Database" />
+            app:title="@string/resetdb" />
 
         <Preference
             app:key="logout"
-            app:title="Log out" />
+            app:title="@string/logout" />
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/sync_header">
 
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+        <Preference
+            app:key="reset"
+            app:title="@string/about" />
 
     </PreferenceCategory>
 
