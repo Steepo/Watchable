@@ -2,6 +2,8 @@ package com.warnercodes.watchable.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -149,6 +152,14 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
 
+            RecyclerView recyclerView = viewHolder.title_recyclerview;
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            List<Movie> dataset = new ArrayList<Movie>();
+            final HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+            recyclerView.setAdapter(adapter);
+            EnableAutoScroll(recyclerView, layoutManager, adapter, 2);
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
             String url = "https://api.themoviedb.org/3/movie/11/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
             JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
@@ -156,17 +167,8 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder.title_recyclerview;
-                                recyclerView.setHasFixedSize(true);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                                recyclerView.setLayoutManager(layoutManager);
-                                List<Movie> dataset = new ArrayList<Movie>();
-                                HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                                recyclerView.setAdapter(adapter);
                                 JSONArray movie_array = response.getJSONArray("results");
-                                itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                Log.i("TAG", String.valueOf(movie_array.length()));
-                                for (int index = 0; index < itemsRecyclerView; index++) {
+                                for (int index = 0; index < movie_array.length(); index++) {
                                     Movie movie = new Movie();
                                     adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "consigliati"));
                                     adapter.notifyDataSetChanged();
@@ -206,7 +208,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 recyclerView.setAdapter(adapter);
                                 JSONArray movie_array = response.getJSONArray("results");
                                 itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < itemsRecyclerView; index++) {
                                     Movie movie = new Movie();
                                     adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
@@ -229,6 +230,17 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (getItemViewType(position) == CINEMA) {
             final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
+
+            RecyclerView recyclerView = viewHolder.title_recyclerview;
+            recyclerView.setHasFixedSize(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            List<Movie> dataset = new ArrayList<Movie>();
+            final HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+            recyclerView.setAdapter(adapter);
+
+            EnableAutoScroll(recyclerView, layoutManager, adapter, 2);
+
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
             final RequestQueue requestQueue = Volley.newRequestQueue(context);
             String url = "https://api.themoviedb.org/3/movie/now_playing?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
@@ -237,17 +249,8 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
-                                RecyclerView recyclerView = viewHolder.title_recyclerview;
-                                recyclerView.setHasFixedSize(true);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                                recyclerView.setLayoutManager(layoutManager);
-                                List<Movie> dataset = new ArrayList<Movie>();
-                                final HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                                recyclerView.setAdapter(adapter);
                                 final JSONArray movie_array = response.getJSONArray("results");
-                                itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                Log.i("TAG", String.valueOf(movie_array.length()));
-                                for (int index = 0; index < itemsRecyclerView; index++) {
+                                for (int index = 0; index < movie_array.length(); index++) {
                                     int movieid = movie_array.getJSONObject(index).getInt("id");
                                     RequestQueue trailersQueue = Volley.newRequestQueue(context);
                                     String videosUrl = "https://api.themoviedb.org/3/movie/" + movieid + "/videos?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
@@ -258,7 +261,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                     try {
                                                         JSONArray array = response.getJSONArray("results");
                                                         if (array.length() > 0) {
-                                                            for (int index = 0; index < 4; index++) {
+                                                            for (int index = 0; index < response.length(); index++) {
                                                                 if (array.getJSONObject(index).getString("type").equals("Trailer")) {
                                                                     String youtubekey = array.getJSONObject(index).getString("key");
                                                                     String title = array.getJSONObject(index).getString("name");
@@ -268,6 +271,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                                     temp.setTipo("trailer");
                                                                     adapter.add(index, temp);
                                                                     adapter.notifyDataSetChanged();
+                                                                    break;
                                                                 }
                                                             }
                                                         }
@@ -324,7 +328,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 recyclerView.setAdapter(adapter);
                                 JSONArray movie_array = response.getJSONArray("results");
                                 itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < itemsRecyclerView; index++) {
                                     Movie movie = new Movie();
                                     adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
@@ -366,7 +369,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 recyclerView.setAdapter(adapter);
                                 JSONArray movie_array = response.getJSONArray("results");
                                 itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < itemsRecyclerView; index++) {
                                     Movie movie = new Movie();
                                     adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
@@ -407,7 +409,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 recyclerView.setAdapter(adapter);
                                 JSONArray movie_array = response.getJSONArray("results");
                                 itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                Log.i("TAG", String.valueOf(movie_array.length()));
                                 for (int index = 0; index < itemsRecyclerView; index++) {
                                     Movie movie = new Movie();
                                     adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
@@ -469,8 +470,46 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public int setMaxElemntsNumber(int length){
-        if(length > MAX_ITEMS_RECYCLERVIEW)
+    private void EnableAutoScroll(final RecyclerView recyclerView, final LinearLayoutManager layoutManager, final HorizontalAdapter adapter, int speed) {
+        final int duration = speed;
+        final int pixelsToMove = speed;
+        final Handler mHandler = new Handler(Looper.getMainLooper());
+        final Runnable SCROLLING_RUNNABLE = new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.scrollBy(pixelsToMove, 0);
+                mHandler.postDelayed(this, duration);
+            }
+        };
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int lastItem = layoutManager.findLastCompletelyVisibleItemPosition();
+                if (dx != pixelsToMove) {
+                    mHandler.removeCallbacks(SCROLLING_RUNNABLE);
+                    mHandler.postDelayed(SCROLLING_RUNNABLE, 1000);
+                }
+                if (lastItem == layoutManager.getItemCount() - 1) {
+                    //mHandler.removeCallbacks(SCROLLING_RUNNABLE);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.scrollToPosition(0);
+                            //recyclerView.setAdapter(null);
+                            //recyclerView.setAdapter(adapter);
+                        }
+                    }, 0);
+                    mHandler.postDelayed(SCROLLING_RUNNABLE, 0);
+                }
+            }
+        });
+        mHandler.postDelayed(SCROLLING_RUNNABLE, 10000);
+    }
+
+    public int setMaxElemntsNumber(int length) {
+        if (length > MAX_ITEMS_RECYCLERVIEW)
             return MAX_ITEMS_RECYCLERVIEW;
         else return length;
     }
@@ -501,11 +540,12 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     class ViewHolderNoCard extends RecyclerView.ViewHolder {
         private RecyclerView title_recyclerview;
         private TextView item_textview;
-
+        private ConstraintLayout cointainer;
         ViewHolderNoCard(View view) {
             super(view);
             this.title_recyclerview = view.findViewById(R.id.title_recyclerview);
             this.item_textview = view.findViewById(R.id.item_textview);
+            this.cointainer = view.findViewById(R.id.container);
         }
     }
 }

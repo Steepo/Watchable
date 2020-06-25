@@ -10,10 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.common.SignInButton;
 import com.warnercodes.watchable.databinding.ActivityLoginBinding;
 
-public class LoginPage extends AppCompatActivity {
+public class LoginPageActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     public Button buttonFacebook;
     public SignInButton buttonGoogle;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
@@ -27,13 +28,13 @@ public class LoginPage extends AppCompatActivity {
         buttonFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginPage.this, FacebookSignInActivity.class));
+                startActivity(new Intent(LoginPageActivity.this, FacebookSignInActivity.class));
             }
         });
         buttonGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginPage.this, GoogleSignInActivity.class));
+                startActivity(new Intent(LoginPageActivity.this, GoogleSignInActivity.class));
             }
         });
 

@@ -23,7 +23,7 @@ public class Cast {
             item.setProfile_path(response.getString("profile_path"));
             item.setCharacter(response.getString("character"));
         } catch (JSONException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         return item;
