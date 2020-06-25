@@ -116,6 +116,32 @@ public class Movie {
         return item;
     }
 
+    public Movie parseAdviceMovieJson(JSONObject response, String type) {
+        Movie item = new Movie();
+        item.setTipo(type);
+        generi = new ArrayList<String>();
+        try {
+            item.setMovieId(response.getInt("id"));
+            item.setCopertina(response.getString("backdrop_path"));
+            item.setTitle(response.getString("title"));
+            item.setOriginal_title(response.getString("original_title"));
+            item.setMovieId(response.getInt("id"));
+            item.setReleaseDate(response.getString("release_date"));
+            item.setTrama(response.getString("overview"));
+            JSONArray genres = response.getJSONArray("genres");
+            item.setImdbId(response.getString("imdb_id"));
+            if (genres.length() > 0)
+                for (int i = 0; i < genres.length(); i++) {
+                    generi.add(genres.getJSONObject(i).getString("name"));
+                    Log.i("GENERI", genres.getJSONObject(i).getString("name"));
+                }
+            item.setGeneri(generi);
+        } catch (JSONException e) {
+            //e.printStackTrace();
+        }
+        return item;
+    }
+
     public void addOMdbInfo(JSONObject response) {
 
         try {
