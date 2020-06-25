@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.warnercodes.watchable.Cast;
 import com.warnercodes.watchable.Movie;
+import com.warnercodes.watchable.R;
 import com.warnercodes.watchable.Review;
 import com.warnercodes.watchable.activity.MovieDetailActivity;
 import com.warnercodes.watchable.activity.ReviewActivity;
@@ -182,15 +183,14 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String author = completeReview.getAuthor();
             Date date = completeReview.getDate();
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+            SimpleDateFormat formatter = new SimpleDateFormat(context.getString(R.string.dateformat));
             String format = formatter.format(date);
-            System.out.println(format);
-            viewHolder.author_date.setText(author + "  " + format);
+            viewHolder.author_date.setText(String.format("%s  %s", author, format));
             viewHolder.text.setText(completeReview.getText());
             viewHolder.score.setText(String.valueOf(completeReview.getScore()));
             viewHolder.title.setText(completeReview.getTitle());
             int totalvotes = completeReview.getVotedown() + completeReview.getVoteup();
-            viewHolder.votes.setText(completeReview.getVoteup() + " of " + totalvotes + " found this review helpful");
+            viewHolder.votes.setText(String.format(context.getString(R.string.helpful_review), completeReview.getVoteup(), totalvotes));
 
         }
         if (getItemViewType(position) == TRAILER) {

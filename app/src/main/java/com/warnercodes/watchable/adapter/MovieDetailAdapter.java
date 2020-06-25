@@ -117,9 +117,9 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         // set the main cover
         Glide.with(context).load(movie.getCopertina()).into(viewHolder.main_cover);
 
-        viewHolder.casttextview.setText("Cast");
-        viewHolder.similarTexview.setText("Similar");
-        viewHolder.reviewstextview.setText("User Reviews");
+        viewHolder.casttextview.setText(R.string.cast);
+        viewHolder.similarTexview.setText(R.string.similar);
+        viewHolder.reviewstextview.setText(R.string.user_reviews);
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(RequestCast(viewHolder));
@@ -173,10 +173,10 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                         }
                         viewHolder.metascoreScore.setText(metascoreScore);
-                        viewHolder.metascoretext.setText("Metascore");
+                        viewHolder.metascoretext.setText(R.string.metascore);
                         viewHolder.imdb_view.setVisibility(View.VISIBLE);
                         viewHolder.imdbScore.setText(movie.getImdbRating());
-                        viewHolder.imdbScoreTen.setText("/10");
+                        viewHolder.imdbScoreTen.setText(R.string._10);
 
                         //TODO: rotten if null
                         if (movie.getRottenScore() != null) {

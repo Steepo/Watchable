@@ -75,5 +75,18 @@
     <string name="resetdb">Reset Database</string>
     <string name="login_with_google">Login with Google</string>
     <string name="login_with_facebook">Login with Facebook</string>
+    <string name="add_to_watchlist">Add to watchlist</string>
+    <string name="search_movies">Search Movies</string>
+    <string name="director">Director:</string>
+    <string name="writers">Writers:</string>
+    <string name="awards">Awards</string>
+    <string name="view_more">View more</string>
+    <string name="_10">/10</string>
+    <string name="hours">You\'ve watched %d hours of movies</string>
+    <string name="show_more">Show more…</string>
+    <string name="helpful_review">%d of %d found this review helpful</string>
+    <string name="dateformat">dd MMM yyyy</string>
+    <string name="user_reviews">User Reviews</string>
+    <string name="metascore">Metascore</string>
 
 </resources>

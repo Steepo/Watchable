@@ -116,7 +116,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             //Log.i("Profile", String.valueOf(document.get("runtime")));
                         }
                         int hours = total / 60;
-                        viewHolder.hours_spent.setText("You've watched " + hours + " hours of movies");
+                        viewHolder.hours_spent.setText(String.format(context.getString(R.string.hours), hours));
                     }
                 }
             });
@@ -158,7 +158,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (getItemViewType(position) == WATCHLIST) {
             final ViewHolder viewHolder = (ViewHolder) holder;
-            viewHolder.item_textview.setText("Da guardare");
+            viewHolder.item_textview.setText(R.string.watchlist);
             final RecyclerView recyclerView = viewHolder.item_recylerview;
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);

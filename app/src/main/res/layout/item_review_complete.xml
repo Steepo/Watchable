@@ -51,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="A Great Movie .... For Disney'A Great Movie .... For Disney' A Great Movie .... For Disney's Accounting Department"
+            tools:text="A Great Movie .... For Disney'A Great Movie .... For Disney' A Great Movie .... For Disney's Accounting Department"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"

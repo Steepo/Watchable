@@ -34,8 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/youtube" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.cardview.widget.CardView>
 
@@ -55,8 +54,7 @@
             android:id="@+id/main_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerInside"
-            tools:srcCompat="@drawable/iron" />
+            android:scaleType="centerInside" />
 
     </androidx.cardview.widget.CardView>
 
@@ -224,7 +222,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        android:text="Show more..."
+        android:text="@string/show_more"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:layout_marginBottom="8dp"
@@ -254,7 +252,7 @@
             android:id="@+id/director_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Director: "
+            android:text="@string/director"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -272,7 +270,7 @@
             android:id="@+id/writer_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Writers: "
+            android:text="@string/writers"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/director" />
@@ -305,7 +303,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Awards"
+            android:text="@string/awards"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -346,7 +344,7 @@
         android:id="@+id/load_more_reviews"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="View more"
+        android:text="@string/view_more"
         android:visibility="invisible"
         android:layout_marginBottom="8dp"
         app:layout_constraintEnd_toEndOf="@id/reviews_view"
