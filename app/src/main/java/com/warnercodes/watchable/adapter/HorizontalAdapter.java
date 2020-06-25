@@ -94,6 +94,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void clear() {
         if (gridList != null)
             gridList.clear();
+        if (dataList != null)
+            dataList.clear();
     }
 
     public void setCompleteReview(Review completeReview) {
@@ -176,7 +178,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             AdviceViewHolder viewHolder = (AdviceViewHolder) holder;
             context = viewHolder.img_advice.getContext();
             if (!((Activity) context).isFinishing())
-                Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_advice);
+                Glide.with(context).load(dataList.get(position).getBackdrop()).into(viewHolder.img_advice);
             TextView textView = viewHolder.title_advice;
             TextView textView1 = viewHolder.trama_adv;
             textView.setText(dataList.get(position).getTitle());

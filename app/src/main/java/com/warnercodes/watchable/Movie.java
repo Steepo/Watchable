@@ -36,6 +36,7 @@ public class Movie {
     private String imdbRating;
     private String imdbVotes;
     private String rottenScore;
+    private String backdrop;
 
     private boolean watchlist;
     private boolean Watched;
@@ -97,6 +98,7 @@ public class Movie {
         try {
             item.setMovieId(response.getInt("id"));
             item.setCopertina(response.getString("poster_path"));
+
             item.setTitle(response.getString("title"));
             item.setOriginal_title(response.getString("original_title"));
             item.setMovieId(response.getInt("id"));
@@ -122,7 +124,8 @@ public class Movie {
         generi = new ArrayList<String>();
         try {
             item.setMovieId(response.getInt("id"));
-            item.setCopertina(response.getString("backdrop_path"));
+            item.setBackdrop(response.getString("backdrop_path"));
+            item.setCopertina(response.getString("poster_path"));
             item.setTitle(response.getString("title"));
             item.setOriginal_title(response.getString("original_title"));
             item.setMovieId(response.getInt("id"));
@@ -388,6 +391,15 @@ public class Movie {
 
     public void setWatched(boolean watched) {
         Watched = watched;
+    }
+
+    public String getBackdrop() {
+        return backdrop;
+    }
+
+    public void setBackdrop(String backdrop) {
+        this.backdrop = "https://image.tmdb.org/t/p/w400" + backdrop;
+        ;
     }
 }
 

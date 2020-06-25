@@ -277,7 +277,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                                     temp.setYoutubekey(youtubekey);
                                                                     temp.setTitle(title);
                                                                     temp.setTipo("trailer");
-                                                                    adapter.add(index, temp);
+                                                                    adapter.add(adapter.getItemCount(), temp);
                                                                     adapter.notifyDataSetChanged();
                                                                     break;
                                                                 }
@@ -295,9 +295,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                     Log.e("DEBUG", String.valueOf(error));
                                                 }
                                             });
-                                    Movie movie = new Movie();
-                                    //adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
-                                    //adapter.notifyDataSetChanged();
                                     trailersQueue.add(trailerRequest);
                                 }
 
@@ -527,15 +524,15 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         EnableAutoScroll(recyclerView, layoutManager, adapter, 2);
         final RequestQueue requestQueue = Volley.newRequestQueue(context);
 
-        String url = "https://api.themoviedb.org/3/movie/"+listaFilmGuardati.get(1)+"/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
+        String url = "https://api.themoviedb.org/3/movie/" + listaFilmGuardati.get(0) + "/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
         JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             JSONArray movie_array = response.getJSONArray("results");
-                            System.out.println("guardati: "+listaFilmGuardati);
-                            System.out.println("guardate: "+listaFilmDaGuardare);
+                            System.out.println("guardati: " + listaFilmGuardati);
+                            System.out.println("guardate: " + listaFilmDaGuardare);
                             int i = 0;
                             for (int index = 0; index < movie_array.length(); index++) {
                                 Movie movie = new Movie();
