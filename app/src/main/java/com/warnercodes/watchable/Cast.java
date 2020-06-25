@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Cast {
+    private int id;
     private String character;
     private String name;
     private String profile_path;
@@ -17,6 +18,7 @@ public class Cast {
         Cast item = new Cast();
         item.setTipo(type);
         try {
+            item.setId(response.getInt("id"));
             item.setName(response.getString("name"));
             item.setProfile_path(response.getString("profile_path"));
             item.setCharacter(response.getString("character"));
@@ -60,10 +62,19 @@ public class Cast {
         this.tipo = tipo;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Cast{" +
-                "character='" + character + '\'' +
+                "id=" + id +
+                ", character='" + character + '\'' +
                 ", name='" + name + '\'' +
                 ", profile_path='" + profile_path + '\'' +
                 ", tipo='" + tipo + '\'' +
