@@ -228,23 +228,24 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     if (array.getJSONObject(index).has("authorRating"))
                                         score = array.getJSONObject(index).getInt("authorRating");
 
-                                    JSONObject votes = array.getJSONObject(index).getJSONObject("interestingVotes");
+                                    if (array.getJSONObject(index).has("interestingVotes")) {
+                                        JSONObject votes = array.getJSONObject(index).getJSONObject("interestingVotes");
 
-                                    int voteup = 0;
-                                    if (votes.has("up"))
-                                        voteup = votes.getInt("up");
+                                        int voteup = 0;
+                                        if (votes.has("up"))
+                                            voteup = votes.getInt("up");
 
-                                    int votedown = 0;
-                                    if (votes.has("down"))
-                                        votedown = votes.getInt("down");
+                                        int votedown = 0;
+                                        if (votes.has("down"))
+                                            votedown = votes.getInt("down");
 
-                                    String rawDate = array.getJSONObject(index).getString("submissionDate");
-                                    Date date = null;
-                                    date = new SimpleDateFormat("yyy-MM-dd").parse(rawDate);
-                                    reviewList.add(index, new Review(author, text, title, score, voteup, votedown, date));
+                                        String rawDate = array.getJSONObject(index).getString("submissionDate");
+                                        Date date = null;
+                                        date = new SimpleDateFormat("yyy-MM-dd").parse(rawDate);
+                                        reviewList.add(reviewList.size(), new Review(author, text, title, score, voteup, votedown, date));
+                                    }
                                 } catch (JSONException | ParseException e) {
                                     e.printStackTrace();
-                                    index--;
                                 }
                             }
                             for (int j = 0; j < reviewList.size() && j < 5; j++) {

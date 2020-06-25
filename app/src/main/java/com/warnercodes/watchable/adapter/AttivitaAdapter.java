@@ -71,7 +71,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private static int RECENTI = 1;
     private static int CONSIGLIATI = 2;
-    private static int SIMILI = 3;
     private static int CINEMA = 4;
     private static int POPOLARI = 5;
     private static int ARRIVO = 6;
@@ -85,7 +84,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_without_title, parent, false);
             return new ViewHolderNoTitle(view);
         }
-        if (viewType == CONSIGLIATI || viewType == SIMILI || viewType == POPOLARI || viewType == CAST || viewType == CINEMA || viewType == VOTATI) {
+        if (viewType == CONSIGLIATI || viewType == POPOLARI || viewType == CAST || viewType == CINEMA || viewType == VOTATI) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.title_recyclerview, parent, false);
             return new ViewHolderNoCard(view);
         }
@@ -96,9 +95,7 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         context = holder.itemView.getContext();
         SharedPreferences sharedPref = context.getSharedPreferences("infos", Context.MODE_PRIVATE);
-        final String email = sharedPref.getString("email", null);
         String uid = sharedPref.getString("uid", null);
-        final String fullname = sharedPref.getString("name", null);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference user = db.collection("utenti").document(uid);
@@ -188,46 +185,6 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             requestQueue.add(jsonObjectRequest1);
         }
 
-        if (getItemViewType(position) == SIMILI) {
-            final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
-            viewHolder.item_textview.setText(dataList.get(position).getTitolo());
-
-            final RequestQueue requestQueue = Volley.newRequestQueue(context);
-            String url = "https://api.themoviedb.org/3/movie/11/similar?api_key=" + API_KEY + "&language=" + LANG + "&page=1";
-            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest
-                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                RecyclerView recyclerView = viewHolder.title_recyclerview;
-                                recyclerView.setHasFixedSize(true);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-                                recyclerView.setLayoutManager(layoutManager);
-                                List<Movie> dataset = new ArrayList<Movie>();
-                                HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
-                                recyclerView.setAdapter(adapter);
-                                JSONArray movie_array = response.getJSONArray("results");
-                                itemsRecyclerView = setMaxElemntsNumber(movie_array.length());
-                                for (int index = 0; index < itemsRecyclerView; index++) {
-                                    Movie movie = new Movie();
-                                    adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
-                                    adapter.notifyDataSetChanged();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                            Log.e("DEBUG", String.valueOf(error));
-                        }
-                    });
-            requestQueue.add(jsonObjectRequest1);
-        }
-
         if (getItemViewType(position) == CINEMA) {
             final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
 
@@ -286,8 +243,12 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                                     //Toast.makeText(MovieDetailActivity.this,error.getMessage(), Toast.LENGTH_LONG).show();
                                                     Log.e("DEBUG", String.valueOf(error));
                                                 }
-                                            });
-                                    Movie movie = new Movie();
+                                            }) {
+                                        @Override
+                                        public Priority getPriority() {
+                                            return Priority.IMMEDIATE;
+                                        }
+                                    };
                                     //adapter.add(index, movie.parseSingleMovieJson(movie_array.getJSONObject(index), "recenti"));
                                     //adapter.notifyDataSetChanged();
                                     trailersQueue.add(trailerRequest);
@@ -304,7 +265,13 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
                             Log.e("DEBUG", String.valueOf(error));
                         }
-                    });
+                    }) {
+                @Override
+                public Priority getPriority() {
+                    return Priority.IMMEDIATE;
+                }
+            };
+
             requestQueue.add(jsonObjectRequest1);
         }
 

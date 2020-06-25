@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -127,7 +128,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             viewHolder.item_textview.setText(R.string.watched);
             final RecyclerView recyclerView = viewHolder.item_recylerview;
             recyclerView.setHasFixedSize(true);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            GridLayoutManager layoutManager = new GridLayoutManager(context, 3);
             recyclerView.setLayoutManager(layoutManager);
             final List<Movie> dataset = new ArrayList<Movie>();
 
@@ -137,9 +138,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
                         List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
                         int index = 0;
-                        HorizontalAdapter adapter = new HorizontalAdapter(context, dataset);
+                        HorizontalAdapter adapter = new HorizontalAdapter(context);
                         recyclerView.setAdapter(adapter);
-                        adapter.clear();
+                        //adapter.clear();
                         for (DocumentSnapshot document : documents) {
                             Movie movie = new Movie();
                             movie.setCopertinaFull(document.getString("copertina"));
@@ -147,7 +148,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             movie.setRuntime((document.getLong("runtime").intValue()));
                             movie.setTitle(document.getString("title"));
                             movie.setTipo("recenti");
-                            adapter.add(index, movie);
+                            adapter.addGrid(index, movie);
                             adapter.notifyDataSetChanged();
                             index++;
                         }

@@ -33,7 +33,8 @@ import com.warnercodes.watchable.activity.MovieDetailActivity;
 import com.warnercodes.watchable.activity.ReviewActivity;
 import com.warnercodes.watchable.databinding.ItemAdviceBinding;
 import com.warnercodes.watchable.databinding.ItemCastBinding;
-import com.warnercodes.watchable.databinding.ItemRecentBinding;
+import com.warnercodes.watchable.databinding.ItemMovieBinding;
+import com.warnercodes.watchable.databinding.ItemMovieGridBinding;
 import com.warnercodes.watchable.databinding.ItemReviewBinding;
 import com.warnercodes.watchable.databinding.ItemReviewCompleteBinding;
 import com.warnercodes.watchable.databinding.ItemTrailerBinding;
@@ -53,6 +54,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<Cast> castList;
     private List<Review> reviewList;
     private Review completeReview;
+    private List<Movie> gridList;
 
     public HorizontalAdapter(Context context, List<Movie> dataList) {
         this.context = context;
@@ -64,7 +66,9 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.context = context;
         castList = new ArrayList<Cast>();
         reviewList = new ArrayList<Review>();
+        gridList = new ArrayList<Movie>();
     }
+
 
     public void add(int position, Movie item) {
         dataList.add(position, item);
@@ -81,8 +85,14 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyItemInserted(position);
     }
 
+    public void addGrid(int position, Movie item) {
+        gridList.add(position, item);
+        notifyItemInserted(position);
+    }
+
     public void clear() {
-        dataList.clear();
+        if (gridList != null)
+            gridList.clear();
     }
 
     public void setCompleteReview(Review completeReview) {
@@ -100,6 +110,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static int REVIEW = 4;
     private static int COMPLETE_REVIEW = 5;
     private static int TRAILER = 6;
+    private static int GRID = 7;
 
 
     @NonNull
@@ -107,8 +118,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewBinding view;
         if (viewType == RECENTI) {
-            view = ItemRecentBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-            return new RecentiViewHolder((ItemRecentBinding) view);
+            view = ItemMovieBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new MovieViewHolder((ItemMovieBinding) view);
         }
         if (viewType == CONSIGLIATI) {
             view = ItemAdviceBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
@@ -130,17 +141,26 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             view = ItemTrailerBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
             return new TrailersViewHolder((ItemTrailerBinding) view);
         }
+        if (viewType == GRID) {
+            view = ItemMovieGridBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new GridViewHolder((ItemMovieGridBinding) view);
+        }
         return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         if (getItemViewType(position) == RECENTI) {
-            RecentiViewHolder viewHolder = (RecentiViewHolder) holder;
+            MovieViewHolder viewHolder = (MovieViewHolder) holder;
             context = viewHolder.img_movie.getContext();
             Glide.with(context).load(dataList.get(position).getCopertina()).into(viewHolder.img_movie);
         }
 
+        if (getItemViewType(position) == GRID) {
+            GridViewHolder viewHolder = (GridViewHolder) holder;
+            context = viewHolder.img_movie.getContext();
+            Glide.with(context).load(gridList.get(position).getCopertina()).into(viewHolder.img_movie);
+        }
 
         if (getItemViewType(position) == CAST) {
             CastViewHolder viewHolder = (CastViewHolder) holder;
@@ -223,6 +243,8 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             String tipo = castList.get(position).getTipo();
             if (tipo.equals("cast"))
                 return CAST;
+        } else if (gridList != null && gridList.size() > 0) {
+            return GRID;
         } else if (completeReview != null) {
             return COMPLETE_REVIEW;
         }
@@ -240,20 +262,40 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return reviewList.size();
         else if (completeReview != null)
             return 1;
+        else if (gridList != null)
+            return gridList.size();
         return 0;
     }
 
-
-    class RecentiViewHolder extends RecyclerView.ViewHolder {
+    class MovieViewHolder extends RecyclerView.ViewHolder {
         private ImageView img_movie;
 
-        RecentiViewHolder(ItemRecentBinding binding) {
+        MovieViewHolder(ItemMovieBinding binding) {
             super(binding.getRoot());
             this.img_movie = binding.imgMovie;
             img_movie.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Integer id = dataList.get(getAdapterPosition()).getMovieId();
+                    Intent intent = new Intent(context, MovieDetailActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("movieId", id);
+                    context.startActivity(intent);
+                }
+            });
+        }
+    }
+
+    class GridViewHolder extends RecyclerView.ViewHolder {
+        private ImageView img_movie;
+
+        GridViewHolder(ItemMovieGridBinding binding) {
+            super(binding.getRoot());
+            this.img_movie = binding.imgMovie;
+            img_movie.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Integer id = gridList.get(getAdapterPosition()).getMovieId();
                     Intent intent = new Intent(context, MovieDetailActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("movieId", id);
