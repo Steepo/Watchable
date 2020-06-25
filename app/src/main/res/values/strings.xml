@@ -1,14 +1,9 @@
 <resources>
     <string name="app_name">Watchable</string>
     <string name="title_activity_home_page">HomePage</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="titolo">Title</string>
     <string name="profile_name">Mario Rossi</string>
     <string name="profile_mail">mariorossi@gmail.com</string>
     <string name="hour_spent">You\'ve watched 214 hours of movies</string>
-    <string name="favorite_here">Favorite</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Home Page Recyclerview Titles -->
@@ -23,13 +18,7 @@
     <string name="cast_title">Best actors</string>
 
     <!-- Elements -->
-    <string name="recent">Recent</string>
-    <string name="adviced">Adviced</string>
     <string name="similar">Similar</string>
-    <string name="cinema">Cinema</string>
-    <string name="popular">Popular</string>
-    <string name="incoming">Incoming</string>
-    <string name="rated">Rated</string>
     <string name="cast">Cast</string>
 
     <!-- Preference Titles -->
@@ -37,15 +26,8 @@
     <string name="sync_header">About</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your Name</string>
-    <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
     <string name="remove_watchlist">Remove from watch list</string>
     <string name="add_watchlist">Add to watch list</string>
@@ -54,16 +36,9 @@
     <string name="add_watched">Add to Watched</string>
 
     <!-- Google Authentication -->
-    <string name="desc_firebase_lockup">Firebase logo and name</string>
-    <string name="google_title_text">Google Sign In</string>
-    <string name="multi_factor_signed_out">You are not signed in. To use this sample, first navigate to the Email/Password example to sign in and then return here to enroll in multi-factor auth.</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="disconnect">Disconnect</string>
-    <string name="signed_out">Signed Out</string>
 
     <!-- Facebook Authentication -->
 
-    <string name="facebook_app_id">3175042632517865</string>
     <string name="fb_login_protocol_scheme">fb3175042632517865</string>
     <string name="home">Home</string>
     <string name="upcoming">Upcoming</string>
