@@ -23,6 +23,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -154,44 +156,27 @@ public class AttivitaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (getItemViewType(position) == CONSIGLIATI) {
             final ViewHolderNoCard viewHolder = (ViewHolderNoCard) holder;
             viewHolder.item_textview.setText(dataList.get(position).getTitolo());
-            watchlist.addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+            watchlist.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Log.w("FIREBASE", "Listen failed.", e);
-                        return;
-                    }
-                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
-                        Log.d("FIREBASE", "Current data: " + queryDocumentSnapshots.getDocuments());
-                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot document : documents) {
-                            Movie movie = new Movie();
-                            listaFilmDaGuardare.add(document.getLong("movieId").intValue());
-                        }
-                    } else {
-                        Log.d("FIREBASE", "Current data: null");
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    for (DocumentSnapshot document : documents) {
+                        Movie movie = new Movie();
+                        listaFilmDaGuardare.add(document.getLong("movieId").intValue());
                     }
                 }
             });
 
-            watched.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            watched.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
-                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Log.w("FIREBASE", "Listen failed.", e);
-                        return;
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    for (DocumentSnapshot document : documents) {
+                        Movie movie = new Movie();
+                        listaFilmGuardati.add(document.getLong("movieId").intValue());
                     }
-                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
-                        Log.d("FIREBASE", "Current data: " + queryDocumentSnapshots.getDocuments());
-                        List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot document : documents) {
-                            Movie movie = new Movie();
-                            listaFilmGuardati.add(document.getLong("movieId").intValue());
-                        }
-                        loadAdviceFilms(viewHolder, listaFilmDaGuardare, listaFilmGuardati);
-                    } else {
-                        Log.d("FIREBASE", "Current data: null");
-                    }
+                    loadAdviceFilms(viewHolder, listaFilmDaGuardare, listaFilmGuardati);
                 }
             });
         }

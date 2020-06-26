@@ -220,11 +220,12 @@ public class HorizontalAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (getItemViewType(position) == TRAILER) {
             TrailersViewHolder viewHolder = (TrailersViewHolder) holder;
             Movie item = dataList.get(position);
-            Glide.with(context)
-                    .load("https://img.youtube.com/vi/" + item.getYoutubekey() + "/maxresdefault.jpg")
-                    .error(Glide.with(context)
-                            .load("https://img.youtube.com/vi/" + item.getYoutubekey() + "/mqdefault.jpg"))
-                    .into(viewHolder.cover);
+            if (!((Activity) context).isFinishing())
+                Glide.with(context)
+                        .load("https://img.youtube.com/vi/" + item.getYoutubekey() + "/maxresdefault.jpg")
+                        .error(Glide.with(context)
+                                .load("https://img.youtube.com/vi/" + item.getYoutubekey() + "/mqdefault.jpg"))
+                        .into(viewHolder.cover);
         }
     }
 
