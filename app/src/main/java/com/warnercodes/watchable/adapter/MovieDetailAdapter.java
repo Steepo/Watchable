@@ -140,7 +140,7 @@ public class MovieDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private JsonObjectRequest RequestOMdb(final MovieDetailsViewHolder viewHolder) {
-        String OMdbUrl = "https://www.omdbapi.com/?i=" + movie.getImdbId() + "&apikey=f435a572";
+        String OMdbUrl = "https://www.omdbapi.com/?i=" + movie.getImdbId() + "&apikey=";
         JsonObjectRequest OMdbRequest = new JsonObjectRequest(Request.Method.GET, OMdbUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
