@@ -1,6 +1,6 @@
 
 # Watchable
-Android app to discover movies and keep track of it.
+Android app to discover movies and keep track of them.
 
 Project made for the Android Programming UNIMIB course
 ## Screenshots
